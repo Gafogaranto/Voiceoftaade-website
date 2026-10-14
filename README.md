@@ -46,3 +46,6 @@ GitHub Pages hosts static files. This version is a polished front-end, not a ful
 
 ## Updating later
 Edit the files locally, commit and push to the `main` branch. GitHub Actions redeploys the site automatically.
+
+
+Brand update: the site now uses the supplied Voiceoftaade logo and a navy-and-gold palette. The logo asset is stored in `assets/voiceoftaade-logo.jpg`.
