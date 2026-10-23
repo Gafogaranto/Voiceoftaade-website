@@ -262,3 +262,7 @@
   }
   .account-avatar { width: 45px; height: 45px; }
 }
+
+/* Dedicated Voiceoftaade Journals page */
+.journal-section .section-heading h1{font:600 clamp(2.35rem,4.6vw,4.2rem)/1.12 var(--serif);letter-spacing:-.045em;margin:0}
+.journal-section .section-heading h1 em{color:var(--gold-dark);font-style:normal}
