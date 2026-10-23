@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07172b">
+  <meta name="description" content="Create your Voiceoftaade reader account and manage your profile.">
+  <title>Reader Account | Voiceoftaade Publications</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .account-page{min-height:70vh;padding:clamp(36px,7vw,90px) 20px;background:radial-gradient(ellipse at 80% 15%,#dce5ef,transparent 40%),var(--paper)}
+    .account-wrap{max-width:760px;margin:auto}.account-intro{text-align:center;margin-bottom:30px}
+    .account-intro h1{font:600 clamp(2.2rem,6vw,3.6rem)/1.1 var(--serif);margin:0 0 14px}
+    .account-intro h1 em{color:var(--gold-dark);font-weight:500}.account-intro p{color:var(--muted)}
+    .account-panel{background:#fff;border:1px solid var(--line);padding:clamp(22px,5vw,42px);box-shadow:0 18px 50px #07172b0c}
+    .account-tabs{display:flex;gap:8px;margin-bottom:24px}.account-tabs button{flex:1;padding:12px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700}
+    .account-tabs button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .account-form{display:grid;gap:15px}.account-form label{display:grid;gap:6px;font-size:.8rem;font-weight:700}
+    .account-form input{width:100%;padding:13px 14px;border:1px solid #cbd1d9;border-radius:2px;background:#fff;color:var(--ink)}
+    .account-form input:focus{outline:2px solid #d9ad4f;outline-offset:1px}
+    .account-note{font-size:.8rem;color:var(--muted);margin:0}.account-status{min-height:1.4em;margin:16px 0 0;font-size:.85rem;overflow-wrap:anywhere}
+    .account-status.error{color:#a22b2b}.account-status.success{color:#286343}
+    .account-dashboard{display:none}.account-dashboard h2{font:600 2rem var(--serif);margin-top:0}
+    .account-dashboard .account-form{max-width:520px}.account-email{font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}
+    .account-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.account-actions button{cursor:pointer;border:1px solid var(--ink);padding:12px 18px;background:#fff}
+    .account-back{display:inline-block;margin-top:24px;font-weight:700;font-size:.85rem}
+    @media(max-width:480px){.account-tabs{flex-direction:column}.account-panel{padding:22px 18px}}
+  </style>
+</head>
+<body>
+  <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
+    <a class="nav-cta" href="./">Back to website</a>
+  </header>
+  <main class="account-page">
+    <div class="account-wrap">
+      <div class="account-intro"><p class="eyebrow">YOUR VOICEOFTAADE SPACE</p><h1>A home for your <em>reading journey.</em></h1><p>Create a free reader account to keep your profile with you. More reader features will be added in stages.</p></div>
+      <section class="account-panel" aria-label="Reader account">
+        <div id="authPanel">
+          <div class="account-tabs" role="tablist" aria-label="Account options">
+            <button type="button" class="active" id="signInTab" aria-selected="true">Sign in</button>
+            <button type="button" id="signUpTab" aria-selected="false">Create account</button>
+          </div>
+          <form class="account-form" id="authForm">
+            <label id="nameField" hidden>Display name<input id="displayName" name="displayName" type="text" maxlength="80" autocomplete="name" placeholder="How should we address you?"></label>
+            <label>Email address<input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+            <label>Password<input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters"></label>
+            <button class="button button-dark" id="submitAuth" type="submit">Sign in <span>→</span></button>
+            <button type="button" class="text-link" id="forgotPassword" style="justify-self:start;border:0;background:none;padding:0;cursor:pointer">Forgot your password?</button>
+            <p class="account-note" id="formNote">Your account is for reader features. Public articles remain available without signing in.</p>
+          </form>
+          <p class="account-status" id="authStatus" role="status" aria-live="polite"></p>
+        </div>
+        <div class="account-dashboard" id="dashboard">
+          <p class="eyebrow">READER DASHBOARD</p><h2>Welcome to your space.</h2>
+          <p class="account-email" id="signedInEmail"></p>
+          <form class="account-form" id="profileForm">
+            <label>Display name<input id="profileName" type="text" maxlength="80" autocomplete="nickname" placeholder="Your display name"></label>
+            <button class="button button-dark" type="submit">Save profile <span>→</span></button>
+          </form>
+          <p class="account-status" id="profileStatus" role="status" aria-live="polite"></p>
+          <div class="account-actions"><button type="button" id="signOut">Sign out</button></div>
+          <p class="account-note">Saved reflections, reading progress, private journal entries, and notification preferences are planned for later stages. They are not yet synced to this account.</p>
+        </div>
+      </section>
+      <a class="account-back" href="./">← Return to Voiceoftaade Publications</a>
+    </div>
+  </main>
+  <footer class="site-footer"><p>Words for wisdom. Ideas for life.</p><div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications</span><a href="./">Back to website ↑</a></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="account.js"></script>
+</body>
+</html>
