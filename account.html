@@ -81,6 +81,19 @@
     .profile-tabs{display:flex;gap:4px;padding:0 24px;background:#fff;overflow-x:auto}
     .profile-tabs a{flex:0 0 auto;padding:17px 16px;border:0;border-bottom:3px solid transparent;background:transparent;color:#657184;font-weight:800;font-size:.82rem;text-decoration:none;white-space:nowrap}
     .profile-tabs a.active{color:#173e5b;border-bottom-color:#d9ad4f}
+    .profile-tabs-bottom{border-top:1px solid #e0e4e9;margin-top:0}
+    .profile-tabs-bottom .profile-collection-tab{flex:0 0 auto;padding:17px 16px;border:0;border-bottom:3px solid transparent;background:transparent;color:#657184;font-weight:800;font-size:.82rem;cursor:pointer;white-space:nowrap}
+    .profile-tabs-bottom .profile-collection-tab.active{color:#173e5b;border-bottom-color:#d9ad4f}
+    .profile-collections{padding:22px;background:#f0f2f5;border-top:1px solid #e0e4e9}
+    .profile-collections>div{max-width:100%;margin:auto}
+    .profile-collections h3{font:600 1.5rem/1.2 var(--serif);color:#182536;margin:0 0 16px}
+    .profile-collections .saved-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .profile-collections .saved-card{padding:18px;background:#fff;border:1px solid #dfe3e8;border-radius:9px}
+    .profile-collections .saved-card h3{font-size:1.08rem}
+    .profile-collections .saved-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .profile-collections .saved-actions button{border:0;background:none;padding:0;color:#244b68;font-weight:750;cursor:pointer}
+    .profile-collections .saved-empty{grid-column:1/-1;color:#687486;padding:20px;background:#fff;border:1px dashed #c9ced5}
+    @media(max-width:720px){.profile-collections{padding:14px}.profile-collections .saved-list{grid-template-columns:1fr}.profile-tabs-bottom .profile-collection-tab{padding:15px 12px}}
     .profile-content{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;padding:22px;background:#f0f2f5}.profile-settings-content .profile-card{max-width:680px;width:100%;margin:0 auto}
     .profile-card{min-width:0;padding:22px;border:1px solid #e0e4e9;border-radius:11px;background:#fff;box-shadow:0 2px 5px #07172b08}
     .profile-card h3{margin:0 0 10px;color:#182536;font:600 1.35rem/1.2 var(--serif)}
@@ -194,9 +207,21 @@
                 </section>
               </div>
               <nav class="profile-tabs profile-tabs-bottom" aria-label="Reader collections">
-                <a href="./#savedReflections">Saved Journals</a>
-                <a href="./#favouriteReflections">Favourite Journals</a>
+                <button type="button" class="profile-collection-tab active" id="profileShowSaved" aria-pressed="true">Saved Journals</button>
+                <button type="button" class="profile-collection-tab" id="profileShowFavourites" aria-pressed="false">Favourite Journals</button>
               </nav>
+              <section class="profile-collections" aria-label="Your saved journals">
+                <div id="profileSavedCollection">
+                  <p class="eyebrow">YOUR PERSONAL COLLECTION</p>
+                  <h3>Saved Journals</h3>
+                  <div id="profileSavedList" class="saved-list" aria-live="polite"></div>
+                </div>
+                <div id="profileFavouriteCollection" hidden>
+                  <p class="eyebrow">YOUR MOST-LOVED IDEAS</p>
+                  <h3>Favourite Journals</h3>
+                  <div id="profileFavouriteList" class="saved-list" aria-live="polite"></div>
+                </div>
+              </section>
             </section>
             <p class="account-note">Your profile name and photos are saved to your reader account. Private journal and saved-content syncing will be added in a later stage.</p>
           </div>
@@ -207,6 +232,54 @@
   </main>
   <footer class="site-footer"><p>Words for wisdom. Ideas for life.</p><div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications</span><a href="./">Back to website ↑</a></div></footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (() => {
+    const SAVED_KEY = "voiceoftaade-saved-reflections-v2";
+    const FAV_KEY = "voiceoftaade-favourite-reflections-v1";
+    const articles = {
+      discipline:["MINDSET","Discipline is the quiet architecture of a meaningful life"],
+      perspective:["WISDOM","Perspective changes what a moment means"],
+      stillness:["WISDOM","The strength found in stillness"],
+      wisdom:["WISDOM","Wisdom over noise"],
+      time:["LIFE","Time is the one currency you cannot recover"],
+      love:["LOVE","Love without losing yourself"],
+      marriage:["LOVE","Marriage is built in the ordinary moments"],
+      boundaries:["RELATIONSHIPS","Boundaries are a form of self-respect"],
+      loyalty:["RELATIONSHIPS","Loyalty is proven by consistent action"],
+      forgiveness:["HEALING","Forgiveness is not the same as permission"],
+      laziness:["MINDSET","When comfort quietly becomes a cage"],
+      fear:["MINDSET","Fear should inform you, not govern you"],
+      dream:["PURPOSE","Protect the dream by working on it"],
+      failure:["GROWTH","Failure is information, not identity"],
+      humility:["CHARACTER","Humility makes room for growth"],
+      likes:["SOCIETY","Do not confuse likes with love"],
+      faking:["SOCIETY","The exhausting cost of pretending"],
+      softlife:["LIFE","A soft life still needs wise choices"],
+      hustle:["WORK","The hustle must serve the life"],
+      peace:["WELLBEING","Protecting your mental peace"]
+    };
+    const read = key => { try { const v=JSON.parse(localStorage.getItem(key)||"[]"); return Array.isArray(v)?[...new Set(v.filter(id=>typeof id==="string"&&articles[id]))]:[]; } catch { return []; } };
+    const render = (containerId,key,empty) => {
+      const list=document.getElementById(containerId); if(!list)return; list.replaceChildren();
+      const ids=read(key);
+      if(!ids.length){const p=document.createElement("p");p.className="saved-empty";p.textContent=empty;list.append(p);return;}
+      ids.forEach(id=>{
+        const [category,title]=articles[id],card=document.createElement("article");card.className="saved-card";
+        const tag=document.createElement("p");tag.className="eyebrow";tag.textContent=category;
+        const h=document.createElement("h3");h.textContent=title;
+        const actions=document.createElement("div");actions.className="saved-actions";
+        const open=document.createElement("button");open.type="button";open.textContent="Read journal →";open.addEventListener("click",()=>location.href="./#journal");
+        const remove=document.createElement("button");remove.type="button";remove.textContent=key===SAVED_KEY?"Remove saved":"Remove favourite";remove.addEventListener("click",()=>{localStorage.setItem(key,JSON.stringify(read(key).filter(item=>item!==id)));refresh();});
+        actions.append(open,remove);card.append(tag,h,actions);list.append(card);
+      });
+    };
+    function refresh(){render("profileSavedList",SAVED_KEY,"No saved journals yet. Open a journal on the homepage and choose Save reflection.");render("profileFavouriteList",FAV_KEY,"No favourite journals yet. Open a journal on the homepage and choose Add to favourites.");}
+    const savedBtn=document.getElementById("profileShowSaved"),favBtn=document.getElementById("profileShowFavourites"),saved=document.getElementById("profileSavedCollection"),fav=document.getElementById("profileFavouriteCollection");
+    savedBtn.addEventListener("click",()=>{saved.hidden=false;fav.hidden=true;savedBtn.classList.add("active");favBtn.classList.remove("active");savedBtn.setAttribute("aria-pressed","true");favBtn.setAttribute("aria-pressed","false");});
+    favBtn.addEventListener("click",()=>{saved.hidden=true;fav.hidden=false;favBtn.classList.add("active");savedBtn.classList.remove("active");favBtn.setAttribute("aria-pressed","true");savedBtn.setAttribute("aria-pressed","false");});
+    refresh();
+  })();
+  </script>
   <script src="account.js"></script>
 </body>
 </html>
