@@ -44,6 +44,7 @@
   function applyProfilePhotos(avatarUrl, coverUrl) {
     $("profileAvatar").src = avatarUrl || defaultAvatar;
     $("photoPreviewAvatar").src = avatarUrl || defaultAvatar;
+    $("profileCover").dataset.coverUrl = coverUrl || "";
     $("profileCover").style.backgroundImage = coverUrl
       ? "linear-gradient(0deg,rgba(3,10,18,.65),transparent 65%),url('" + coverUrl.replace(/'/g, "%27") + "')"
       : "";
