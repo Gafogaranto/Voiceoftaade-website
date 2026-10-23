@@ -8,48 +8,51 @@
   <title>Reader Account | Voiceoftaade Publications</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    :root{--account-ink:#17231f;--account-paper:#f7f4ec;--account-gold:#b58a43;--account-line:#e5dfd2;--account-muted:#69736c}
-    body{background:var(--account-paper)}
-    .announcement{letter-spacing:.07em;font-size:.72rem}
-    .site-header{background:#fbfaf6;border-bottom:1px solid var(--account-line)}
-    .account-page{min-height:76vh;padding:clamp(34px,7vw,82px) 18px 64px;background:radial-gradient(ellipse at 12% 10%,rgba(181,138,67,.13),transparent 33%),radial-gradient(ellipse at 92% 38%,rgba(31,66,53,.09),transparent 36%),var(--account-paper)}
-    .account-wrap{max-width:790px;margin:auto}
-    .account-intro{text-align:center;margin:0 auto 32px;max-width:650px}
-    .account-intro .eyebrow,.account-dashboard .eyebrow{display:inline-flex;align-items:center;gap:9px;letter-spacing:.17em;font-size:.7rem;font-weight:800;color:#8c6a31}
-    .account-intro .eyebrow:before,.account-intro .eyebrow:after{content:"";display:inline-block;width:22px;height:1px;background:var(--account-gold)}
-    .account-intro h1{font:500 clamp(2.35rem,7vw,4.2rem)/1.04 var(--serif);letter-spacing:-.035em;color:var(--account-ink);margin:16px 0}
-    .account-intro h1 em{color:#9b7536;font-weight:500}
-    .account-intro>p:last-child{max-width:480px;margin:0 auto;color:var(--account-muted);line-height:1.8;font-size:.96rem}
-    .account-panel{position:relative;overflow:hidden;background:rgba(255,254,250,.96);border:1px solid #e8e1d4;border-radius:18px;padding:clamp(22px,5vw,46px);box-shadow:0 24px 65px rgba(27,39,31,.09)}
-    .account-panel:before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#183b2d,#b58a43,#d6bd86)}
-    .account-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:#f0ede5;border-radius:11px;margin-bottom:27px}
-    .account-tabs button{border:1px solid transparent;border-radius:8px;background:transparent;color:#667067;padding:13px 10px;cursor:pointer;font-weight:750;transition:background .2s,color .2s,box-shadow .2s}
-    .account-tabs button.active{background:#fffefa;color:#20392e;border-color:#e6dfd2;box-shadow:0 3px 10px #17231f0b}
-    .account-form{display:grid;gap:17px}
-    .account-form label{display:grid;gap:8px;font-size:.79rem;font-weight:750;letter-spacing:.025em;color:#37443c}
-    .account-form input{box-sizing:border-box;width:100%;padding:15px 15px;border:1px solid #dcd8ce;border-radius:9px;background:#fffefa;color:var(--account-ink);font:inherit;font-size:.95rem;transition:border-color .2s,box-shadow .2s}
-    .account-form input::placeholder{color:#a0a49d}
-    .account-form input:focus{outline:none;border-color:#b58a43;box-shadow:0 0 0 3px rgba(181,138,67,.14)}
-    .account-form .button{display:flex;justify-content:center;align-items:center;gap:12px;width:100%;min-height:51px;border:0;border-radius:9px;background:#203d30;color:#fff;font-weight:750;letter-spacing:.01em;box-shadow:0 8px 18px rgba(32,61,48,.16);transition:transform .2s,background .2s}
-    .account-form .button:hover{background:#152d23;transform:translateY(-1px)}
-    .account-form .button:disabled{opacity:.65;cursor:wait;transform:none}
+    :root{--vt-forest:#123d2d;--vt-deep:#0b281e;--vt-gold:#d7b36a;--vt-cream:#f5f0e5;--vt-ink:#192720;--vt-muted:#69756d}
+    *{box-sizing:border-box}body{background:var(--vt-cream)}
+    .announcement{background:var(--vt-deep);color:#eee6d5;letter-spacing:.08em;font-size:.7rem;text-align:center;padding:10px 14px}
+    .site-header{background:#fbf8f0;border-bottom:1px solid #e4ddce;padding:12px clamp(18px,5vw,64px)}
+    .account-page{min-height:78vh;padding:clamp(24px,5vw,64px) 18px 70px;background:linear-gradient(135deg,#f7f2e7 0%,#f1eadb 50%,#f9f6ef 100%);position:relative;isolation:isolate;overflow:hidden}
+    .account-page:before{content:"";position:absolute;z-index:-1;width:430px;height:430px;border:1px solid rgba(18,61,45,.1);border-radius:50%;top:-230px;right:-90px;box-shadow:0 0 0 35px rgba(18,61,45,.025),0 0 0 75px rgba(18,61,45,.02)}
+    .account-wrap{max-width:1120px;margin:auto}
+    .account-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,.92fr);align-items:stretch;gap:0;filter:drop-shadow(0 24px 45px rgba(17,39,28,.12))}
+    .account-story{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:570px;padding:clamp(28px,5vw,58px);border-radius:20px 0 0 20px;color:#f9f4e9;background:radial-gradient(ellipse at 90% 15%,rgba(215,179,106,.22),transparent 36%),linear-gradient(145deg,#1b503b 0%,#123d2d 48%,#0b281e 100%)}
+    .account-story:after{content:"";position:absolute;width:300px;height:300px;border:1px solid rgba(215,179,106,.27);border-radius:50%;right:-125px;bottom:-100px;box-shadow:0 0 0 22px rgba(215,179,106,.04),0 0 0 48px rgba(215,179,106,.035),0 0 0 78px rgba(215,179,106,.025)}
+    .story-mark{width:54px;height:54px;border:1px solid rgba(215,179,106,.6);border-radius:50%;display:grid;place-items:center;color:var(--vt-gold);font:italic 1.9rem Georgia,serif}
+    .story-kicker{margin:32px 0 15px;color:var(--vt-gold);font-size:.69rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+    .account-story h1{font:500 clamp(2.7rem,5vw,4.7rem)/.99 var(--serif);letter-spacing:-.045em;margin:0;max-width:510px}
+    .account-story h1 em{color:var(--vt-gold);font-weight:500}
+    .story-copy{max-width:390px;color:#d8e2d9;font-size:.94rem;line-height:1.9;margin:24px 0 0}
+    .story-quote{position:relative;z-index:1;margin-top:42px;padding-top:20px;border-top:1px solid rgba(255,255,255,.18);max-width:390px}
+    .story-quote p{font:italic 1.25rem/1.5 var(--serif);margin:0 0 10px;color:#f7efdf}
+    .story-quote span{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--vt-gold)}
+    .account-panel{min-width:0;background:#fffdf8;border:1px solid #e7dfd0;border-left:0;border-radius:0 20px 20px 0;padding:clamp(25px,4vw,48px);display:flex;flex-direction:column;justify-content:center}
+    .auth-heading{margin-bottom:25px}.auth-heading .eyebrow,.account-dashboard .eyebrow{color:#9b7535;font-size:.69rem;font-weight:850;letter-spacing:.18em;text-transform:uppercase;margin:0 0 10px}
+    .auth-heading h2{font:500 clamp(1.9rem,3vw,2.5rem)/1.1 var(--serif);color:var(--vt-ink);margin:0 0 10px;letter-spacing:-.03em}
+    .auth-heading p{margin:0;color:var(--vt-muted);font-size:.88rem;line-height:1.7}
+    .account-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;background:#f0ede4;border-radius:10px;margin-bottom:23px}
+    .account-tabs button{border:1px solid transparent;border-radius:7px;background:transparent;color:#647066;padding:12px 7px;cursor:pointer;font-weight:750;font-size:.83rem;transition:.2s}
+    .account-tabs button.active{background:#fffefa;color:var(--vt-forest);border-color:#e3dccd;box-shadow:0 3px 10px #142b1f0c}
+    .account-form{display:grid;gap:15px}
+    .account-form label{display:grid;gap:7px;font-size:.77rem;font-weight:750;color:#35463b;letter-spacing:.025em}
+    .account-form input{width:100%;padding:14px;border:1px solid #dcd8ce;border-radius:8px;background:#fff;color:var(--vt-ink);font:inherit;font-size:.93rem;transition:border-color .2s,box-shadow .2s}
+    .account-form input:focus{outline:0;border-color:#b58a43;box-shadow:0 0 0 3px rgba(181,138,67,.15)}
+    .account-form input::placeholder{color:#a4aaa3}
+    .account-form .button{display:flex;justify-content:center;align-items:center;gap:12px;width:100%;min-height:50px;margin-top:3px;border:0;border-radius:8px;background:var(--vt-forest);color:white;font-weight:800;letter-spacing:.015em;box-shadow:0 8px 16px rgba(18,61,45,.18);cursor:pointer;transition:transform .2s,background .2s}
+    .account-form .button:hover{background:#0b2e21;transform:translateY(-1px)}.account-form .button:disabled{opacity:.65;cursor:wait;transform:none}
     .account-form .button span{font-size:1.15rem}
-    .text-link{font-size:.85rem;color:#8c6a31;text-decoration:underline;text-underline-offset:3px}
-    .account-note{font-size:.8rem;line-height:1.7;color:var(--account-muted);margin:2px 0 0}
-    .account-status{min-height:1.4em;margin:16px 0 0;font-size:.87rem;line-height:1.55;overflow-wrap:anywhere}
-    .account-status.error{color:#a22b2b}.account-status.success{color:#286343}
-    .account-dashboard{display:none}
-    .account-dashboard h2{font:500 clamp(1.9rem,5vw,2.7rem)/1.1 var(--serif);letter-spacing:-.025em;color:var(--account-ink);margin:8px 0 12px}
-    .account-email{display:inline-block;padding:8px 12px;border-radius:100px;background:#f0ede5;color:#667067;font-size:.82rem;overflow-wrap:anywhere;margin:0 0 25px}
-    .account-dashboard .account-form{max-width:100%;padding:22px;background:#f8f6f0;border:1px solid #eae4d8;border-radius:12px}
-    .account-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-    .account-actions button{cursor:pointer;border:1px solid #d7d2c7;border-radius:8px;padding:11px 17px;background:transparent;color:#334239;font-weight:700;transition:background .2s}
-    .account-actions button:hover{background:#f0ede5}
-    .account-dashboard>.account-note{margin-top:20px;padding:14px 16px;border-left:3px solid #c5a66a;background:#f8f6f0}
-    .account-back{display:block;width:fit-content;margin:26px auto 0;color:#58645b;font-weight:750;font-size:.85rem;text-decoration:none}
-    .account-back:hover{color:#8c6a31}
-    .site-footer{background:#182a22;color:#e9e5db}
-    @media(max-width:480px){.account-tabs{grid-template-columns:1fr 1fr}.account-panel{padding:27px 19px;border-radius:14px}.account-dashboard .account-form{padding:16px}.account-intro{margin-bottom:25px}.account-page{padding-top:36px}}
+    .text-link{font-size:.82rem;color:#8b692f;text-decoration:underline;text-underline-offset:3px}
+    .account-note{font-size:.76rem;line-height:1.7;color:var(--vt-muted);margin:2px 0 0}
+    .account-status{min-height:1.4em;margin:14px 0 0;font-size:.84rem;line-height:1.55;overflow-wrap:anywhere}.account-status.error{color:#a22b2b}.account-status.success{color:#286343}
+    .account-dashboard{display:none}.account-dashboard h2{font:500 clamp(2rem,4vw,2.8rem)/1.1 var(--serif);color:var(--vt-ink);margin:0 0 12px;letter-spacing:-.03em}
+    .account-email{display:inline-block;padding:8px 12px;border-radius:100px;background:#f0ede4;color:#657167;font-size:.78rem;overflow-wrap:anywhere;margin:0 0 24px}
+    .account-dashboard .account-form{padding:20px;background:#f8f5ed;border:1px solid #e9e1d2;border-radius:11px}
+    .account-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.account-actions button{cursor:pointer;border:1px solid #d8d2c4;border-radius:8px;padding:11px 16px;background:transparent;color:#334239;font-weight:750}
+    .account-dashboard>.account-note{margin-top:20px;padding:13px 15px;border-left:3px solid var(--vt-gold);background:#f8f5ed}
+    .account-back{display:block;width:fit-content;margin:25px auto 0;color:#526157;font-weight:750;font-size:.83rem;text-decoration:none}.account-back:hover{color:#9b7535}
+    .site-footer{background:var(--vt-deep);color:#e9e5db}
+    @media(max-width:760px){.account-layout{grid-template-columns:1fr;filter:drop-shadow(0 18px 30px rgba(17,39,28,.12))}.account-story{min-height:auto;border-radius:16px 16px 0 0;padding:28px 25px 25px}.story-mark{width:43px;height:43px;font-size:1.55rem}.story-kicker{margin-top:24px}.account-story h1{font-size:clamp(2.5rem,11vw,3.5rem);max-width:480px}.story-copy{margin-top:15px;font-size:.88rem}.story-quote{margin-top:22px;padding-top:15px}.story-quote p{font-size:1.08rem}.account-panel{border-left:1px solid #e7dfd0;border-radius:0 0 16px 16px;padding:28px 24px 30px}.auth-heading h2{font-size:2rem}.account-page{padding-top:22px}}
+    @media(max-width:380px){.account-panel{padding:24px 17px}.account-tabs button{font-size:.77rem}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
   </style>
 </head>
@@ -61,35 +64,49 @@
   </header>
   <main class="account-page">
     <div class="account-wrap">
-      <div class="account-intro"><p class="eyebrow">YOUR VOICEOFTAADE SPACE</p><h1>A home for your <em>reading journey.</em></h1><p>Create a free reader account to keep your profile with you. More reader features will be added in stages.</p></div>
-      <section class="account-panel" aria-label="Reader account">
-        <div id="authPanel">
-          <div class="account-tabs" role="tablist" aria-label="Account options">
-            <button type="button" class="active" id="signInTab" aria-selected="true">Sign in</button>
-            <button type="button" id="signUpTab" aria-selected="false">Create account</button>
+      <div class="account-layout">
+        <aside class="account-story" aria-label="About Voiceoftaade">
+          <div>
+            <div class="story-mark" aria-hidden="true">V</div>
+            <p class="story-kicker">A reader's space · Voiceoftaade</p>
+            <h1>Words that stay with <em>you.</em></h1>
+            <p class="story-copy">A thoughtful corner for curious minds, meaningful ideas, and a life lived with purpose. Sign in to make this reading journey your own.</p>
           </div>
-          <form class="account-form" id="authForm">
-            <label id="nameField" hidden>Display name<input id="displayName" name="displayName" type="text" maxlength="80" autocomplete="name" placeholder="How should we address you?"></label>
-            <label>Email address<input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
-            <label>Password<input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters"></label>
-            <button class="button button-dark" id="submitAuth" type="submit">Sign in <span>→</span></button>
-            <button type="button" class="text-link" id="forgotPassword" style="justify-self:start;border:0;background:none;padding:0;cursor:pointer">Forgot your password?</button>
-            <p class="account-note" id="formNote">Your account is for reader features. Public articles remain available without signing in.</p>
-          </form>
-          <p class="account-status" id="authStatus" role="status" aria-live="polite"></p>
-        </div>
-        <div class="account-dashboard" id="dashboard">
-          <p class="eyebrow">READER DASHBOARD</p><h2>Welcome to your space.</h2>
-          <p class="account-email" id="signedInEmail"></p>
-          <form class="account-form" id="profileForm">
-            <label>Display name<input id="profileName" type="text" maxlength="80" autocomplete="nickname" placeholder="Your display name"></label>
-            <button class="button button-dark" type="submit">Save profile <span>→</span></button>
-          </form>
-          <p class="account-status" id="profileStatus" role="status" aria-live="polite"></p>
-          <div class="account-actions"><button type="button" id="signOut">Sign out</button></div>
-          <p class="account-note">Saved reflections, reading progress, private journal entries, and notification preferences are planned for later stages. They are not yet synced to this account.</p>
-        </div>
-      </section>
+          <div class="story-quote">
+            <p>“Wisdom begins when we make room to listen.”</p>
+            <span>Voiceoftaade Publications</span>
+          </div>
+        </aside>
+        <section class="account-panel" aria-label="Reader account">
+          <div id="authPanel">
+            <div class="auth-heading"><p class="eyebrow">WELCOME BACK</p><h2>Your space awaits.</h2><p>Sign in to your reader account, or create one to get started.</p></div>
+            <div class="account-tabs" role="tablist" aria-label="Account options">
+              <button type="button" class="active" id="signInTab" aria-selected="true">Sign in</button>
+              <button type="button" id="signUpTab" aria-selected="false">Create account</button>
+            </div>
+            <form class="account-form" id="authForm">
+              <label id="nameField" hidden>Display name<input id="displayName" name="displayName" type="text" maxlength="80" autocomplete="name" placeholder="How should we address you?"></label>
+              <label>Email address<input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+              <label>Password<input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="Enter your password"></label>
+              <button class="button button-dark" id="submitAuth" type="submit">Sign in <span>→</span></button>
+              <button type="button" class="text-link" id="forgotPassword" style="justify-self:start;border:0;background:none;padding:0;cursor:pointer">Forgot your password?</button>
+              <p class="account-note" id="formNote">Your account is for reader features. Public articles remain available without signing in.</p>
+            </form>
+            <p class="account-status" id="authStatus" role="status" aria-live="polite"></p>
+          </div>
+          <div class="account-dashboard" id="dashboard">
+            <p class="eyebrow">YOUR READER DASHBOARD</p><h2>Welcome to your space.</h2>
+            <p class="account-email" id="signedInEmail"></p>
+            <form class="account-form" id="profileForm">
+              <label>Display name<input id="profileName" type="text" maxlength="80" autocomplete="nickname" placeholder="Your display name"></label>
+              <button class="button button-dark" type="submit">Save profile <span>→</span></button>
+            </form>
+            <p class="account-status" id="profileStatus" role="status" aria-live="polite"></p>
+            <div class="account-actions"><button type="button" id="signOut">Sign out</button></div>
+            <p class="account-note">Saved reflections, reading progress, private journal entries, and notification preferences are planned for later stages. They are not yet synced to this account.</p>
+          </div>
+        </section>
+      </div>
       <a class="account-back" href="./">← Return to Voiceoftaade Publications</a>
     </div>
   </main>
