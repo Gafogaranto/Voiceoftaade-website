@@ -30,10 +30,11 @@ The browser-facing Supabase publishable key is expected to be public. Database s
 
 ## Known limitations and work in progress
 
-- Saved and favourite journal collections currently use browser `localStorage`. They are not synchronised to a reader's account or across devices yet.
+- Signed-in readers' saved and favourite journals are stored in Supabase with per-user row-level security. Legacy local collections are migrated on sign-in; verify this flow with a test account before relying on it for production data.
+- Reading history records the journal when it is opened (currently 100% at open, not granular scroll-based progress). More precise scroll progress is a future improvement.
 - Google OAuth is not considered configured until provider credentials are set in Supabase and the complete sign-in flow is tested.
 - The latest successful GitHub Pages deployment does not by itself prove every live feature works. Test account flows, uploads, notifications, mobile navigation, saved journals, and offline behaviour in a real browser.
-- Supabase security advisor has reported that leaked-password protection is disabled. Review and enable it in Supabase Auth password-security settings.
+- Supabase security advisor reports leaked-password protection is disabled on the current plan. This setting has not been enabled; enabling it requires a plan that supports the feature.
 - This static site does not provide a private editorial CMS. Public journal content is currently maintained in the repository.
 - Book purchases are handled by the external Payhip checkout; this website should not collect payment-card details.
 
