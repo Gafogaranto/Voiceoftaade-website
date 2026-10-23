@@ -58,3 +58,53 @@
   .daily-wisdom { padding: 60px 23px; }
   .saved-list { grid-template-columns: 1fr; }
 }
+
+
+/* Voiceoftaade branded Daily Wisdom card and collection navigation */
+.daily-wisdom { padding: 64px 22px 70px; }
+.daily-wisdom-inner { width: 100%; max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.daily-wisdom-inner > .eyebrow { text-align: center; }
+.wisdom-art-card {
+  width: min(100%, 520px); min-height: 540px; padding: 34px 30px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; isolation: isolate;
+  border: 1px solid #d9ad4f; outline: 1px solid rgba(217,173,79,.42); outline-offset: -12px;
+  border-radius: 4px; color: #f7f0df;
+  background: radial-gradient(ellipse at 50% 45%, rgba(38,75,104,.95), transparent 58%), linear-gradient(145deg, #12314e, #07172b 64%, #030b15);
+  box-shadow: 0 22px 50px rgba(0,0,0,.24);
+}
+.wisdom-art-card::before, .wisdom-art-card::after { content: ""; position: absolute; z-index: -1; border: 1px solid rgba(217,173,79,.25); border-radius: 50%; width: 360px; height: 360px; }
+.wisdom-art-card::after { width: 290px; height: 290px; border-style: dashed; }
+.wisdom-art-brand { display: flex; flex-direction: column; align-items: center; margin-bottom: 35px; }
+.wisdom-brand-star { color: #d9ad4f; font: 42px Georgia,serif; line-height: 1.2; }
+.wisdom-art-brand span:nth-child(2) { font: 700 18px Arial,sans-serif; letter-spacing: .24em; }
+.wisdom-art-brand small { color: #d9ad4f; font-size: 10px; letter-spacing: .32em; margin-top: 7px; }
+.wisdom-art-card .eyebrow { color: #e0b95f; text-align: center; margin-bottom: 14px; }
+.wisdom-art-card blockquote { max-width: 410px; margin: 0 auto 25px; text-align: center; font: 500 clamp(1.45rem, 4vw, 2.1rem)/1.4 var(--serif); overflow-wrap: anywhere; }
+.wisdom-art-rule { width: 105px; height: 2px; background: #d9ad4f; margin: 0 auto 22px; }
+.wisdom-art-book { max-width: 400px; margin: 0; text-align: center; font-size: .65rem; line-height: 1.8; letter-spacing: .12em; color: #d2c8b0; }
+.wisdom-art-book strong { display: block; color: #f8eed6; font-size: .75rem; }
+.wisdom-art-date { color: #d2c8b0; font-size: .72rem; margin: 20px 0 0; }
+.wisdom-art-footer { color: #d9ad4f; font-size: .58rem; letter-spacing: .16em; margin: 25px 0 0; text-align: center; }
+.wisdom-caption { color: #c5c0b4; font-size: .75rem; text-align: center; margin: 20px 0 14px; }
+.wisdom-share-button { align-self: center; margin: 0 auto; border: 0; border-radius: 3px; cursor: pointer; }
+.wisdom-share-button:disabled { opacity: .65; cursor: wait; }
+.wisdom-share-status { min-height: 1.3em; text-align: center; color: #e2d8c2; font-size: .75rem; margin: 10px 0 0; }
+.collection-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: -16px 0 24px; }
+.collection-tab { border: 1px solid #d4d0c4; background: transparent; color: var(--ink); padding: 10px 16px; font-size: .78rem; cursor: pointer; }
+.collection-tab.active, .collection-tab:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+.favourites-section { background: #eeece4; }
+.reflection-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.reflection-actions .button { cursor: pointer; }
+.button-outline { border: 1px solid #b79a5b !important; background: transparent; color: var(--ink); }
+.button-outline[aria-pressed="true"] { background: #e8dfca; }
+#mainNav { gap: 20px; }
+@media (max-width: 900px) { #mainNav { gap: 14px; } }
+@media (max-width: 680px) {
+  .daily-wisdom { padding: 52px 18px 58px; }
+  .wisdom-art-card { min-height: 500px; padding: 30px 24px; }
+  .wisdom-art-brand { margin-bottom: 25px; }
+  .wisdom-art-card blockquote { font-size: 1.45rem; }
+  .collection-tabs { margin-top: -6px; }
+  #mainNav { gap: 0; }
+}
