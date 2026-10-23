@@ -81,6 +81,17 @@
 <text class="emblem-publications" x="300" y="391" text-anchor="middle" fill="#e8c574" font-family="Arial, sans-serif" font-size="12" letter-spacing="5">PUBLICATIONS</text></svg><span class="intro-sheen" aria-hidden="true"></span></div>
     <p class="intro-tagline">WISDOM <span>·</span> REFLECTION <span>·</span> PURPOSE</p>
   </div>
+  <script>
+    // Safety fallback: the homepage must never remain covered if the main script fails.
+    window.setTimeout(function () {
+      var intro = document.getElementById("brandIntro");
+      if (intro) {
+        intro.classList.add("intro-finished");
+        intro.setAttribute("aria-hidden", "true");
+        window.setTimeout(function () { if (intro.isConnected) intro.remove(); }, 500);
+      }
+    }, 6500);
+  </script>
   <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Voiceoftaade home">
