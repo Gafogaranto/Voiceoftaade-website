@@ -17,6 +17,20 @@
   <meta property="og:description" content="Meet Taiwo Abdulgafar Adekunle, professionally known as Taade, founder of Voiceoftaade Publications.">
   <meta property="og:url" content="https://gafogaranto.github.io/Voiceoftaade-website/">
   <title>Voiceoftaade Publications | Taiwo Abdulgafar Adekunle (Taade)</title>
+  <!-- OneSignal web push notifications -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "b21452f7-8aa3-478e-808e-bfc3b8fb12ec",
+        safari_web_id: "web.onesignal.auto.1bb493cc-6f2b-4253-90e1-02d85a4b9e78",
+        serviceWorkerPath: "/Voiceoftaade-website/OneSignalSDKWorker.js",
+        serviceWorkerParam: { scope: "/Voiceoftaade-website/" },
+        notifyButton: { enable: true }
+      });
+    });
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
