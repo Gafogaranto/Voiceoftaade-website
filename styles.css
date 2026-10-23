@@ -276,3 +276,77 @@ html, body { min-height: 100%; }
 body { min-height: 100vh; display: flex; flex-direction: column; }
 body > main, main { flex: 1 0 auto; }
 .site-footer { flex-shrink: 0; width: 100%; margin-top: auto; }
+
+
+/* Mobile layout refinement: consistent gutters, readable type, and no horizontal overflow. */
+@media (max-width: 680px) {
+  html { scroll-padding-top: 78px; }
+  body { width: 100%; overflow-x: clip; }
+  img, svg, video, canvas { max-width: 100%; }
+  .announcement { padding: 9px 14px; font-size: .75rem; line-height: 1.45; }
+  .site-header { position: sticky; top: 0; z-index: 100; width: 100%; }
+  .site-header nav { z-index: 101; max-height: calc(100dvh - 76px); overflow-y: auto; }
+  .hero { width: 100%; padding: 42px 20px 32px; gap: 8px; }
+  .hero-copy { min-width: 0; }
+  .hero h1 { font-size: clamp(2.25rem, 10.5vw, 3.25rem); line-height: 1.08; overflow-wrap: anywhere; }
+  .hero-intro { font-size: .98rem; }
+  .hero-actions { display: flex; align-items: flex-start; flex-direction: column; gap: 15px; }
+  .hero-actions .button { max-width: 100%; }
+  .hero-art { width: 100%; max-width: 430px; height: auto; min-height: 320px; margin: 0 auto; transform: none; }
+  .book-cover { max-width: 78%; }
+  .art-caption { max-width: 100%; font-size: .62rem; }
+  .ticker { width: 100%; overflow: hidden; flex-wrap: wrap; justify-content: center; padding: 14px 12px; gap: 8px 12px; line-height: 1.4; }
+  .section, .about-section, .community-section, .contact-section { padding-left: 20px; padding-right: 20px; }
+  .section-heading h2, .about-copy h2, .community-copy h2, .contact-section h2 { font-size: clamp(2rem, 8vw, 2.7rem); line-height: 1.12; }
+  .book-feature { padding: 24px 18px; gap: 28px; }
+  .book-poster { width: min(100%, 250px); margin-inline: auto; }
+  .book-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .book-actions .button, .book-actions .text-link { max-width: 100%; }
+  .coming-soon { gap: 12px; }
+  .coming-label { margin-left: 0; }
+  .quote-section { padding: 58px 22px; }
+  .quote-section blockquote { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+  .about-section { grid-template-columns: 1fr; gap: 24px; }
+  .about-stamp { justify-self: start; }
+  .community-section { grid-template-columns: 1fr; gap: 30px; }
+  .community-mark { justify-self: start; }
+  .contact-section { grid-template-columns: 1fr; gap: 24px; }
+  .contact-links a { grid-template-columns: 34px minmax(0, 1fr) 16px; gap: 10px; }
+  .contact-links strong { overflow-wrap: anywhere; }
+  .site-footer { padding: 28px 20px 20px; }
+  .footer-bottom { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; overflow-wrap: anywhere; }
+  .inner-hero, .section-inner { padding-left: 20px; padding-right: 20px; }
+  .inner-hero h1 { font-size: clamp(2.2rem, 9vw, 3.2rem); line-height: 1.1; overflow-wrap: anywhere; }
+  .contact-page-grid, .community-feed-section, .social-hub-section { width: auto; margin-left: 18px; margin-right: 18px; }
+  .contact-form-panel, .contact-side-panel, .feed-card, .social-hub-grid > a { min-width: 0; }
+  .contact-form input, .contact-form select, .contact-form textarea { min-width: 0; font-size: 16px; }
+  .contact-form button { width: 100%; justify-content: center; }
+  .community-hub-actions { flex-direction: column; align-items: stretch; }
+  .community-hub-actions > * { width: 100%; }
+  .feed-heading { display: block; }
+  .feed-heading h2 { font-size: clamp(1.9rem, 7.5vw, 2.5rem); }
+  .community-feed, .social-hub-grid { grid-template-columns: minmax(0, 1fr); }
+  .journal-tools { width: 100%; min-width: 0; }
+  .search-box, .search-box input { min-width: 0; max-width: 100%; }
+  .filter-buttons { display: flex; flex-wrap: wrap; }
+  .filter { max-width: 100%; }
+  .article-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .article-card { min-width: 0; }
+  .article-dialog { width: calc(100% - 24px); max-width: 600px; max-height: 88dvh; padding: 28px 20px; overflow-y: auto; }
+  .daily-wisdom-inner { width: 100%; min-width: 0; }
+  #dailyWisdom .wisdom-art-card { min-height: 0; }
+  .account-page, .account-layout, .account-panel, .profile-layout { min-width: 0; max-width: 100%; }
+  input, select, textarea, button { max-width: 100%; }
+}
+
+@media (max-width: 390px) {
+  .site-header { padding-left: 12px; padding-right: 12px; }
+  .brand-logo { width: 128px; max-width: 48vw; }
+  .menu-toggle { padding: 5px 8px; }
+  .hero { padding-left: 16px; padding-right: 16px; }
+  .hero h1 { font-size: clamp(2rem, 10vw, 2.6rem); }
+  .section, .about-section, .community-section, .contact-section { padding-left: 16px; padding-right: 16px; }
+  .section-heading h2, .about-copy h2, .community-copy h2, .contact-section h2 { font-size: 2rem; }
+  .contact-page-grid, .community-feed-section, .social-hub-section { margin-left: 12px; margin-right: 12px; }
+  .contact-form-panel, .contact-side-panel { padding: 20px 15px; }
+}
