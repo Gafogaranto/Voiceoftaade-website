@@ -93,6 +93,16 @@
 
     <section class="ticker" aria-label="Our themes"><span>WISDOM</span><b>✳</b><span>PERSONAL GROWTH</span><b>✳</b><span>LOVE & RELATIONSHIPS</span><b>✳</b><span>PURPOSE</span><b>✳</b><span>WISDOM</span></section>
 
+    <section class="daily-wisdom" id="dailyWisdom" aria-labelledby="dailyWisdomTitle">
+      <div class="daily-wisdom-inner">
+        <p class="eyebrow">A MOMENT OF CLARITY</p>
+        <h2 id="dailyWisdomTitle">Today's <em>wisdom.</em></h2>
+        <blockquote id="dailyWisdomQuote">Small choices, repeated with care, can shape a remarkable life.</blockquote>
+        <p class="daily-wisdom-date" id="dailyWisdomDate"></p>
+        <button class="button button-gold" id="shareWisdom" type="button">Share today's wisdom ↗</button>
+      </div>
+    </section>
+
     <section class="section books-section" id="books">
       <div class="section-heading">
         <div><p class="eyebrow">THE BOOKSHELF</p><h2>Read something that <em>stays with you.</em></h2></div>
@@ -129,6 +139,18 @@
       </div>
     </section>
 
+    <section class="saved-section" id="savedReflections">
+      <div class="section saved-inner">
+        <div class="section-heading">
+          <div><p class="eyebrow">YOUR PERSONAL COLLECTION</p><h2>Reflections worth <em>keeping.</em></h2></div>
+          <p>Save a journal reflection and return to it whenever you need a moment to think.</p>
+        </div>
+        <div id="savedList" class="saved-list" aria-live="polite">
+          <p class="saved-empty">You haven't saved any reflections yet. Open a journal reflection and choose “Save reflection” to start your collection.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="quote-section"><div class="quote-mark">“</div><blockquote>In a noisy world, wisdom is not always the loudest voice. Sometimes, it is the one that helps you hear yourself clearly.</blockquote><p>— THE VOICEOFTAADE PHILOSOPHY</p></section>
 
     <section class="section about-section" id="about">
@@ -146,7 +168,7 @@
 
   <footer class="site-footer"><a class="brand footer-brand" href="#home"><img class="brand-logo footer-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a><p>Words for wisdom. Ideas for life.</p><div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications · Founded by Taiwo Abdulgafar Adekunle (Taade)</span><span>Built for readers, thinkers, and doers.</span><a href="#home">Back to top ↑</a></div></footer>
 
-  <dialog id="articleDialog" class="article-dialog"><button class="dialog-close" id="dialogClose" aria-label="Close reflection">×</button><p class="eyebrow" id="dialogCategory">REFLECTION</p><h2 id="dialogTitle"></h2><div id="dialogBody"></div><p class="dialog-signoff">VOICEOFTAADE JOURNAL · READ, REFLECT, REPEAT</p></dialog>
+  <dialog id="articleDialog" class="article-dialog"><button class="dialog-close" id="dialogClose" aria-label="Close reflection">×</button><p class="eyebrow" id="dialogCategory">REFLECTION</p><h2 id="dialogTitle"></h2><div id="dialogBody"></div><button class="button button-dark" id="saveReflection" type="button">☆ Save reflection</button><p class="dialog-signoff">VOICEOFTAADE JOURNAL · READ, REFLECT, REPEAT</p></dialog>
   <script src="script.js"></script>
   <script>
   if ("serviceWorker" in navigator) {
