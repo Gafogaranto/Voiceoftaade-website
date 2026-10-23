@@ -108,3 +108,34 @@
   .collection-tabs { margin-top: -6px; }
   #mainNav { gap: 0; }
 }
+
+/* Responsive Daily Wisdom card — v2 */
+#dailyWisdom { padding: clamp(36px, 6vw, 76px) 18px; }
+#dailyWisdom .daily-wisdom-inner { width: 100%; max-width: 720px; margin-inline: auto; align-items: center; }
+#dailyWisdom .wisdom-art-card {
+  box-sizing: border-box; width: min(100%, 540px); min-height: 0; aspect-ratio: 4 / 5;
+  padding: clamp(22px, 5vw, 48px); gap: clamp(8px, 1.8vw, 20px);
+  background-color: #07172b;
+  background-image: radial-gradient(ellipse at 50% 42%, rgba(42,78,104,.92) 0%, rgba(7,23,43,.2) 58%), linear-gradient(145deg,#12314e 0%,#07172b 65%,#030b15 100%);
+}
+#dailyWisdom .wisdom-art-brand { margin: 0 0 clamp(5px, 1vw, 12px); }
+#dailyWisdom .wisdom-art-card blockquote { width: 100%; max-width: 100%; font-size: clamp(1.1rem, 4.6vw, 2rem); line-height: 1.38; margin: 0; }
+#dailyWisdom .wisdom-art-book, #dailyWisdom .wisdom-art-date, #dailyWisdom .wisdom-art-footer { max-width: 100%; overflow-wrap: anywhere; }
+#dailyWisdom .wisdom-art-footer { margin-top: clamp(8px, 2vw, 20px); }
+#dailyWisdom .wisdom-share-button { display: inline-flex; justify-content: center; align-items: center; min-height: 46px; padding: 12px 22px; margin: 18px auto 0; }
+#dailyWisdom .wisdom-share-status { max-width: 540px; padding-inline: 10px; overflow-wrap: anywhere; }
+#savedReflections, #favouriteReflections { scroll-margin-top: 100px; }
+.saved-card { background: rgba(255,255,255,.75); padding: 20px; margin: 0 0 14px; border: 1px solid #ded9cc; }
+.saved-card h3 { margin: 5px 0 14px; font-family: var(--serif); line-height: 1.35; }
+.saved-actions { display:flex; flex-wrap:wrap; gap:14px; }
+.saved-actions button { cursor:pointer; }
+@media(max-width:480px) {
+  #dailyWisdom { padding: 34px 14px 42px; }
+  #dailyWisdom .wisdom-art-card { width: 100%; aspect-ratio: 4 / 5; padding: 22px 20px; outline-offset: -8px; }
+  #dailyWisdom .wisdom-art-brand span:nth-child(2) { font-size: clamp(12px, 3.5vw, 17px); letter-spacing: .15em; }
+  #dailyWisdom .wisdom-art-card .eyebrow { font-size: .65rem; }
+  #dailyWisdom .wisdom-art-book strong { font-size: .68rem; }
+  #dailyWisdom .wisdom-art-footer { font-size: .5rem; letter-spacing: .08em; }
+  .collection-tabs { width:100%; }
+  .collection-tab { flex:1; padding:10px 8px; }
+}
