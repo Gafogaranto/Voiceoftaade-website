@@ -262,7 +262,11 @@
                 </div>
               </section>
             </section>
-            <p class="account-note">Your profile name and photos are saved to your reader account. Private journal and saved-content syncing will be added in a later stage.</p>
+            <section class="profile-collections" aria-label="Your reading history">
+              <p class="eyebrow">YOUR READING HISTORY</p><h3>Recently opened journals</h3>
+              <div id="readingProgressList" class="saved-list" aria-live="polite"><p class="saved-empty">Your reading history will appear here as you open journals.</p></div>
+            </section>
+            <p class="account-note">Your saved journals, favourites, and reading history are linked to your reader account when you are signed in.</p>
           </div>
         </section>
       </div>
@@ -296,53 +300,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
   (() => {
-    const SAVED_KEY = "voiceoftaade-saved-reflections-v2";
-    const FAV_KEY = "voiceoftaade-favourite-reflections-v1";
-    const articles = {
-      discipline:["MINDSET","Discipline is the quiet architecture of a meaningful life"],
-      boundaries:["RELATIONSHIPS","Boundaries are not walls; they are instructions"],
-      audience:["MODERN LIFE","Your life is bigger than the audience watching it"],
-      "chapter-0":["FOUNDATIONS OF A GOOD LIFE","Perspective — Daily Journal"],
-      "chapter-1":["FOUNDATIONS OF A GOOD LIFE","Stillness — Daily Journal"],
-      "chapter-2":["FOUNDATIONS OF A GOOD LIFE","Discipline — Daily Journal"],
-      "chapter-3":["FOUNDATIONS OF A GOOD LIFE","Wisdom Over Noise — Daily Journal"],
-      "chapter-4":["FOUNDATIONS OF A GOOD LIFE","Time — Daily Journal"],
-      "chapter-5":["MATTERS OF THE HEART","Love Without Losing Yourself — Daily Journal"],
-      "chapter-6":["MATTERS OF THE HEART","Marriage — Daily Journal"],
-      "chapter-7":["MATTERS OF THE HEART","Boundaries — Daily Journal"],
-      "chapter-8":["MATTERS OF THE HEART","Loyalty — Daily Journal"],
-      "chapter-9":["MATTERS OF THE HEART","Forgiveness — Daily Journal"],
-      "chapter-10":["MINDSET AND MOTIVATION","Laziness and Spiritual Disconnection — Daily Journal"],
-      "chapter-11":["MINDSET AND MOTIVATION","Fear — Daily Journal"],
-      "chapter-12":["MINDSET AND MOTIVATION","Dream — Daily Journal"],
-      "chapter-13":["MINDSET AND MOTIVATION","Failure — Daily Journal"],
-      "chapter-14":["MINDSET AND MOTIVATION","Humility — Daily Journal"],
-      "chapter-15":["SOCIAL TRUTH & MODERN STRUGGLES","Likes and Validation — Daily Journal"],
-      "chapter-16":["SOCIAL TRUTH & MODERN STRUGGLES","Faking and Authenticity — Daily Journal"],
-      "chapter-17":["SOCIAL TRUTH & MODERN STRUGGLES","The Soft Life — Daily Journal"],
-      "chapter-18":["SOCIAL TRUTH & MODERN STRUGGLES","The Hustle — Daily Journal"],
-      "chapter-19":["SOCIAL TRUTH & MODERN STRUGGLES","Mental Peace — Daily Journal"]
-    };
-    const read = key => { try { const v=JSON.parse(localStorage.getItem(key)||"[]"); return Array.isArray(v)?[...new Set(v.filter(id=>typeof id==="string"&&articles[id]))]:[]; } catch { return []; } };
-    const render = (containerId,key,empty) => {
-      const list=document.getElementById(containerId); if(!list)return; list.replaceChildren();
-      const ids=read(key);
-      if(!ids.length){const p=document.createElement("p");p.className="saved-empty";p.textContent=empty;list.append(p);return;}
-      ids.forEach(id=>{
-        const [category,title]=articles[id],card=document.createElement("article");card.className="saved-card";
-        const tag=document.createElement("p");tag.className="eyebrow";tag.textContent=category;
-        const h=document.createElement("h3");h.textContent=title;
-        const actions=document.createElement("div");actions.className="saved-actions";
-        const open=document.createElement("button");open.type="button";open.textContent="Read journal →";open.addEventListener("click",()=>location.href="./#journal");
-        const remove=document.createElement("button");remove.type="button";remove.textContent=key===SAVED_KEY?"Remove saved":"Remove favourite";remove.addEventListener("click",()=>{localStorage.setItem(key,JSON.stringify(read(key).filter(item=>item!==id)));refresh();});
-        actions.append(open,remove);card.append(tag,h,actions);list.append(card);
-      });
-    };
-    function refresh(){render("profileSavedList",SAVED_KEY,"No saved journals yet. Open a journal on the homepage and choose Save reflection.");render("profileFavouriteList",FAV_KEY,"No favourite journals yet. Open a journal on the homepage and choose Add to favourites.");}
-    const savedBtn=document.getElementById("profileShowSaved"),favBtn=document.getElementById("profileShowFavourites"),saved=document.getElementById("profileSavedCollection"),fav=document.getElementById("profileFavouriteCollection");
-    savedBtn.addEventListener("click",()=>{saved.hidden=false;fav.hidden=true;savedBtn.classList.add("active");favBtn.classList.remove("active");savedBtn.setAttribute("aria-pressed","true");favBtn.setAttribute("aria-pressed","false");});
-    favBtn.addEventListener("click",()=>{saved.hidden=true;fav.hidden=false;favBtn.classList.add("active");savedBtn.classList.remove("active");favBtn.setAttribute("aria-pressed","true");savedBtn.setAttribute("aria-pressed","false");});
-    refresh();
+    // Reader collections are rendered from Supabase in account.js.
+
   })();
   </script>
   <script src="account.js"></script>
