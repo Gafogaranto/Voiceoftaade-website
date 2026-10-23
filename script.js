@@ -317,6 +317,6 @@ renderCollections();
   window.setTimeout(() => {
     intro.classList.add("intro-finished");
     intro.setAttribute("aria-hidden", "true");
-  }, 4100);
+  }, 5600);
   window.setTimeout(() => intro.remove(), 5000);
 })();
