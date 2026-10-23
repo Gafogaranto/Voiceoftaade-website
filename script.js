@@ -43,21 +43,7 @@ const articles = {
   }
 };
 const dialog = document.getElementById("articleDialog");
-document.querySelectorAll("[data-article]").forEach(button => {
-  button.addEventListener("click", () => {
-    const article = articles[button.dataset.article];
-    if (!article) return;
-    document.getElementById("dialogCategory").textContent = article.category;
-    document.getElementById("dialogTitle").textContent = article.title;
-    const body = document.getElementById("dialogBody");
-    body.replaceChildren(...article.paragraphs.map(text => {
-      const p = document.createElement("p");
-      p.textContent = text;
-      return p;
-    }));
-    dialog.showModal();
-  });
-});
+// Reflection opening is handled once by the collection-aware handler below.
 document.getElementById("dialogClose").addEventListener("click", () => dialog.close());
 dialog.addEventListener("click", event => {
   if (event.target === dialog) dialog.close();
