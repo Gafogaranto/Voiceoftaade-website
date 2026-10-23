@@ -64,7 +64,7 @@
     </a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav id="mainNav" aria-label="Main navigation">
-      <a href="#books">Books</a><a href="#journal">Journal</a><a href="#about">Our Story</a><a href="#community">Community</a>
+      <a href="#books">Books</a><a href="#journal">Journal</a><a href="#savedReflections">Saved</a><a href="#favouriteReflections">Favourites</a><a href="#about">Our Story</a><a href="#community">Community</a>
       <a class="nav-cta" href="#contact">Contact</a>
     </nav>
   </header>
@@ -95,11 +95,18 @@
 
     <section class="daily-wisdom" id="dailyWisdom" aria-labelledby="dailyWisdomTitle">
       <div class="daily-wisdom-inner">
-        <p class="eyebrow">A MOMENT OF CLARITY</p>
-        <h2 id="dailyWisdomTitle">Today's <em>wisdom.</em></h2>
-        <blockquote id="dailyWisdomQuote">Small choices, repeated with care, can shape a remarkable life.</blockquote>
-        <p class="daily-wisdom-date" id="dailyWisdomDate"></p>
-        <button class="button button-gold" id="shareWisdom" type="button">Share today's wisdom ↗</button>
+        <div class="wisdom-art-card" id="wisdomArtCard">
+          <div class="wisdom-art-brand"><span class="wisdom-brand-star">✳</span><span>VOICEOFTAADE</span><small>PUBLICATIONS</small></div>
+          <p class="eyebrow">DAILY WISDOM</p>
+          <blockquote id="dailyWisdomQuote">Small choices, repeated with care, can shape a remarkable life.</blockquote>
+          <div class="wisdom-art-rule"></div>
+          <p class="wisdom-art-book">INSPIRED BY <strong>SERIES OF LIFE HACKS TO LIVE BY</strong></p>
+          <p class="wisdom-art-date" id="dailyWisdomDate"></p>
+          <p class="wisdom-art-footer">READ · REFLECT · LIVE DELIBERATELY</p>
+        </div>
+        <p class="wisdom-caption">A daily reflection from the themes of the Voiceoftaade book.</p>
+        <button class="button button-gold wisdom-share-button" id="shareWisdom" type="button">Share wisdom card ↗</button>
+        <p class="wisdom-share-status" id="wisdomShareStatus" aria-live="polite"></p>
       </div>
     </section>
 
@@ -142,12 +149,23 @@
     <section class="saved-section" id="savedReflections">
       <div class="section saved-inner">
         <div class="section-heading">
-          <div><p class="eyebrow">YOUR PERSONAL COLLECTION</p><h2>Reflections worth <em>keeping.</em></h2></div>
-          <p>Save a journal reflection and return to it whenever you need a moment to think.</p>
+          <div><p class="eyebrow">YOUR PERSONAL COLLECTION</p><h2>Saved <em>reflections.</em></h2></div>
+          <p>Your private reading shelf, stored in this browser on this device.</p>
         </div>
-        <div id="savedList" class="saved-list" aria-live="polite">
-          <p class="saved-empty">You haven't saved any reflections yet. Open a journal reflection and choose “Save reflection” to start your collection.</p>
+        <div class="collection-tabs" role="tablist" aria-label="Your collections">
+          <button class="collection-tab active" id="showSaved" type="button" role="tab" aria-selected="true">Saved reflections</button>
+          <button class="collection-tab" id="showFavourites" type="button" role="tab" aria-selected="false">Favourites</button>
         </div>
+        <div id="savedList" class="saved-list" aria-live="polite"></div>
+      </div>
+    </section>
+    <section class="saved-section favourites-section" id="favouriteReflections">
+      <div class="section saved-inner">
+        <div class="section-heading">
+          <div><p class="eyebrow">YOUR MOST-LOVED IDEAS</p><h2>Favourite <em>reflections.</em></h2></div>
+          <p>Keep the reflections you want to revisit most often close at hand.</p>
+        </div>
+        <div id="favouriteList" class="saved-list" aria-live="polite"></div>
       </div>
     </section>
 
@@ -168,7 +186,7 @@
 
   <footer class="site-footer"><a class="brand footer-brand" href="#home"><img class="brand-logo footer-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a><p>Words for wisdom. Ideas for life.</p><div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications · Founded by Taiwo Abdulgafar Adekunle (Taade)</span><span>Built for readers, thinkers, and doers.</span><a href="#home">Back to top ↑</a></div></footer>
 
-  <dialog id="articleDialog" class="article-dialog"><button class="dialog-close" id="dialogClose" aria-label="Close reflection">×</button><p class="eyebrow" id="dialogCategory">REFLECTION</p><h2 id="dialogTitle"></h2><div id="dialogBody"></div><button class="button button-dark" id="saveReflection" type="button">☆ Save reflection</button><p class="dialog-signoff">VOICEOFTAADE JOURNAL · READ, REFLECT, REPEAT</p></dialog>
+  <dialog id="articleDialog" class="article-dialog"><button class="dialog-close" id="dialogClose" aria-label="Close reflection">×</button><p class="eyebrow" id="dialogCategory">REFLECTION</p><h2 id="dialogTitle"></h2><div id="dialogBody"></div><div class="reflection-actions"><button class="button button-dark" id="saveReflection" type="button">＋ Save reflection</button><button class="button button-outline" id="favouriteReflection" type="button" aria-pressed="false">♡ Add to favourites</button></div><p class="dialog-signoff">VOICEOFTAADE JOURNAL · READ, REFLECT, REPEAT</p></dialog>
   <script src="script.js"></script>
   <script>
   if ("serviceWorker" in navigator) {
