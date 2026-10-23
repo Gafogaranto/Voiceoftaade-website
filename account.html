@@ -238,25 +238,8 @@
     const FAV_KEY = "voiceoftaade-favourite-reflections-v1";
     const articles = {
       discipline:["MINDSET","Discipline is the quiet architecture of a meaningful life"],
-      perspective:["WISDOM","Perspective changes what a moment means"],
-      stillness:["WISDOM","The strength found in stillness"],
-      wisdom:["WISDOM","Wisdom over noise"],
-      time:["LIFE","Time is the one currency you cannot recover"],
-      love:["LOVE","Love without losing yourself"],
-      marriage:["LOVE","Marriage is built in the ordinary moments"],
-      boundaries:["RELATIONSHIPS","Boundaries are a form of self-respect"],
-      loyalty:["RELATIONSHIPS","Loyalty is proven by consistent action"],
-      forgiveness:["HEALING","Forgiveness is not the same as permission"],
-      laziness:["MINDSET","When comfort quietly becomes a cage"],
-      fear:["MINDSET","Fear should inform you, not govern you"],
-      dream:["PURPOSE","Protect the dream by working on it"],
-      failure:["GROWTH","Failure is information, not identity"],
-      humility:["CHARACTER","Humility makes room for growth"],
-      likes:["SOCIETY","Do not confuse likes with love"],
-      faking:["SOCIETY","The exhausting cost of pretending"],
-      softlife:["LIFE","A soft life still needs wise choices"],
-      hustle:["WORK","The hustle must serve the life"],
-      peace:["WELLBEING","Protecting your mental peace"]
+      boundaries:["RELATIONSHIPS","Boundaries are not walls; they are instructions"],
+      audience:["MODERN LIFE","Your life is bigger than the audience watching it"]
     };
     const read = key => { try { const v=JSON.parse(localStorage.getItem(key)||"[]"); return Array.isArray(v)?[...new Set(v.filter(id=>typeof id==="string"&&articles[id]))]:[]; } catch { return []; } };
     const render = (containerId,key,empty) => {
