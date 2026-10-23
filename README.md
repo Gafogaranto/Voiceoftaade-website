@@ -1,51 +1,68 @@
-# Voiceoftaade Publications — static website
+# Voiceoftaade Publications
 
-A responsive, multi-section publishing website prepared for GitHub Pages. It uses plain HTML, CSS, and JavaScript, so no build process or paid hosting is required.
+Official publishing website for Voiceoftaade: books, daily journals, reflections, community links, and reader accounts.
 
-## Included
-- Responsive home page and navigation
-- Featured ebook section linking to the existing Payhip checkout
-- Journal cards with working category filters, search, and article pop-ups
-- About, community, social links, and contact sections
-- Mobile navigation and accessible reduced-motion support
-- GitHub Pages workflow for automatic deployment
+Live site: https://gafogaranto.github.io/Voiceoftaade-website/
 
-## Before publishing
-1. Check the contact email in `index.html`. It currently uses `voiceoftaade@gmail.com`; replace it if that is not the email you want public.
-2. Confirm your social/community links and Payhip product link.
-3. Update the book cover wording and any pricing/availability on Payhip as needed.
-4. The journal articles are starter content. Edit them in `index.html` and `script.js` before treating them as final editorial pieces.
+## Architecture
 
-## Deploy to GitHub Pages (free)
-1. Sign in at https://github.com/ and create a **public** repository named `voiceoftaade-website` (or another name you prefer).
-2. Extract this ZIP on your computer.
-3. Upload the contents of this folder to the repository root. `index.html`, `styles.css`, and `script.js` should be at the top level, not buried inside another folder.
-4. In the repository, open **Settings → Pages**.
-5. Under **Build and deployment**, choose **GitHub Actions**.
-6. The included workflow at `.github/workflows/pages.yml` deploys the site automatically when you push to the `main` branch.
-7. Open the **Actions** tab and wait for the Pages deployment workflow to finish successfully.
-8. Under **Settings → Pages**, GitHub will show the public URL. For a repository named `voiceoftaade-website`, it will usually be `https://YOUR-USERNAME.github.io/voiceoftaade-website/`. Replace `YOUR-USERNAME` with your GitHub username.
+This project intentionally uses a lightweight static frontend hosted on GitHub Pages:
 
-### Alternative: GitHub user site
-If you want the URL to be `https://YOUR-USERNAME.github.io/` instead, create the repository with the exact name `YOUR-USERNAME.github.io` and upload the site there.
+- `index.html`, `styles.css`, and `script.js`: public website, navigation, journal content, search, category filtering, and journal interactions.
+- `account.html` and `account.js`: reader sign-up/sign-in, password reset, profile editing, and profile-photo uploads.
+- Supabase Auth and PostgreSQL: reader authentication and profile records.
+- Supabase Storage: reader avatar and cover images.
+- OneSignal: web push notifications.
+- `manifest.webmanifest`, `sw.js`, and `OneSignalSDKWorker.js`: installable web-app and service-worker support.
+- `.github/workflows/pages.yml`: automatic deployment to GitHub Pages when changes reach `main`.
 
-## Important scope and limitations
-GitHub Pages hosts static files. This version is a polished front-end, not a full back-end platform:
-- **Ebook sales:** handled by Payhip, so no card details are collected by this site.
-- **Reader accounts / login:** not implemented. Real accounts require an authentication provider and backend.
-- **Admin dashboard / CMS:** not implemented. For now, edit the files and push changes to GitHub. A headless CMS can be connected later.
-- **Newsletter storage and delivery:** not implemented. Use a newsletter service if you want subscriptions.
-- **Contact form:** the site provides direct contact links instead of pretending to store submissions.
-- **Privacy:** no analytics or cookies are added by this template. Google Fonts is an external service.
+The browser-facing Supabase publishable key is expected to be public. Database security must therefore be enforced with Row Level Security (RLS), least-privilege grants, and storage policies. Never place a Supabase service-role key, database password, or other server secret in this repository or browser JavaScript.
 
-## Editing the site
-- Page content and sections: `index.html`
-- Design and responsive styles: `styles.css`
-- Journal content, filtering, and interactions: `script.js`
-- Automatic GitHub Pages deployment: `.github/workflows/pages.yml`
+## Current functionality
 
-## Updating later
-Edit the files locally, commit and push to the `main` branch. GitHub Actions redeploys the site automatically.
+- Responsive public publishing homepage and shared navigation.
+- Book promotion and external Payhip checkout.
+- Daily journals with search, category filtering, article pop-ups, and saved/favourite collections.
+- Reader account registration, email/password sign-in, password-reset flow, and profile details.
+- Profile avatar and cover-photo upload support through Supabase Storage.
+- OneSignal web push integration.
+- Installable web-app manifest and service-worker support.
 
+## Known limitations and work in progress
 
-Brand update: the site now uses the supplied Voiceoftaade logo and a navy-and-gold palette. The logo asset is stored in `assets/voiceoftaade-logo.jpg`.
+- Saved and favourite journal collections currently use browser `localStorage`. They are not synchronised to a reader's account or across devices yet.
+- Google OAuth is not considered configured until provider credentials are set in Supabase and the complete sign-in flow is tested.
+- The latest successful GitHub Pages deployment does not by itself prove every live feature works. Test account flows, uploads, notifications, mobile navigation, saved journals, and offline behaviour in a real browser.
+- Supabase security advisor has reported that leaked-password protection is disabled. Review and enable it in Supabase Auth password-security settings.
+- This static site does not provide a private editorial CMS. Public journal content is currently maintained in the repository.
+- Book purchases are handled by the external Payhip checkout; this website should not collect payment-card details.
+
+## Development and release workflow
+
+1. Make a focused change and review the complete diff before committing.
+2. Keep public content separate from private reader data.
+3. Do not weaken RLS or Storage policies to make a feature work. Every private-data table needs user-scoped policies and appropriate grants.
+4. Test desktop and mobile layouts, signed-out and signed-in states, failure states, and relevant accessibility behaviour.
+5. Push to `main`; GitHub Actions deploys the static site.
+6. Confirm the latest workflow run succeeds, then verify the deployed website. A successful workflow is deployment evidence, not a substitute for browser testing.
+
+## Key files
+
+| File | Responsibility |
+| --- | --- |
+| `index.html` | Public homepage and content structure |
+| `styles.css` | Shared visual system and responsive styles |
+| `script.js` | Journal data and public-page interactions |
+| `account.html` | Reader account interface |
+| `account.js` | Supabase authentication, profile and image upload logic |
+| `sw.js` | Website service-worker caching |
+| `manifest.webmanifest` | Installable web-app metadata |
+| `.github/workflows/pages.yml` | GitHub Pages deployment |
+
+## Deployment
+
+GitHub Pages is configured to deploy from the GitHub Actions workflow at `.github/workflows/pages.yml`. The production site is:
+
+https://gafogaranto.github.io/Voiceoftaade-website/
+
+After changes are pushed, inspect the Actions tab for the workflow result and verify the live site after deployment.
