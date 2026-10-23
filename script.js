@@ -299,3 +299,24 @@ function buildDailyChapterJournals() {
 }
 buildDailyChapterJournals();
 renderCollections();
+
+
+// One short signature reveal per browser tab session; accessible and lightweight.
+(() => {
+  const intro = document.getElementById("brandIntro");
+  if (!intro) return;
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let alreadySeen = false;
+  try { alreadySeen = sessionStorage.getItem("voiceoftaade-intro-seen") === "yes"; } catch (_) {}
+  if (alreadySeen || reduceMotion) {
+    intro.classList.add("intro-finished");
+    intro.setAttribute("aria-hidden", "true");
+    return;
+  }
+  try { sessionStorage.setItem("voiceoftaade-intro-seen", "yes"); } catch (_) {}
+  window.setTimeout(() => {
+    intro.classList.add("intro-finished");
+    intro.setAttribute("aria-hidden", "true");
+  }, 4100);
+  window.setTimeout(() => intro.remove(), 5000);
+})();
