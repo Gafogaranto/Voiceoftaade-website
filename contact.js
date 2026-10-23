@@ -14,9 +14,13 @@
     if (payload.message.length < 10) { status.textContent = "Please add a little more detail (at least 10 characters)."; return; }
     submit.disabled = true; submit.textContent = "Sending…"; status.textContent = "";
     try {
-      const { error } = await client.from("contact_messages").insert(payload);
+      const { data, error } = await client.functions.invoke("submit-contact-message", { body: { ...payload, company: $("contactCompany").value.trim() } });
       if (error) throw error;
-      form.reset(); status.textContent = "Message sent successfully. Thank you for contacting Voiceoftaade Publications.";
+      if (data?.error) throw new Error(data.error);
+      form.reset();
+      status.textContent = data?.emailNotification
+        ? "Message sent successfully. A copy has been delivered to the Voiceoftaade inbox. Thank you for contacting us."
+        : "Message received and saved securely. Email alerts are not configured yet, but your message is in the private Voiceoftaade inbox.";
     } catch (error) {
       console.error("Contact submission failed", error);
       status.textContent = "We couldn't send your message just now. Please try again or email voiceoftaade@gmail.com.";
