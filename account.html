@@ -75,12 +75,12 @@
     .site-footer .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid #ffffff25;padding-top:18px;text-align:left;font-size:.75rem}
     .site-footer .footer-bottom a{color:#e8c574;text-decoration:none}
     @media(max-width:800px){
-      .site-header{flex-wrap:wrap}
-      #accountMenuToggle{display:block;margin-left:auto}
-      #accountMainNav{display:none;order:3;flex:0 0 100%;width:100%;align-items:stretch;gap:0;padding:8px 0 5px;border-top:1px solid #e4ddce}
+      .site-header{position:sticky;top:0;z-index:1000;flex-wrap:nowrap;min-height:70px;padding:8px 14px}
+      #accountMenuToggle{display:block;flex:0 0 auto;margin-left:auto;min-width:44px;min-height:44px}
+      #accountMainNav{display:none;position:absolute;top:100%;right:10px;left:auto;z-index:1001;width:min(88vw,340px);max-height:calc(100dvh - 90px);overflow-y:auto;overscroll-behavior:contain;align-items:stretch;gap:0;padding:8px 14px 14px;border:1px solid #e4ddce;border-radius:0 0 12px 12px;background:#fbf8f0;box-shadow:0 16px 32px rgba(7,23,43,.2)}
       #accountMainNav.nav-open{display:flex;flex-direction:column}
-      #accountMainNav>a{padding:12px 8px;border-bottom:1px solid #e8e1d4}
-      #accountMainNav>a.nav-cta{margin-top:8px;text-align:center}
+      #accountMainNav>a{display:flex;align-items:center;min-height:46px;padding:11px 8px;border-bottom:1px solid #e8e1d4;white-space:normal}
+      #accountMainNav>a.nav-cta{justify-content:center;margin-top:10px;text-align:center}
       #accountMainNav .account-avatar-link{align-self:flex-start;padding:8px}
       .site-footer .footer-bottom{justify-content:center;text-align:center}
     }
@@ -171,6 +171,41 @@
       .profile-card{padding:18px}
       .cover-upload{right:9px;bottom:9px;padding:8px 10px;font-size:.68rem}
       .cover-brand{margin-bottom:40px}
+    }
+
+ 
+    /* Reader profile refinements: Facebook-style overlapping avatar and unified collection tabs. */
+    .social-profile{position:relative}
+    .profile-cover{overflow:visible;z-index:1;border-radius:12px 12px 0 0}
+    .cover-shade{border-radius:inherit}
+    .profile-identity{position:relative;display:flex;align-items:flex-end;gap:20px;min-height:132px;padding:16px 24px 18px 190px;text-align:left}
+    .profile-avatar-wrap{position:absolute;z-index:3;left:24px;top:-76px;width:148px;height:148px;margin:0;padding:5px;border:1px solid #e0e4e9;border-radius:50%;background:#fff;box-shadow:0 3px 12px #07172b20}
+    .profile-name-block{padding:0 0 5px}
+    .profile-primary-actions{padding-bottom:5px}
+    .profile-collection-panels{min-height:170px}
+    .profile-collection-panels [hidden]{display:none!important}
+    .profile-tabs-bottom{display:flex;align-items:stretch;gap:4px;padding:0 18px;background:#fff}
+    .profile-tabs-bottom .profile-collection-tab{min-height:52px}
+    @media(max-width:720px){
+      .profile-cover{height:clamp(175px,45vw,250px)}
+      .profile-identity{display:flex;align-items:flex-start;flex-direction:column;gap:10px;min-height:0;padding:64px 16px 18px;text-align:left}
+      .profile-avatar-wrap{left:16px;top:-58px;width:112px;height:112px}
+      .profile-name-block{width:100%;padding:0 0 2px}
+      .profile-name-block .eyebrow{font-size:.58rem}
+      .profile-name-block h2{font-size:clamp(1.45rem,6vw,2rem)}
+      .profile-primary-actions{width:100%;justify-content:flex-start;padding:0;gap:8px}
+      .profile-primary-actions button{min-height:42px}
+      .cover-upload{right:10px;bottom:10px;max-width:55%;font-size:.68rem}
+      .profile-tabs-bottom{padding:0 8px;gap:0}
+      .profile-tabs-bottom .profile-collection-tab{flex:1 0 auto;min-width:0;padding:13px 10px;font-size:.72rem}
+      .profile-collection-panels{padding:16px}
+      .profile-collections .saved-list{grid-template-columns:minmax(0,1fr)}
+    }
+    @media(max-width:380px){
+      .profile-avatar-wrap{width:96px;height:96px;top:-50px;left:12px}
+      .profile-identity{padding:56px 12px 15px}
+      .profile-tabs-bottom .profile-collection-tab{padding:12px 7px;font-size:.67rem}
+      .profile-primary-actions button{padding:9px 11px}
     }
 
   </style>
@@ -273,8 +308,9 @@
               <nav class="profile-tabs profile-tabs-bottom" aria-label="Reader collections">
                 <button type="button" class="profile-collection-tab active" id="profileShowSaved" aria-pressed="true">Saved Journals</button>
                 <button type="button" class="profile-collection-tab" id="profileShowFavourites" aria-pressed="false">Favourite Journals</button>
+                <button type="button" class="profile-collection-tab" id="profileShowHistory" aria-pressed="false">Reading History</button>
               </nav>
-              <section class="profile-collections" aria-label="Your saved journals">
+              <section class="profile-collections profile-collection-panels" aria-label="Your journal collections">
                 <div id="profileSavedCollection">
                   <p class="eyebrow">YOUR PERSONAL COLLECTION</p>
                   <h3>Saved Journals</h3>
@@ -285,11 +321,12 @@
                   <h3>Favourite Journals</h3>
                   <div id="profileFavouriteList" class="saved-list" aria-live="polite"></div>
                 </div>
+                <div id="profileHistoryCollection" hidden>
+                  <p class="eyebrow">YOUR READING HISTORY</p>
+                  <h3>Recently opened journals</h3>
+                  <div id="readingProgressList" class="saved-list" aria-live="polite"><p class="saved-empty">Your reading history will appear here as you open journals.</p></div>
+                </div>
               </section>
-            </section>
-            <section class="profile-collections" aria-label="Your reading history">
-              <p class="eyebrow">YOUR READING HISTORY</p><h3>Recently opened journals</h3>
-              <div id="readingProgressList" class="saved-list" aria-live="polite"><p class="saved-empty">Your reading history will appear here as you open journals.</p></div>
             </section>
             <p class="account-note">Your saved journals, favourites, and reading history are linked to your reader account when you are signed in.</p>
           </div>
@@ -325,27 +362,21 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
   (() => {
-    const savedButton = document.getElementById("profileShowSaved");
-    const favouriteButton = document.getElementById("profileShowFavourites");
-    const savedPanel = document.getElementById("profileSavedCollection");
-    const favouritePanel = document.getElementById("profileFavouriteCollection");
-    if (!savedButton || !favouriteButton || !savedPanel || !favouritePanel) return;
-    savedButton.addEventListener("click", () => {
-      savedPanel.hidden = false;
-      favouritePanel.hidden = true;
-      savedButton.classList.add("active");
-      favouriteButton.classList.remove("active");
-      savedButton.setAttribute("aria-pressed", "true");
-      favouriteButton.setAttribute("aria-pressed", "false");
-    });
-    favouriteButton.addEventListener("click", () => {
-      savedPanel.hidden = true;
-      favouritePanel.hidden = false;
-      favouriteButton.classList.add("active");
-      savedButton.classList.remove("active");
-      favouriteButton.setAttribute("aria-pressed", "true");
-      savedButton.setAttribute("aria-pressed", "false");
-    });
+    const tabs = [
+      { button: document.getElementById("profileShowSaved"), panel: document.getElementById("profileSavedCollection") },
+      { button: document.getElementById("profileShowFavourites"), panel: document.getElementById("profileFavouriteCollection") },
+      { button: document.getElementById("profileShowHistory"), panel: document.getElementById("profileHistoryCollection") }
+    ];
+    if (tabs.some(item => !item.button || !item.panel)) return;
+    function showCollection(active) {
+      tabs.forEach(item => {
+        const selected = item === active;
+        item.panel.hidden = !selected;
+        item.button.classList.toggle("active", selected);
+        item.button.setAttribute("aria-pressed", String(selected));
+      });
+    }
+    tabs.forEach(item => item.button.addEventListener("click", () => showCollection(item)));
   })();
   </script>
   <script src="account.js"></script>
