@@ -152,23 +152,31 @@ const shareWisdomButton = document.getElementById("shareWisdom");
 const wisdomShareStatus = document.getElementById("wisdomShareStatus");
 if (shareWisdomButton) shareWisdomButton.addEventListener("click", async () => {
   shareWisdomButton.disabled = true;
-  if (wisdomShareStatus) wisdomShareStatus.textContent = "Preparing your branded wisdom card…";
+  if (wisdomShareStatus) wisdomShareStatus.textContent = "Creating your Voiceoftaade wisdom image…";
   try {
     const blob = await drawWisdomCard();
     const file = new File([blob], "Voiceoftaade-Daily-Wisdom.png", { type: "image/png" });
-    const shareText = "Voiceoftaade Daily Wisdom — inspired by Series of Life Hacks to Live By.\n" + window.location.href.split("#")[0];
+    const shareText = "Voiceoftaade Daily Wisdom | Series of Life Hacks to Live By";
     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: shareText, files: [file] });
-      if (wisdomShareStatus) wisdomShareStatus.textContent = "Your branded wisdom card is ready to share.";
+      try {
+        await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: shareText, files: [file] });
+        if (wisdomShareStatus) wisdomShareStatus.textContent = "Shared. Your branded image includes Voiceoftaade attribution.";
+      } catch (shareError) {
+        if (shareError.name === "AbortError") {
+          if (wisdomShareStatus) wisdomShareStatus.textContent = "Sharing cancelled. You can still download the image below.";
+        } else { throw shareError; }
+      }
     } else {
-      const url = URL.createObjectURL(blob); const link = document.createElement("a");
-      link.href = url; link.download = "Voiceoftaade-Daily-Wisdom.png"; document.body.append(link); link.click(); link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1500);
-      if (wisdomShareStatus) wisdomShareStatus.textContent = "Your branded PNG card has been downloaded. Attach it to your post or message.";
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = objectUrl; link.download = "Voiceoftaade-Daily-Wisdom.png";
+      link.style.display = "none"; document.body.appendChild(link); link.click(); link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 5000);
+      if (wisdomShareStatus) wisdomShareStatus.textContent = "Your branded wisdom image has been downloaded. Share the PNG from your Downloads folder.";
     }
   } catch (error) {
-    if (error.name !== "AbortError" && wisdomShareStatus) wisdomShareStatus.textContent = "Could not create the image. Please try again.";
-    if (error.name !== "AbortError") console.error("Wisdom card creation failed:", error);
+    console.error("Voiceoftaade share card failed:", error);
+    if (wisdomShareStatus) wisdomShareStatus.textContent = "The image could not be created in this browser. Refresh the page and try again.";
   } finally { shareWisdomButton.disabled = false; }
 });
 
