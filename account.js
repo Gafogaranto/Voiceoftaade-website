@@ -187,6 +187,24 @@
     if (error) { status("profileStatus", error.message, "error"); return; }
     await showAuth();
   
+
+  setMode("signin");
+    status("authStatus", "You have signed out.", "success");
+  });
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (session && session.user && !currentUser) {
+      // Defer database work to avoid doing it inside the auth event callback.
+      setTimeout(() => { if (!currentUser) showDashboard(session.user); }, 0);
+    } else if (!session && currentUser) {
+      showAuth();
+    }
+  });
+
+  supabase.auth.getSession().then(({ data, error }) => {
+    if (error) status("authStatus", error.message, "error");
+    if (data.session && data.session.user) showDashboard(data.session.user);
+  });
   const JOURNALS = {"chapter-0":["Perspective"],"chapter-1":["Stillness"],"chapter-2":["Discipline"],"chapter-3":["Wisdom Over Noise"],"chapter-4":["Time"],"chapter-5":["Love Without Losing Yourself"],"chapter-6":["Marriage"],"chapter-7":["Boundaries"],"chapter-8":["Loyalty"],"chapter-9":["Forgiveness"],"chapter-10":["Laziness and Spiritual Disconnection"],"chapter-11":["Fear"],"chapter-12":["Dream"],"chapter-13":["Failure"],"chapter-14":["Humility"],"chapter-15":["Likes and Validation"],"chapter-16":["Faking and Authenticity"],"chapter-17":["The Soft Life"],"chapter-18":["The Hustle"],"chapter-19":["Mental Peace"],"discipline":["Discipline is the quiet architecture of a meaningful life"],"boundaries":["Boundaries are not walls; they are instructions"],"audience":["Your life is bigger than the audience watching it"]};
   const LEGACY_KEYS={saved:"voiceoftaade-saved-reflections-v2",favourite:"voiceoftaade-favourite-reflections-v1"};
   async function renderCloudCollections(){
@@ -222,22 +240,5 @@
     rows.forEach(row=>{const card=document.createElement("article");card.className="saved-card";const h=document.createElement("h3");h.textContent=JOURNALS[row.journal_id][0];const p=document.createElement("p");p.textContent=Math.round(Number(row.progress_percent))+"% read · Last opened "+new Date(row.last_read_at).toLocaleDateString();const open=document.createElement("button");open.type="button";open.textContent="Continue reading →";open.addEventListener("click",()=>location.href="./?openJournal="+encodeURIComponent(row.journal_id)+"#journal");card.append(h,p,open);target.append(card);});
   }
 
-  setMode("signin");
-    status("authStatus", "You have signed out.", "success");
-  });
-
-  supabase.auth.onAuthStateChange((event, session) => {
-    if (session && session.user && !currentUser) {
-      // Defer database work to avoid doing it inside the auth event callback.
-      setTimeout(() => { if (!currentUser) showDashboard(session.user); }, 0);
-    } else if (!session && currentUser) {
-      showAuth();
-    }
-  });
-
-  supabase.auth.getSession().then(({ data, error }) => {
-    if (error) status("authStatus", error.message, "error");
-    if (data.session && data.session.user) showDashboard(data.session.user);
-  });
   setMode("signin");
 })();
