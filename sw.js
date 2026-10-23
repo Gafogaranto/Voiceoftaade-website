@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "voiceoftaade-pwa-v3";
+const CACHE_NAME = "voiceoftaade-pwa-v4";
 
 const APP_FILES = [
   "./",
@@ -63,7 +63,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  const isCode = /\\.(js|css|webmanifest)$/.test(url.pathname);
   event.respondWith(
     fetch(request).then((response) => {
       if (response.ok) {
