@@ -34,25 +34,99 @@
   $("signInTab").addEventListener("click", () => setMode("signin"));
   $("signUpTab").addEventListener("click", () => setMode("signup"));
 
+  const defaultAvatar = $("profileAvatar").src;
+  function updateProfileLabels(name, email) {
+    const display = name || "Voiceoftaade Reader";
+    $("profileDisplayName").textContent = display;
+    $("feedDisplayName").textContent = display;
+    $("profileEmail").textContent = email || "Reader profile";
+  }
+  function applyProfilePhotos(avatarUrl, coverUrl) {
+    $("profileAvatar").src = avatarUrl || defaultAvatar;
+    $("photoPreviewAvatar").src = avatarUrl || defaultAvatar;
+    $("profileCover").style.backgroundImage = coverUrl
+      ? "linear-gradient(0deg,rgba(3,10,18,.65),transparent 65%),url('" + coverUrl.replace(/'/g, "%27") + "')"
+      : "";
+    $("photoPreviewCover").style.backgroundImage = coverUrl ? "url('" + coverUrl.replace(/'/g, "%27") + "')" : "";
+    $("photoPreviewCover").textContent = coverUrl ? "" : "Cover photo";
+  }
   async function showDashboard(user) {
     currentUser = user;
     $("authPanel").style.display = "none";
     $("dashboard").style.display = "block";
-    $("signedInEmail").textContent = user.email || "Signed in";
-    const { data, error } = await supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle();
+    const { data, error } = await supabase.from("profiles").select("display_name,avatar_url,cover_url").eq("id", user.id).maybeSingle();
     if (error) {
-      status("profileStatus", "You are signed in, but your profile could not be loaded. Please try refreshing.", "error");
+      status("profileStatus", "You are signed in, but your profile could not be loaded. Please refresh.", "error");
       return;
     }
+    const initialName = (user.user_metadata && user.user_metadata.display_name) || "";
     if (!data) {
-      const initialName = (user.user_metadata && user.user_metadata.display_name) || "";
       const { error: insertError } = await supabase.from("profiles").insert({ id: user.id, display_name: initialName || null });
       if (insertError && insertError.code !== "23505") status("profileStatus", "Your account works, but the profile could not be created yet.", "error");
       $("profileName").value = initialName;
+      updateProfileLabels(initialName, user.email);
+      applyProfilePhotos("", "");
     } else {
-      $("profileName").value = data.display_name || "";
+      $("profileName").value = data.display_name || initialName;
+      updateProfileLabels(data.display_name || initialName, user.email);
+      applyProfilePhotos(data.avatar_url || "", data.cover_url || "");
     }
   }
+
+  async function uploadProfileImage(file, kind) {
+    if (!currentUser || !file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      status("profileStatus", "Please choose a JPG, PNG or WebP image.", "error");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      status("profileStatus", "Please choose an image smaller than 2 MB.", "error");
+      return;
+    }
+    status("profileStatus", "Uploading " + (kind === "avatar" ? "profile picture" : "cover photo") + "…");
+    const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+    const path = currentUser.id + "/" + kind + "-" + Date.now() + "." + extension;
+    const { error: uploadError } = await supabase.storage.from("reader-avatars").upload(path, file, {
+      cacheControl: "3600", upsert: false, contentType: file.type
+    });
+    if (uploadError) {
+      status("profileStatus", "Upload failed: " + uploadError.message, "error");
+      return;
+    }
+    const { data: urlData } = supabase.storage.from("reader-avatars").getPublicUrl(path);
+    const field = kind === "avatar" ? "avatar_url" : "cover_url";
+    const { error: saveError } = await supabase.from("profiles").upsert(
+      { id: currentUser.id, [field]: urlData.publicUrl },
+      { onConflict: "id" }
+    );
+    if (saveError) {
+      status("profileStatus", "Image uploaded, but its profile link could not be saved: " + saveError.message, "error");
+      return;
+    }
+    if (kind === "avatar") applyProfilePhotos(urlData.publicUrl, $("profileCover").dataset.coverUrl || "");
+    else {
+      $("profileCover").dataset.coverUrl = urlData.publicUrl;
+      applyProfilePhotos($("profileAvatar").src === defaultAvatar ? "" : $("profileAvatar").src, urlData.publicUrl);
+    }
+    status("profileStatus", (kind === "avatar" ? "Profile picture" : "Cover photo") + " updated.", "success");
+  }
+  $("avatarUpload").addEventListener("change", (event) => uploadProfileImage(event.target.files[0], "avatar"));
+  $("coverUpload").addEventListener("change", (event) => uploadProfileImage(event.target.files[0], "cover"));
+  $("editProfileButton").addEventListener("click", () => {
+    $("profileAbout").scrollIntoView({ behavior: "smooth", block: "center" });
+    $("profileName").focus();
+  });
+  document.querySelectorAll("[data-profile-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll("[data-profile-tab]").forEach((item) => item.classList.toggle("active", item === button));
+      const tab = button.dataset.profileTab;
+      $("profileAbout").style.display = tab === "about" ? "block" : "none";
+      $("profileFeed").style.display = tab === "posts" ? "block" : "none";
+      $("profilePhotos").style.display = tab === "photos" ? "block" : "none";
+      $("profileSaved").style.display = tab === "saved" ? "block" : "none";
+    });
+  })
+  document.querySelector('[data-profile-tab="posts"]').click();
   async function showAuth() {
     currentUser = null;
     $("dashboard").style.display = "none";
@@ -113,7 +187,10 @@
       { onConflict: "id" }
     );
     if (error) status("profileStatus", "Could not save profile: " + error.message, "error");
-    else status("profileStatus", "Profile saved.", "success");
+    else {
+      updateProfileLabels(display_name, currentUser.email);
+      status("profileStatus", "Profile saved.", "success");
+    }
   });
 
   $("signOut").addEventListener("click", async () => {
