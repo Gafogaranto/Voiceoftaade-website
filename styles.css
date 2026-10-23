@@ -176,3 +176,35 @@
 @keyframes wordmark-arrive{to{opacity:1;transform:translateY(0)}}
 @media(max-width:600px){.intro-logo-wrap{width:94vw}.intro-emblem{max-height:58vh}}
 @media(prefers-reduced-motion:reduce){.emblem-globe,.emblem-feather,.emblem-pen,.emblem-wordmark,.emblem-publications{animation:none!important;stroke-dashoffset:0;opacity:1;transform:none}.intro-tagline{animation:none;opacity:1;transform:none}}
+
+
+/* Reader account: familiar profile icon in the main navigation */
+.site-header nav .account-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 7px 10px;
+  color: #f0c45e;
+  border: 1px solid rgba(217, 173, 79, .6);
+  border-radius: 999px;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.site-header nav .account-icon-link:hover {
+  color: #07172b;
+  background: #d9ad4f;
+  border-color: #d9ad4f;
+}
+.account-profile-icon { display: block; flex: 0 0 auto; }
+.account-icon-label { font-size: .75rem; }
+@media (max-width: 680px) {
+  .site-header nav .account-icon-link {
+    align-self: flex-start;
+    justify-content: flex-start;
+    border-radius: 999px;
+    padding: 9px 12px;
+    margin-top: 5px;
+  }
+}
