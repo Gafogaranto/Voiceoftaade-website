@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "voiceoftaade-pwa-v1";
+const CACHE_NAME = "voiceoftaade-pwa-v2";
 
 const APP_FILES = [
   "./",
