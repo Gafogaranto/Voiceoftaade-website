@@ -55,6 +55,37 @@
     @media(max-width:380px){.account-panel{padding:24px 17px}.account-tabs button{font-size:.77rem}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
 
+    /* Shared site-wide navigation and footer on the reader account page */
+    .site-header{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    #accountMainNav{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,2vw,27px)}
+    #accountMainNav>a{color:#172b23;text-decoration:none;font-size:.82rem;font-weight:750;white-space:nowrap}
+    #accountMainNav>a:hover,#accountMainNav>a[aria-current="page"]{color:#9b7535}
+    #accountMainNav>a.nav-cta{padding:11px 15px;border-radius:5px;background:#123d2d;color:#fff}
+    #accountMainNav .account-avatar-link{display:inline-flex;padding:0}
+    #accountMainNav .account-avatar{width:40px;height:40px}
+    #accountMenuToggle{display:none;border:1px solid #d9ad4f;border-radius:7px;background:#123d2d;color:#fff;padding:9px 12px;font-size:1.15rem;cursor:pointer}
+    .current-profile-link .account-avatar{box-shadow:0 0 0 3px rgba(217,173,79,.2)}
+    .account-footer-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 24px;margin:18px auto 24px}
+    .account-footer-nav a{color:#e9e5db;text-decoration:none;font-size:.82rem}
+    .account-footer-nav a:hover{color:#e8c574}
+    .site-footer{padding:35px clamp(18px,5vw,64px) 18px;text-align:center}
+    .site-footer .footer-brand{display:flex;justify-content:center;margin:0 auto 10px}
+    .site-footer .footer-logo{max-width:190px}
+    .site-footer>p{margin:8px 0 0;color:#d8d0bf}
+    .site-footer .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid #ffffff25;padding-top:18px;text-align:left;font-size:.75rem}
+    .site-footer .footer-bottom a{color:#e8c574;text-decoration:none}
+    @media(max-width:800px){
+      .site-header{flex-wrap:wrap}
+      #accountMenuToggle{display:block;margin-left:auto}
+      #accountMainNav{display:none;order:3;flex:0 0 100%;width:100%;align-items:stretch;gap:0;padding:8px 0 5px;border-top:1px solid #e4ddce}
+      #accountMainNav.nav-open{display:flex;flex-direction:column}
+      #accountMainNav>a{padding:12px 8px;border-bottom:1px solid #e8e1d4}
+      #accountMainNav>a.nav-cta{margin-top:8px;text-align:center}
+      #accountMainNav .account-avatar-link{align-self:flex-start;padding:8px}
+      .site-footer .footer-bottom{justify-content:center;text-align:center}
+    }
+
+
     /* Facebook-inspired reader profile */
     .account-layout:has(.account-dashboard[style*="block"]){display:block;filter:none}
     .account-layout:has(.account-dashboard[style*="block"])>.account-story{display:none}
@@ -135,8 +166,16 @@
 <body>
   <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
   <header class="site-header">
-    <a class="brand" href="./" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
-    <a class="nav-cta" href="./">Back to website</a>
+    <a class="brand" href="./#home" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
+    <button class="menu-toggle" id="accountMenuToggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav id="accountMainNav" aria-label="Main navigation">
+      <a href="./#books">Books</a>
+      <a href="./#journal">Journal</a>
+      <a href="./#about">Our Story</a>
+      <a href="./#community">Community</a>
+      <a class="nav-cta" href="./#contact">Contact</a>
+      <a class="account-avatar-link current-profile-link" href="account.html" aria-current="page" aria-label="Reader profile" title="Reader profile"><span class="account-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg></span></a>
+    </nav>
   </header>
   <main class="account-page">
     <div class="account-wrap">
@@ -230,7 +269,30 @@
       <a class="account-back" href="./">← Return to Voiceoftaade Publications</a>
     </div>
   </main>
-  <footer class="site-footer"><p>Words for wisdom. Ideas for life.</p><div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications</span><a href="./">Back to website ↑</a></div></footer>
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="./#home" aria-label="Voiceoftaade home"><img class="brand-logo footer-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
+    <p>Words for wisdom. Ideas for life.</p>
+    <nav class="account-footer-nav" aria-label="Footer navigation">
+      <a href="./#books">Books</a><a href="./#journal">Journal</a><a href="./#about">Our Story</a><a href="./#community">Community</a><a href="./#contact">Contact</a><a href="account.html" aria-current="page">Reader Profile</a>
+    </nav>
+    <div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications · Founded by Taiwo Abdulgafar Adekunle (Taade)</span><span>Built for readers, thinkers, and doers.</span><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top ↑</a></div>
+  </footer>
+  <script>
+    (() => {
+      const toggle = document.getElementById("accountMenuToggle");
+      const nav = document.getElementById("accountMainNav");
+      if (!toggle || !nav) return;
+      toggle.addEventListener("click", () => {
+        const open = nav.classList.toggle("nav-open");
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+      });
+      nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => {
+        nav.classList.remove("nav-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }));
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
   (() => {
