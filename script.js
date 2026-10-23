@@ -87,150 +87,187 @@ document.querySelectorAll("[data-filter]").forEach(button => {
 searchInput.addEventListener("input", filterArticles);
 
 
-// Daily Wisdom: one message per calendar date, selected consistently for all visitors.
+
+// Original daily reflections inspired by themes in the book, not verbatim excerpts.
 const dailyWisdomMessages = [
-  "Small choices, repeated with care, can shape a remarkable life.",
-  "Protect your attention; what receives it often shapes what becomes of you.",
-  "Growth begins when honesty becomes more important than appearances.",
-  "You can move forward without having every answer today.",
-  "A clear boundary can protect both your peace and your relationships.",
-  "Do not confuse being busy with being purposeful.",
-  "Let your values guide decisions that applause cannot sustain.",
-  "Patience is not standing still; it is giving good work time to mature.",
-  "A thoughtful pause can prevent a careless response.",
-  "Your private progress matters, even when nobody notices it.",
-  "Wisdom is not knowing everything; it is knowing what deserves your attention.",
-  "Consistency turns modest effort into meaningful change.",
-  "Make room for the kind of life you want to remember."
+"Discipline is the quiet promise you keep when nobody is watching.",
+"Do not let the noise of the world drown out the truth you must face.",
+"Love should add meaning to your life, not require you to abandon yourself.",
+"Fear may visit your mind; it does not have to make your decisions.",
+"Time is not only something you spend. It is the life you are giving away.",
+"Wisdom begins when you question your first reaction.",
+"A boundary is a form of clarity: it tells others how respect can reach you.",
+"Ambition without direction can exhaust you; purpose gives effort a destination.",
+"Failure can inform your next step without defining your whole story.",
+"Not every open door is your door, and not every delay is a defeat.",
+"Choose peace that comes from honesty, not silence that hides the truth.",
+"A meaningful life is built in ordinary moments, not only celebrated milestones.",
+"The courage to begin is useful; the patience to continue is powerful.",
+"Do not measure your worth by the attention of people who do not know your journey.",
+"Forgiveness can release the past without pretending that nothing happened.",
+"Your habits are small votes for the person you are becoming.",
+"Love needs more than feeling: it needs respect, truth, and responsibility.",
+"The wise person does not answer every provocation; some deserve no part of your day.",
+"You can change your direction without denying how far you have travelled.",
+"Comfort means little without meaning.",
+"Let your principles remain steady even when public opinion changes direction.",
+"Rest is not the enemy of progress; it helps you continue with intention.",
+"Before you chase another achievement, ask what you want it to serve.",
+"Being understood by everyone is not the price you must pay to live honestly.",
+"The future is shaped by what you repeatedly practise in the present.",
+"Humility is strength that does not need to announce itself.",
+"Give people clarity instead of expecting them to read your silence.",
+"A wise decision may be difficult today and still be kind to your future self.",
+"Do not confuse a crowded schedule with a life filled with purpose.",
+"You cannot control every outcome, but you can take responsibility for your next choice."
 ];
 const today = new Date();
-const dateKey = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
-const dayNumber = Math.floor(new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() / 86400000);
-const wisdomIndex = ((dayNumber % dailyWisdomMessages.length) + dailyWisdomMessages.length) % dailyWisdomMessages.length;
-const wisdomQuote = dailyWisdomMessages[wisdomIndex];
+const dayNumber = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
+const wisdomQuote = dailyWisdomMessages[((dayNumber % dailyWisdomMessages.length) + dailyWisdomMessages.length) % dailyWisdomMessages.length];
 const wisdomQuoteElement = document.getElementById("dailyWisdomQuote");
 const wisdomDateElement = document.getElementById("dailyWisdomDate");
-if (wisdomQuoteElement) wisdomQuoteElement.textContent = wisdomQuote;
-if (wisdomDateElement) wisdomDateElement.textContent = today.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+if (wisdomQuoteElement) wisdomQuoteElement.textContent = "“" + wisdomQuote + "”";
+if (wisdomDateElement) wisdomDateElement.textContent = today.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
 
+function drawWisdomCard() {
+  const canvas = document.createElement("canvas"); canvas.width = 1080; canvas.height = 1350;
+  const ctx = canvas.getContext("2d"); if (!ctx) throw new Error("Canvas is unavailable.");
+  const gradient = ctx.createLinearGradient(0, 0, 1080, 1350);
+  gradient.addColorStop(0, "#12314e"); gradient.addColorStop(.58, "#07172b"); gradient.addColorStop(1, "#030b15");
+  ctx.fillStyle = gradient; ctx.fillRect(0, 0, 1080, 1350);
+  ctx.strokeStyle = "rgba(217,173,79,.3)"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(540, 665, 390, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(540, 665, 330, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = "#d9ad4f"; ctx.lineWidth = 3; ctx.strokeRect(54, 54, 972, 1242);
+  ctx.strokeStyle = "rgba(217,173,79,.55)"; ctx.lineWidth = 1; ctx.strokeRect(72, 72, 936, 1206);
+  ctx.textAlign = "center"; ctx.fillStyle = "#d9ad4f"; ctx.font = "54px Georgia"; ctx.fillText("✳", 540, 160);
+  ctx.fillStyle = "#f7eed9"; ctx.font = "bold 35px Arial"; ctx.fillText("VOICEOFTAADE", 540, 218);
+  ctx.fillStyle = "#d9ad4f"; ctx.font = "20px Arial"; ctx.fillText("PUBLICATIONS", 540, 256);
+  ctx.fillStyle = "#d9ad4f"; ctx.font = "bold 22px Arial"; ctx.fillText("DAILY WISDOM", 540, 380);
+  ctx.fillStyle = "#f7f1e5"; ctx.font = "46px Georgia";
+  const words = ("“" + wisdomQuote + "”").split(/\s+/); const lines = []; let line = "";
+  for (const word of words) {
+    const candidate = line ? line + " " + word : word;
+    if (ctx.measureText(candidate).width > 820 && line) { lines.push(line); line = word; } else line = candidate;
+  }
+  if (line) lines.push(line);
+  let y = 610 - ((lines.length - 1) * 65) / 2;
+  lines.forEach(text => { ctx.fillText(text, 540, y, 850); y += 65; });
+  ctx.fillStyle = "#d9ad4f"; ctx.fillRect(390, 920, 300, 3);
+  ctx.fillStyle = "#d8d4ca"; ctx.font = "19px Arial"; ctx.fillText("INSPIRED BY", 540, 985);
+  ctx.fillStyle = "#f7eed9"; ctx.font = "bold 22px Arial"; ctx.fillText("SERIES OF LIFE HACKS TO LIVE BY", 540, 1025);
+  ctx.fillStyle = "#d8d4ca"; ctx.font = "20px Arial";
+  ctx.fillText(today.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }), 540, 1110);
+  ctx.fillStyle = "#d9ad4f"; ctx.font = "bold 18px Arial"; ctx.fillText("READ · REFLECT · LIVE DELIBERATELY", 540, 1200);
+  ctx.fillStyle = "#d8d4ca"; ctx.font = "16px Arial"; ctx.fillText("gafogaranto.github.io/Voiceoftaade-website", 540, 1240);
+  return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Image creation failed.")), "image/png"));
+}
 const shareWisdomButton = document.getElementById("shareWisdom");
-if (shareWisdomButton) {
-  shareWisdomButton.addEventListener("click", async () => {
-    const shareText = 'Voiceoftaade Daily Wisdom\n“' + wisdomQuote + '”\n' + window.location.href.split("#")[0];
-    if (navigator.share) {
-      try { await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: shareText, url: window.location.href.split("#")[0] }); }
-      catch (error) { if (error.name !== "AbortError") console.error("Sharing failed:", error); }
-    } else if (navigator.clipboard && navigator.clipboard.writeText) {
-      try {
-        await navigator.clipboard.writeText(shareText);
-        shareWisdomButton.textContent = "Wisdom copied ✓";
-      } catch {
-        window.prompt("Copy today's wisdom:", shareText);
-      }
+const wisdomShareStatus = document.getElementById("wisdomShareStatus");
+if (shareWisdomButton) shareWisdomButton.addEventListener("click", async () => {
+  shareWisdomButton.disabled = true;
+  if (wisdomShareStatus) wisdomShareStatus.textContent = "Preparing your branded wisdom card…";
+  try {
+    const blob = await drawWisdomCard();
+    const file = new File([blob], "Voiceoftaade-Daily-Wisdom.png", { type: "image/png" });
+    const shareText = "Voiceoftaade Daily Wisdom — inspired by Series of Life Hacks to Live By.\n" + window.location.href.split("#")[0];
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: shareText, files: [file] });
+      if (wisdomShareStatus) wisdomShareStatus.textContent = "Your branded wisdom card is ready to share.";
     } else {
-      window.prompt("Copy today's wisdom:", shareText);
+      const url = URL.createObjectURL(blob); const link = document.createElement("a");
+      link.href = url; link.download = "Voiceoftaade-Daily-Wisdom.png"; document.body.append(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      if (wisdomShareStatus) wisdomShareStatus.textContent = "Your branded PNG card has been downloaded. Attach it to your post or message.";
     }
-  });
-}
+  } catch (error) {
+    if (error.name !== "AbortError" && wisdomShareStatus) wisdomShareStatus.textContent = "Could not create the image. Please try again.";
+    if (error.name !== "AbortError") console.error("Wisdom card creation failed:", error);
+  } finally { shareWisdomButton.disabled = false; }
+});
 
-// Saved reflections are stored only in this browser on this device.
-const SAVED_REFLECTIONS_KEY = "voiceoftaade-saved-reflections-v1";
-function getSavedReflections() {
+const SAVED_REFLECTIONS_KEY = "voiceoftaade-saved-reflections-v2";
+const FAVOURITE_REFLECTIONS_KEY = "voiceoftaade-favourite-reflections-v1";
+function readCollection(key) {
   try {
-    const saved = JSON.parse(localStorage.getItem(SAVED_REFLECTIONS_KEY) || "[]");
-    return Array.isArray(saved) ? saved.filter(item => item && articles[item.id]) : [];
-  } catch { return []; }
+    const value = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(value) ? [...new Set(value.filter(id => typeof id === "string" && articles[id]))] : [];
+  } catch (error) { console.error("Collection read failed:", error); return []; }
 }
-function storeSavedReflections(saved) {
-  try {
-    localStorage.setItem(SAVED_REFLECTIONS_KEY, JSON.stringify(saved));
-    return true;
-  } catch {
-    alert("Your browser could not save this reflection. Check your device storage settings and try again.");
+function writeCollection(key, values) {
+  try { localStorage.setItem(key, JSON.stringify([...new Set(values)])); return true; }
+  catch (error) {
+    console.error("Collection save failed:", error);
+    alert("Your browser blocked local saving. Open the published site in Chrome, not a private/incognito tab, and try again.");
     return false;
   }
 }
-function renderSavedReflections() {
-  const list = document.getElementById("savedList");
-  if (!list) return;
-  const saved = getSavedReflections();
-  list.replaceChildren();
-  if (!saved.length) {
-    const empty = document.createElement("p");
-    empty.className = "saved-empty";
-    empty.textContent = "You haven't saved any reflections yet. Open a journal reflection and choose “Save reflection” to start your collection.";
-    list.append(empty);
-    return;
-  }
-  saved.forEach(item => {
-    const article = articles[item.id];
-    const card = document.createElement("article");
-    card.className = "saved-card";
-    const category = document.createElement("p");
-    category.className = "eyebrow";
-    category.textContent = article.category;
-    const title = document.createElement("h3");
-    title.textContent = article.title;
-    const actions = document.createElement("div");
-    actions.className = "saved-actions";
-    const open = document.createElement("button");
-    open.className = "read-more";
-    open.type = "button";
-    open.textContent = "Read reflection →";
-    open.addEventListener("click", () => openArticle(item.id));
-    const remove = document.createElement("button");
-    remove.className = "read-more saved-remove";
-    remove.type = "button";
-    remove.textContent = "Remove";
-    remove.addEventListener("click", () => {
-      storeSavedReflections(getSavedReflections().filter(entry => entry.id !== item.id));
-      renderSavedReflections();
-      updateSaveButton();
-    });
-    actions.append(open, remove);
-    card.append(category, title, actions);
-    list.append(card);
-  });
-}
 let currentArticleId = null;
-function updateSaveButton() {
-  const button = document.getElementById("saveReflection");
-  if (!button || !currentArticleId) return;
-  const isSaved = getSavedReflections().some(item => item.id === currentArticleId);
-  button.textContent = isSaved ? "★ Saved — remove from saved" : "☆ Save reflection";
-  button.setAttribute("aria-pressed", String(isSaved));
+function updateReflectionButtons() {
+  if (!currentArticleId) return;
+  const saveButton = document.getElementById("saveReflection");
+  const favouriteButton = document.getElementById("favouriteReflection");
+  const saved = readCollection(SAVED_REFLECTIONS_KEY).includes(currentArticleId);
+  const favourite = readCollection(FAVOURITE_REFLECTIONS_KEY).includes(currentArticleId);
+  if (saveButton) { saveButton.textContent = saved ? "✓ Saved — remove" : "＋ Save reflection"; saveButton.setAttribute("aria-pressed", String(saved)); }
+  if (favouriteButton) { favouriteButton.textContent = favourite ? "♥ Remove favourite" : "♡ Add to favourites"; favouriteButton.setAttribute("aria-pressed", String(favourite)); }
 }
 function openArticle(id) {
-  const article = articles[id];
-  if (!article) return;
+  const article = articles[id]; if (!article) return;
   currentArticleId = id;
   document.getElementById("dialogCategory").textContent = article.category;
   document.getElementById("dialogTitle").textContent = article.title;
   const body = document.getElementById("dialogBody");
-  body.replaceChildren(...article.paragraphs.map(text => {
-    const p = document.createElement("p");
-    p.textContent = text;
-    return p;
-  }));
-  updateSaveButton();
+  body.replaceChildren(...article.paragraphs.map(text => { const p = document.createElement("p"); p.textContent = text; return p; }));
+  updateReflectionButtons();
   if (!dialog.open) dialog.showModal();
 }
-document.querySelectorAll("[data-article]").forEach(button => {
-  button.addEventListener("click", () => openArticle(button.dataset.article));
-});
+document.querySelectorAll("[data-article]").forEach(button => button.addEventListener("click", () => openArticle(button.dataset.article)));
 const saveReflectionButton = document.getElementById("saveReflection");
-if (saveReflectionButton) {
-  saveReflectionButton.addEventListener("click", () => {
-    if (!currentArticleId) return;
-    const saved = getSavedReflections();
-    const existing = saved.some(item => item.id === currentArticleId);
-    const next = existing
-      ? saved.filter(item => item.id !== currentArticleId)
-      : [...saved, { id: currentArticleId, savedAt: new Date().toISOString() }];
-    if (storeSavedReflections(next)) {
-      renderSavedReflections();
-      updateSaveButton();
-    }
+if (saveReflectionButton) saveReflectionButton.addEventListener("click", () => {
+  if (!currentArticleId) return;
+  const saved = readCollection(SAVED_REFLECTIONS_KEY);
+  const next = saved.includes(currentArticleId) ? saved.filter(id => id !== currentArticleId) : [...saved, currentArticleId];
+  if (writeCollection(SAVED_REFLECTIONS_KEY, next)) { renderCollections(); updateReflectionButtons(); }
+});
+const favouriteReflectionButton = document.getElementById("favouriteReflection");
+if (favouriteReflectionButton) favouriteReflectionButton.addEventListener("click", () => {
+  if (!currentArticleId) return;
+  const favourites = readCollection(FAVOURITE_REFLECTIONS_KEY);
+  const next = favourites.includes(currentArticleId) ? favourites.filter(id => id !== currentArticleId) : [...favourites, currentArticleId];
+  if (writeCollection(FAVOURITE_REFLECTIONS_KEY, next)) { renderCollections(); updateReflectionButtons(); }
+});
+function renderCollectionInto(containerId, key, emptyText) {
+  const list = document.getElementById(containerId); if (!list) return;
+  list.replaceChildren(); const ids = readCollection(key);
+  if (!ids.length) { const empty = document.createElement("p"); empty.className = "saved-empty"; empty.textContent = emptyText; list.append(empty); return; }
+  ids.forEach(id => {
+    const article = articles[id]; const card = document.createElement("article"); card.className = "saved-card";
+    const category = document.createElement("p"); category.className = "eyebrow"; category.textContent = article.category;
+    const title = document.createElement("h3"); title.textContent = article.title;
+    const actions = document.createElement("div"); actions.className = "saved-actions";
+    const open = document.createElement("button"); open.className = "read-more"; open.type = "button"; open.textContent = "Read reflection →"; open.addEventListener("click", () => openArticle(id));
+    const remove = document.createElement("button"); remove.className = "read-more saved-remove"; remove.type = "button";
+    remove.textContent = key === SAVED_REFLECTIONS_KEY ? "Remove saved" : "Remove favourite";
+    remove.addEventListener("click", () => { writeCollection(key, readCollection(key).filter(item => item !== id)); renderCollections(); updateReflectionButtons(); });
+    actions.append(open, remove); card.append(category, title, actions); list.append(card);
   });
 }
-renderSavedReflections();
+function renderCollections() {
+  renderCollectionInto("savedList", SAVED_REFLECTIONS_KEY, "No saved reflections yet. Open a journal article and tap “Save reflection”.");
+  renderCollectionInto("favouriteList", FAVOURITE_REFLECTIONS_KEY, "No favourites yet. Open a journal article and tap “Add to favourites”.");
+}
+function setActiveCollection(which) {
+  const isSaved = which === "saved";
+  const savedButton = document.getElementById("showSaved");
+  const favouritesButton = document.getElementById("showFavourites");
+  if (savedButton) { savedButton.classList.toggle("active", isSaved); savedButton.setAttribute("aria-selected", String(isSaved)); }
+  if (favouritesButton) { favouritesButton.classList.toggle("active", !isSaved); favouritesButton.setAttribute("aria-selected", String(!isSaved)); }
+  const target = document.getElementById(isSaved ? "savedReflections" : "favouriteReflections");
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+const showSavedButton = document.getElementById("showSaved");
+const showFavouritesButton = document.getElementById("showFavourites");
+if (showSavedButton) showSavedButton.addEventListener("click", () => setActiveCollection("saved"));
+if (showFavouritesButton) showFavouritesButton.addEventListener("click", () => setActiveCollection("favourites"));
+renderCollections();
