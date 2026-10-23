@@ -109,7 +109,11 @@ const dailyWisdomMessages = [
 ];
 const today = new Date();
 const dayNumber = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
-const wisdomQuote = dailyWisdomMessages[((dayNumber % dailyWisdomMessages.length) + dailyWisdomMessages.length) % dailyWisdomMessages.length];
+const previousWisdom = sessionStorage.getItem("voiceoftaade-last-wisdom");
+let wisdomIndex = Math.floor(Math.random() * dailyWisdomMessages.length);
+if (dailyWisdomMessages.length > 1 && String(wisdomIndex) === previousWisdom) wisdomIndex = (wisdomIndex + 1) % dailyWisdomMessages.length;
+sessionStorage.setItem("voiceoftaade-last-wisdom", String(wisdomIndex));
+const wisdomQuote = dailyWisdomMessages[wisdomIndex];
 const wisdomQuoteElement = document.getElementById("dailyWisdomQuote");
 const wisdomDateElement = document.getElementById("dailyWisdomDate");
 if (wisdomQuoteElement) wisdomQuoteElement.textContent = "“" + wisdomQuote + "”";
@@ -265,3 +269,32 @@ const showFavouritesButton = document.getElementById("showFavourites");
 if (showSavedButton) showSavedButton.addEventListener("click", () => setActiveCollection("saved"));
 if (showFavouritesButton) showFavouritesButton.addEventListener("click", () => setActiveCollection("favourites"));
 renderCollections();
+
+const chapterJournalData = [["Foundations of a Good Life","Perspective","Look beyond your first interpretation. Facts matter, but the story you attach to them deserves examination.","Separate facts from assumptions and choose a response that reflects your values."],["Foundations of a Good Life","Stillness","Stillness creates room to notice what constant noise conceals. A pause can help you recognise a feeling and choose a wiser response.","Take five quiet minutes. What thought keeps returning, and what useful action might it be asking of you?"],["Foundations of a Good Life","Discipline","Discipline is a promise made practical through repetition. It is not punishment; it is structure that helps your future self benefit from today's choices.","Choose one small commitment and keep it today, even if imperfectly."],["Foundations of a Good Life","Wisdom Over Noise","Not every loud opinion deserves authority over your life. Wisdom checks context, considers consequences, and knows when silence is wiser than reaction.","Before reacting to advice, ask whether it is informed, fair, and relevant to your situation."],["Foundations of a Good Life","Time","Time is part of the life you are building. Your routine reveals what receives your attention, by choice or by default.","Reduce one avoidable distraction and protect time for something meaningful."],["Matters of the Heart","Love Without Losing Yourself","Love should make room for your values, voice, friendships, and growth. Caring for someone need not mean abandoning your identity.","Name one need you hesitate to express. How can you communicate it kindly and clearly?"],["Matters of the Heart","Marriage","Partnership grows through everyday responsibility: listening, sharing burdens, repairing misunderstandings, and choosing honesty over avoidance.","Reflect on one habit that builds trust and one that could weaken it."],["Matters of the Heart","Boundaries","Boundaries are clear instructions for mutual respect, not tools for punishment. They help generosity remain sincere rather than turning into resentment.","Write one respectful sentence that communicates a limit you need to maintain."],["Matters of the Heart","Loyalty","Loyalty includes reliability, discretion, and truth. Blind agreement is not always care; honest guidance can protect a relationship better than silence.","Choose one action that demonstrates reliability today."],["Matters of the Heart","Forgiveness","Forgiveness can loosen resentment without pretending harm did not happen. Rebuilding trust and deciding what access someone should have are separate choices.","Consider what moving forward requires: a conversation, a boundary, support, or more time."],["Mindset and Motivation","Laziness and Spiritual Disconnection","When purpose feels distant, investigate the delay instead of insulting yourself. Fatigue, fear, uncertainty, and lack of structure need different responses.","Start one neglected task with a small step and notice what made beginning easier."],["Mindset and Motivation","Fear","Fear may warn you about uncertainty, but it does not have to make every decision. Courage can mean preparing carefully and taking one considered step.","Name a concern, examine the evidence, and identify a practical next step."],["Mindset and Motivation","Dream","A dream offers direction; a plan gives it somewhere to go. Ambition becomes useful when translated into actions you can practise and review.","Write one goal and the next action you can complete this week."],["Mindset and Motivation","Failure","Failure is information about an attempt, not a verdict on your identity. A setback may reveal a skill to learn or a strategy to revise.","Record one lesson from a disappointment and one adjustment for next time."],["Mindset and Motivation","Humility","Humility keeps confidence teachable. It lets you stand by sound convictions while remaining open to evidence and willing to correct mistakes.","Ask one sincere question today before trying to prove your point."],["Social Truth & Modern Struggles","Likes and Validation","Attention can be enjoyable, but it is an unstable measure of meaning. Private progress still matters when nobody notices it.","Would this action still feel worthwhile if nobody applauded or responded?"],["Social Truth & Modern Struggles","Faking and Authenticity","Maintaining appearances can consume the energy genuine growth requires. Authenticity is not oversharing; it means not constantly betraying your values.","Notice one area where you feel pressure to perform. What would a more honest choice look like?"],["Social Truth & Modern Struggles","The Soft Life","Comfort, rest, and joy matter, but comfort alone cannot supply purpose. Choose worthwhile effort and release needless struggle.","Which difficulty helps you grow, and which could be eased with a clearer boundary?"],["Social Truth & Modern Struggles","The Hustle","Hard work matters when it serves a meaningful direction. Constant activity can become exhaustion without progress if priorities are unclear.","Choose the task most connected to your priority and give it focused attention."],["Social Truth & Modern Struggles","Mental Peace","Peace is not the absence of responsibility. It can grow from honest conversations, realistic plans, healthy limits, and accepting what you cannot control.","Name one concern taking too much attention. Decide whether to address it, set a limit, or let it wait."]];
+const journalVariants = [
+ (title, body, prompt) => body + " Today's practice: " + prompt,
+ (title, body, prompt) => "Consider " + title.toLowerCase() + " from a fresh angle. " + body + " Ask yourself: " + prompt,
+ (title, body, prompt) => "The lesson is not meant to remain an idea. " + body + " Put it into practice today: " + prompt
+];
+function buildDailyChapterJournals() {
+ const grid=document.getElementById("articleGrid"); if(!grid)return;
+ const now=new Date(), day=Math.floor(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())/86400000);
+ grid.replaceChildren();
+ chapterJournalData.forEach((item,index)=>{
+  const [part,title,body,prompt]=item, id="chapter-"+index, variant=(day+index)%journalVariants.length;
+  articles[id]={category:part.toUpperCase(),title:title+" — Daily Journal",paragraphs:[journalVariants[variant](title,body,prompt),"Reflection: where does this idea meet your life today? A small, deliberate change is a meaningful beginning.","VOICEOFTAADE JOURNAL PROMPT: "+prompt]};
+  const card=document.createElement("article");card.className="article-card";card.dataset.category=part;
+  const art=document.createElement("div");art.className="article-art "+(index%3===0?"art-olive":index%3===1?"art-clay":"art-blue");
+  const n=document.createElement("span");n.textContent=String(index+1).padStart(2,"0");
+  const artTitle=document.createElement("b");artTitle.textContent=title.toUpperCase();art.append(n,artTitle);
+  const meta=document.createElement("div");meta.className="article-meta";
+  const cat=document.createElement("span");cat.textContent=part.toUpperCase();
+  const label=document.createElement("span");label.textContent="DAILY JOURNAL";meta.append(cat,label);
+  const h=document.createElement("h3");h.textContent=title;
+  const p=document.createElement("p");p.textContent=body;
+  const button=document.createElement("button");button.className="read-more";button.type="button";button.textContent="Read today's journal →";button.addEventListener("click",()=>openArticle(id));
+  card.append(art,meta,h,p,button);grid.append(card);
+ });
+ cards.splice(0,cards.length,...grid.querySelectorAll(".article-card"));filterArticles();
+}
+buildDailyChapterJournals();
