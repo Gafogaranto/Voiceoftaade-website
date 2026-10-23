@@ -194,6 +194,7 @@ const readerSupabase = window.supabase && window.supabase.createClient
 let readerSession = null;
 let readerCollections = { saved: [], favourite: [] };
 let currentArticleId = null;
+let pendingProgressId = null;
 let collectionWriteQueue = Promise.resolve();
 
 function localCollection(key) {
@@ -272,10 +273,14 @@ function updateReflectionButtons() {
   if (favouriteButton) { favouriteButton.textContent = favourite ? "♥ Remove favourite" : "♡ Add to favourites"; favouriteButton.setAttribute("aria-pressed", String(favourite)); }
 }
 function trackReadingProgress(id) {
-  if (!readerSupabase || !readerSession || !articles[id]) return;
+  if (!readerSupabase || !articles[id]) return;
+  if (!readerSession) { pendingProgressId = id; return; }
   const row = { user_id: readerSession.user.id, journal_id: id, progress_percent: 100, last_read_at: new Date().toISOString(), updated_at: new Date().toISOString() };
   readerSupabase.from("reader_reading_progress").upsert(row, { onConflict: "user_id,journal_id" })
-    .then(({ error }) => { if (error) console.error("Reading progress could not be saved:", error); });
+    .then(({ error }) => {
+      if (error) console.error("Reading progress could not be saved:", error);
+      else window.dispatchEvent(new CustomEvent("voiceoftaade:progress-saved", { detail: { journalId: id } }));
+    });
 }
 function openArticle(id) {
   const article = articles[id]; if (!article) return;
@@ -332,13 +337,18 @@ if (readerSupabase) {
   readerSupabase.auth.getSession().then(async ({ data, error }) => {
     if (error) { console.error("Reader session check failed:", error); return; }
     readerSession = data.session || null;
-    if (readerSession) await migrateLocalCollections();
-    else renderCollections();
+    if (readerSession) {
+      await migrateLocalCollections();
+      if (pendingProgressId) { const pending = pendingProgressId; pendingProgressId = null; trackReadingProgress(pending); }
+    } else renderCollections();
   });
   readerSupabase.auth.onAuthStateChange((event, session) => {
     readerSession = session || null;
-    if (session) setTimeout(() => migrateLocalCollections(), 0);
-    else { readerCollections = { saved: [], favourite: [] }; renderCollections(); updateReflectionButtons(); }
+    if (session) setTimeout(async () => {
+      await migrateLocalCollections();
+      if (pendingProgressId) { const pending = pendingProgressId; pendingProgressId = null; trackReadingProgress(pending); }
+    }, 0);
+    else { readerCollections = { saved: [], favourite: [] }; pendingProgressId = null; renderCollections(); updateReflectionButtons(); }
   });
 }
 renderCollections();
