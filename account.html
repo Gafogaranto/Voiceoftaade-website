@@ -300,8 +300,27 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
   (() => {
-    // Reader collections are rendered from Supabase in account.js.
-
+    const savedButton = document.getElementById("profileShowSaved");
+    const favouriteButton = document.getElementById("profileShowFavourites");
+    const savedPanel = document.getElementById("profileSavedCollection");
+    const favouritePanel = document.getElementById("profileFavouriteCollection");
+    if (!savedButton || !favouriteButton || !savedPanel || !favouritePanel) return;
+    savedButton.addEventListener("click", () => {
+      savedPanel.hidden = false;
+      favouritePanel.hidden = true;
+      savedButton.classList.add("active");
+      favouriteButton.classList.remove("active");
+      savedButton.setAttribute("aria-pressed", "true");
+      favouriteButton.setAttribute("aria-pressed", "false");
+    });
+    favouriteButton.addEventListener("click", () => {
+      savedPanel.hidden = true;
+      favouritePanel.hidden = false;
+      favouriteButton.classList.add("active");
+      savedButton.classList.remove("active");
+      favouriteButton.setAttribute("aria-pressed", "true");
+      savedButton.setAttribute("aria-pressed", "false");
+    });
   })();
   </script>
   <script src="account.js"></script>
