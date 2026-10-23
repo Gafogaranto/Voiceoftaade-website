@@ -301,7 +301,27 @@
     const articles = {
       discipline:["MINDSET","Discipline is the quiet architecture of a meaningful life"],
       boundaries:["RELATIONSHIPS","Boundaries are not walls; they are instructions"],
-      audience:["MODERN LIFE","Your life is bigger than the audience watching it"]
+      audience:["MODERN LIFE","Your life is bigger than the audience watching it"],
+      "chapter-0":["FOUNDATIONS OF A GOOD LIFE","Perspective — Daily Journal"],
+      "chapter-1":["FOUNDATIONS OF A GOOD LIFE","Stillness — Daily Journal"],
+      "chapter-2":["FOUNDATIONS OF A GOOD LIFE","Discipline — Daily Journal"],
+      "chapter-3":["FOUNDATIONS OF A GOOD LIFE","Wisdom Over Noise — Daily Journal"],
+      "chapter-4":["FOUNDATIONS OF A GOOD LIFE","Time — Daily Journal"],
+      "chapter-5":["MATTERS OF THE HEART","Love Without Losing Yourself — Daily Journal"],
+      "chapter-6":["MATTERS OF THE HEART","Marriage — Daily Journal"],
+      "chapter-7":["MATTERS OF THE HEART","Boundaries — Daily Journal"],
+      "chapter-8":["MATTERS OF THE HEART","Loyalty — Daily Journal"],
+      "chapter-9":["MATTERS OF THE HEART","Forgiveness — Daily Journal"],
+      "chapter-10":["MINDSET AND MOTIVATION","Laziness and Spiritual Disconnection — Daily Journal"],
+      "chapter-11":["MINDSET AND MOTIVATION","Fear — Daily Journal"],
+      "chapter-12":["MINDSET AND MOTIVATION","Dream — Daily Journal"],
+      "chapter-13":["MINDSET AND MOTIVATION","Failure — Daily Journal"],
+      "chapter-14":["MINDSET AND MOTIVATION","Humility — Daily Journal"],
+      "chapter-15":["SOCIAL TRUTH & MODERN STRUGGLES","Likes and Validation — Daily Journal"],
+      "chapter-16":["SOCIAL TRUTH & MODERN STRUGGLES","Faking and Authenticity — Daily Journal"],
+      "chapter-17":["SOCIAL TRUTH & MODERN STRUGGLES","The Soft Life — Daily Journal"],
+      "chapter-18":["SOCIAL TRUTH & MODERN STRUGGLES","The Hustle — Daily Journal"],
+      "chapter-19":["SOCIAL TRUTH & MODERN STRUGGLES","Mental Peace — Daily Journal"]
     };
     const read = key => { try { const v=JSON.parse(localStorage.getItem(key)||"[]"); return Array.isArray(v)?[...new Set(v.filter(id=>typeof id==="string"&&articles[id]))]:[]; } catch { return []; } };
     const render = (containerId,key,empty) => {
