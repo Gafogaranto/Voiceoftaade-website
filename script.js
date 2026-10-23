@@ -298,3 +298,4 @@ function buildDailyChapterJournals() {
  cards.splice(0,cards.length,...grid.querySelectorAll(".article-card"));filterArticles();
 }
 buildDailyChapterJournals();
+renderCollections();
