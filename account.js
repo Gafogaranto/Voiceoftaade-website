@@ -9,6 +9,7 @@
   const $ = (id) => document.getElementById(id);
   let mode = "signin";
   let currentUser = null;
+  let savedProfile = { display_name: "", bio: "", location: "", website_url: "", reading_interests: "" };
 
   $("year").textContent = new Date().getFullYear();
   function status(id, message, kind = "") {
@@ -51,7 +52,7 @@
     currentUser = user;
     $("authPanel").style.display = "none";
     $("dashboard").style.display = "block";
-    const { data, error } = await supabase.from("profiles").select("display_name,avatar_url,cover_url").eq("id", user.id).maybeSingle();
+    const { data, error } = await supabase.from("profiles").select("display_name,avatar_url,cover_url,bio,location,website_url,reading_interests").eq("id", user.id).maybeSingle();
     if (error) {
       status("profileStatus", "You are signed in, but your profile could not be loaded. Please refresh.", "error");
       return;
@@ -60,16 +61,63 @@
     if (!data) {
       const { error: insertError } = await supabase.from("profiles").insert({ id: user.id, display_name: initialName || null });
       if (insertError && insertError.code !== "23505") status("profileStatus", "Your account works, but the profile could not be created yet.", "error");
+      savedProfile = { display_name: initialName, bio: "", location: "", website_url: "", reading_interests: "" };
+      populateProfileEditor(savedProfile);
+      renderProfileDetails(savedProfile);
+      $("profileForm").hidden = true;
       $("profileName").value = initialName;
       updateProfileLabels(initialName, user.email);
       applyProfilePhotos("", "");
     } else {
-      $("profileName").value = data.display_name || initialName;
+      savedProfile = {
+        display_name: data.display_name || initialName,
+        bio: data.bio || "",
+        location: data.location || "",
+        website_url: data.website_url || "",
+        reading_interests: data.reading_interests || ""
+      };
+      populateProfileEditor(savedProfile);
+      renderProfileDetails(savedProfile);
+      $("profileForm").hidden = true;
       updateProfileLabels(data.display_name || initialName, user.email);
       applyProfilePhotos(data.avatar_url || "", data.cover_url || "");
     }
     await migrateDeviceCollections(user);
     await renderCloudProgress();
+  }
+
+  function populateProfileEditor(profile) {
+    $("profileName").value = profile.display_name || "";
+    $("profileBio").value = profile.bio || "";
+    $("profileLocation").value = profile.location || "";
+    $("profileWebsite").value = profile.website_url || "";
+    $("profileInterests").value = profile.reading_interests || "";
+  }
+  function setProfilePreview(id, value, emptyText) {
+    const node = $(id);
+    const text = (value || "").trim();
+    node.textContent = text || emptyText;
+    node.classList.toggle("profile-detail-empty", !text);
+  }
+  function renderProfileDetails(profile) {
+    setProfilePreview("profileBioPreview", profile.bio, "Add a short introduction");
+    setProfilePreview("profileLocationPreview", profile.location, "Not added");
+    setProfilePreview("profileInterestsPreview", profile.reading_interests, "Not added");
+    const website = $("profileWebsitePreview");
+    website.replaceChildren();
+    const url = (profile.website_url || "").trim();
+    if (url) {
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = url;
+      website.appendChild(link);
+      website.classList.remove("profile-detail-empty");
+    } else {
+      website.textContent = "Not added";
+      website.classList.add("profile-detail-empty");
+    }
   }
 
   async function uploadProfileImage(file, kind) {
@@ -112,8 +160,16 @@
   $("avatarUpload").addEventListener("change", (event) => uploadProfileImage(event.target.files[0], "avatar"));
   $("coverUpload").addEventListener("change", (event) => uploadProfileImage(event.target.files[0], "cover"));
   $("editProfileButton").addEventListener("click", () => {
+    const form = $("profileForm");
+    form.hidden = false;
+    populateProfileEditor(savedProfile);
     $("profileAbout").scrollIntoView({ behavior: "smooth", block: "center" });
-    $("profileName").focus();
+    $("profileName").focus({ preventScroll: true });
+  });
+  $("cancelProfileEdit").addEventListener("click", () => {
+    populateProfileEditor(savedProfile);
+    $("profileForm").hidden = true;
+    status("profileStatus", "");
   });
 
   async function showAuth() {
@@ -169,15 +225,28 @@
   $("profileForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!currentUser) return;
-    const display_name = $("profileName").value.trim();
+    const profile = {
+      display_name: $("profileName").value.trim(),
+      bio: $("profileBio").value.trim(),
+      location: $("profileLocation").value.trim(),
+      website_url: $("profileWebsite").value.trim(),
+      reading_interests: $("profileInterests").value.trim()
+    };
+    if (profile.website_url && !/^https?:\/\//i.test(profile.website_url)) {
+      status("profileStatus", "Please enter a website address starting with https:// or http://.", "error");
+      return;
+    }
     status("profileStatus", "Saving profile…");
     const { error } = await supabase.from("profiles").upsert(
-      { id: currentUser.id, display_name },
+      { id: currentUser.id, ...profile },
       { onConflict: "id" }
     );
     if (error) status("profileStatus", "Could not save profile: " + error.message, "error");
     else {
-      updateProfileLabels(display_name, currentUser.email);
+      savedProfile = profile;
+      renderProfileDetails(savedProfile);
+      updateProfileLabels(profile.display_name, currentUser.email);
+      $("profileForm").hidden = true;
       status("profileStatus", "Profile saved.", "success");
     }
   });
