@@ -186,21 +186,82 @@ if (shareWisdomButton) shareWisdomButton.addEventListener("click", async () => {
 
 const SAVED_REFLECTIONS_KEY = "voiceoftaade-saved-reflections-v2";
 const FAVOURITE_REFLECTIONS_KEY = "voiceoftaade-favourite-reflections-v1";
-function readCollection(key) {
+const SUPABASE_URL = "https://qnnmbngxunmjerpeoxrr.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67";
+const readerSupabase = window.supabase && window.supabase.createClient
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+  : null;
+let readerSession = null;
+let readerCollections = { saved: [], favourite: [] };
+let currentArticleId = null;
+let collectionWriteQueue = Promise.resolve();
+
+function localCollection(key) {
   try {
     const value = JSON.parse(localStorage.getItem(key) || "[]");
     return Array.isArray(value) ? [...new Set(value.filter(id => typeof id === "string" && articles[id]))] : [];
-  } catch (error) { console.error("Collection read failed:", error); return []; }
+  } catch (error) { console.error("Local collection read failed:", error); return []; }
 }
-function writeCollection(key, values) {
-  try { localStorage.setItem(key, JSON.stringify([...new Set(values)])); return true; }
-  catch (error) {
+function collectionType(key) { return key === SAVED_REFLECTIONS_KEY ? "saved" : "favourite"; }
+function readCollection(key) {
+  const type = collectionType(key);
+  return readerSession ? readerCollections[type].slice() : localCollection(key);
+}
+function renderCollections() {
+  renderCollectionInto("savedList", SAVED_REFLECTIONS_KEY, "No saved reflections yet. Open a journal article and tap “Save reflection”.");
+  renderCollectionInto("favouriteList", FAVOURITE_REFLECTIONS_KEY, "No favourites yet. Open a journal article and tap “Add to favourites”.");
+}
+async function refreshReaderCollections() {
+  if (!readerSupabase || !readerSession) return;
+  const { data, error } = await readerSupabase.from("reader_journal_collections")
+    .select("journal_id,collection_type,created_at")
+    .eq("user_id", readerSession.user.id)
+    .order("created_at", { ascending: false });
+  if (error) { console.error("Could not load reader collections:", error); return; }
+  readerCollections = { saved: [], favourite: [] };
+  (data || []).forEach(row => {
+    if (articles[row.journal_id] && readerCollections[row.collection_type] && !readerCollections[row.collection_type].includes(row.journal_id)) {
+      readerCollections[row.collection_type].push(row.journal_id);
+    }
+  });
+  renderCollections();
+  updateReflectionButtons();
+}
+async function migrateLocalCollections() {
+  if (!readerSupabase || !readerSession) return;
+  const oldItems = [
+    ...localCollection(SAVED_REFLECTIONS_KEY).map(journal_id => ({ journal_id, collection_type: "saved" })),
+    ...localCollection(FAVOURITE_REFLECTIONS_KEY).map(journal_id => ({ journal_id, collection_type: "favourite" }))
+  ];
+  if (oldItems.length) {
+    const rows = oldItems.map(item => ({ user_id: readerSession.user.id, ...item }));
+    const { error } = await readerSupabase.from("reader_journal_collections").upsert(rows, { onConflict: "user_id,journal_id,collection_type", ignoreDuplicates: true });
+    if (error) console.error("Local collection migration could not complete:", error);
+  }
+  await refreshReaderCollections();
+}
+async function toggleCollection(key, id) {
+  const type = collectionType(key);
+  if (!articles[id]) return;
+  if (readerSupabase && readerSession) {
+    const exists = readerCollections[type].includes(id);
+    const result = exists
+      ? await readerSupabase.from("reader_journal_collections").delete().eq("user_id", readerSession.user.id).eq("journal_id", id).eq("collection_type", type)
+      : await readerSupabase.from("reader_journal_collections").upsert({ user_id: readerSession.user.id, journal_id: id, collection_type: type }, { onConflict: "user_id,journal_id,collection_type", ignoreDuplicates: true });
+    if (result.error) { alert("We could not update your collection. Please check your connection and try again."); console.error(result.error); return; }
+    await refreshReaderCollections();
+    return;
+  }
+  const current = localCollection(key);
+  const next = current.includes(id) ? current.filter(item => item !== id) : [...current, id];
+  try {
+    localStorage.setItem(key, JSON.stringify([...new Set(next)]));
+    renderCollections(); updateReflectionButtons();
+  } catch (error) {
     console.error("Collection save failed:", error);
-    alert("Your browser blocked local saving. Open the published site in Chrome, not a private/incognito tab, and try again.");
-    return false;
+    alert("Your browser could not save this collection. Please check browser storage settings and try again.");
   }
 }
-let currentArticleId = null;
 function updateReflectionButtons() {
   if (!currentArticleId) return;
   const saveButton = document.getElementById("saveReflection");
@@ -210,6 +271,12 @@ function updateReflectionButtons() {
   if (saveButton) { saveButton.textContent = saved ? "✓ Saved — remove" : "＋ Save reflection"; saveButton.setAttribute("aria-pressed", String(saved)); }
   if (favouriteButton) { favouriteButton.textContent = favourite ? "♥ Remove favourite" : "♡ Add to favourites"; favouriteButton.setAttribute("aria-pressed", String(favourite)); }
 }
+function trackReadingProgress(id) {
+  if (!readerSupabase || !readerSession || !articles[id]) return;
+  const row = { user_id: readerSession.user.id, journal_id: id, progress_percent: 100, last_read_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+  readerSupabase.from("reader_reading_progress").upsert(row, { onConflict: "user_id,journal_id" })
+    .then(({ error }) => { if (error) console.error("Reading progress could not be saved:", error); });
+}
 function openArticle(id) {
   const article = articles[id]; if (!article) return;
   currentArticleId = id;
@@ -218,42 +285,35 @@ function openArticle(id) {
   const body = document.getElementById("dialogBody");
   body.replaceChildren(...article.paragraphs.map(text => { const p = document.createElement("p"); p.textContent = text; return p; }));
   updateReflectionButtons();
+  trackReadingProgress(id);
   if (!dialog.open) dialog.showModal();
 }
 document.querySelectorAll("[data-article]").forEach(button => button.addEventListener("click", () => openArticle(button.dataset.article)));
 const saveReflectionButton = document.getElementById("saveReflection");
 if (saveReflectionButton) saveReflectionButton.addEventListener("click", () => {
-  if (!currentArticleId) return;
-  const saved = readCollection(SAVED_REFLECTIONS_KEY);
-  const next = saved.includes(currentArticleId) ? saved.filter(id => id !== currentArticleId) : [...saved, currentArticleId];
-  if (writeCollection(SAVED_REFLECTIONS_KEY, next)) { renderCollections(); updateReflectionButtons(); }
+  if (currentArticleId) toggleCollection(SAVED_REFLECTIONS_KEY, currentArticleId);
 });
 const favouriteReflectionButton = document.getElementById("favouriteReflection");
 if (favouriteReflectionButton) favouriteReflectionButton.addEventListener("click", () => {
-  if (!currentArticleId) return;
-  const favourites = readCollection(FAVOURITE_REFLECTIONS_KEY);
-  const next = favourites.includes(currentArticleId) ? favourites.filter(id => id !== currentArticleId) : [...favourites, currentArticleId];
-  if (writeCollection(FAVOURITE_REFLECTIONS_KEY, next)) { renderCollections(); updateReflectionButtons(); }
+  if (currentArticleId) toggleCollection(FAVOURITE_REFLECTIONS_KEY, currentArticleId);
 });
 function renderCollectionInto(containerId, key, emptyText) {
   const list = document.getElementById(containerId); if (!list) return;
-  list.replaceChildren(); const ids = readCollection(key);
+  list.replaceChildren();
+  const ids = readCollection(key);
   if (!ids.length) { const empty = document.createElement("p"); empty.className = "saved-empty"; empty.textContent = emptyText; list.append(empty); return; }
   ids.forEach(id => {
-    const article = articles[id]; const card = document.createElement("article"); card.className = "saved-card";
+    const article = articles[id]; if (!article) return;
+    const card = document.createElement("article"); card.className = "saved-card";
     const category = document.createElement("p"); category.className = "eyebrow"; category.textContent = article.category;
     const title = document.createElement("h3"); title.textContent = article.title;
     const actions = document.createElement("div"); actions.className = "saved-actions";
     const open = document.createElement("button"); open.className = "read-more"; open.type = "button"; open.textContent = "Read reflection →"; open.addEventListener("click", () => openArticle(id));
     const remove = document.createElement("button"); remove.className = "read-more saved-remove"; remove.type = "button";
     remove.textContent = key === SAVED_REFLECTIONS_KEY ? "Remove saved" : "Remove favourite";
-    remove.addEventListener("click", () => { writeCollection(key, readCollection(key).filter(item => item !== id)); renderCollections(); updateReflectionButtons(); });
+    remove.addEventListener("click", () => toggleCollection(key, id));
     actions.append(open, remove); card.append(category, title, actions); list.append(card);
   });
-}
-function renderCollections() {
-  renderCollectionInto("savedList", SAVED_REFLECTIONS_KEY, "No saved reflections yet. Open a journal article and tap “Save reflection”.");
-  renderCollectionInto("favouriteList", FAVOURITE_REFLECTIONS_KEY, "No favourites yet. Open a journal article and tap “Add to favourites”.");
 }
 function setActiveCollection(which) {
   const isSaved = which === "saved";
@@ -268,6 +328,19 @@ const showSavedButton = document.getElementById("showSaved");
 const showFavouritesButton = document.getElementById("showFavourites");
 if (showSavedButton) showSavedButton.addEventListener("click", () => setActiveCollection("saved"));
 if (showFavouritesButton) showFavouritesButton.addEventListener("click", () => setActiveCollection("favourites"));
+if (readerSupabase) {
+  readerSupabase.auth.getSession().then(async ({ data, error }) => {
+    if (error) { console.error("Reader session check failed:", error); return; }
+    readerSession = data.session || null;
+    if (readerSession) await migrateLocalCollections();
+    else renderCollections();
+  });
+  readerSupabase.auth.onAuthStateChange((event, session) => {
+    readerSession = session || null;
+    if (session) setTimeout(() => migrateLocalCollections(), 0);
+    else { readerCollections = { saved: [], favourite: [] }; renderCollections(); updateReflectionButtons(); }
+  });
+}
 renderCollections();
 
 const chapterJournalData = [["Foundations of a Good Life","Perspective","Look beyond your first interpretation. Facts matter, but the story you attach to them deserves examination.","Separate facts from assumptions and choose a response that reflects your values."],["Foundations of a Good Life","Stillness","Stillness creates room to notice what constant noise conceals. A pause can help you recognise a feeling and choose a wiser response.","Take five quiet minutes. What thought keeps returning, and what useful action might it be asking of you?"],["Foundations of a Good Life","Discipline","Discipline is a promise made practical through repetition. It is not punishment; it is structure that helps your future self benefit from today's choices.","Choose one small commitment and keep it today, even if imperfectly."],["Foundations of a Good Life","Wisdom Over Noise","Not every loud opinion deserves authority over your life. Wisdom checks context, considers consequences, and knows when silence is wiser than reaction.","Before reacting to advice, ask whether it is informed, fair, and relevant to your situation."],["Foundations of a Good Life","Time","Time is part of the life you are building. Your routine reveals what receives your attention, by choice or by default.","Reduce one avoidable distraction and protect time for something meaningful."],["Matters of the Heart","Love Without Losing Yourself","Love should make room for your values, voice, friendships, and growth. Caring for someone need not mean abandoning your identity.","Name one need you hesitate to express. How can you communicate it kindly and clearly?"],["Matters of the Heart","Marriage","Partnership grows through everyday responsibility: listening, sharing burdens, repairing misunderstandings, and choosing honesty over avoidance.","Reflect on one habit that builds trust and one that could weaken it."],["Matters of the Heart","Boundaries","Boundaries are clear instructions for mutual respect, not tools for punishment. They help generosity remain sincere rather than turning into resentment.","Write one respectful sentence that communicates a limit you need to maintain."],["Matters of the Heart","Loyalty","Loyalty includes reliability, discretion, and truth. Blind agreement is not always care; honest guidance can protect a relationship better than silence.","Choose one action that demonstrates reliability today."],["Matters of the Heart","Forgiveness","Forgiveness can loosen resentment without pretending harm did not happen. Rebuilding trust and deciding what access someone should have are separate choices.","Consider what moving forward requires: a conversation, a boundary, support, or more time."],["Mindset and Motivation","Laziness and Spiritual Disconnection","When purpose feels distant, investigate the delay instead of insulting yourself. Fatigue, fear, uncertainty, and lack of structure need different responses.","Start one neglected task with a small step and notice what made beginning easier."],["Mindset and Motivation","Fear","Fear may warn you about uncertainty, but it does not have to make every decision. Courage can mean preparing carefully and taking one considered step.","Name a concern, examine the evidence, and identify a practical next step."],["Mindset and Motivation","Dream","A dream offers direction; a plan gives it somewhere to go. Ambition becomes useful when translated into actions you can practise and review.","Write one goal and the next action you can complete this week."],["Mindset and Motivation","Failure","Failure is information about an attempt, not a verdict on your identity. A setback may reveal a skill to learn or a strategy to revise.","Record one lesson from a disappointment and one adjustment for next time."],["Mindset and Motivation","Humility","Humility keeps confidence teachable. It lets you stand by sound convictions while remaining open to evidence and willing to correct mistakes.","Ask one sincere question today before trying to prove your point."],["Social Truth & Modern Struggles","Likes and Validation","Attention can be enjoyable, but it is an unstable measure of meaning. Private progress still matters when nobody notices it.","Would this action still feel worthwhile if nobody applauded or responded?"],["Social Truth & Modern Struggles","Faking and Authenticity","Maintaining appearances can consume the energy genuine growth requires. Authenticity is not oversharing; it means not constantly betraying your values.","Notice one area where you feel pressure to perform. What would a more honest choice look like?"],["Social Truth & Modern Struggles","The Soft Life","Comfort, rest, and joy matter, but comfort alone cannot supply purpose. Choose worthwhile effort and release needless struggle.","Which difficulty helps you grow, and which could be eased with a clearer boundary?"],["Social Truth & Modern Struggles","The Hustle","Hard work matters when it serves a meaningful direction. Constant activity can become exhaustion without progress if priorities are unclear.","Choose the task most connected to your priority and give it focused attention."],["Social Truth & Modern Struggles","Mental Peace","Peace is not the absence of responsibility. It can grow from honest conversations, realistic plans, healthy limits, and accepting what you cannot control.","Name one concern taking too much attention. Decide whether to address it, set a limit, or let it wait."]];
