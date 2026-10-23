@@ -63,18 +63,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  const isCode = /\\.(js|css|webmanifest)$/.test(url.pathname);
   event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(request).then((response) => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME)
-            .then((cache) => cache.put(request, copy));
-        }
-        return response;
-      });
+    fetch(request).then((response) => {
+      if (response.ok) {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+      }
+      return response;
+    }).catch(async () => {
+      return (await caches.match(request)) || Response.error();
     })
   );
 });
