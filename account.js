@@ -38,18 +38,14 @@
   function updateProfileLabels(name, email) {
     const display = name || "Voiceoftaade Reader";
     $("profileDisplayName").textContent = display;
-    $("feedDisplayName").textContent = display;
     $("profileEmail").textContent = email || "Reader profile";
   }
   function applyProfilePhotos(avatarUrl, coverUrl) {
     $("profileAvatar").src = avatarUrl || defaultAvatar;
-    $("photoPreviewAvatar").src = avatarUrl || defaultAvatar;
     $("profileCover").dataset.coverUrl = coverUrl || "";
     $("profileCover").style.backgroundImage = coverUrl
       ? "linear-gradient(0deg,rgba(3,10,18,.65),transparent 65%),url('" + coverUrl.replace(/'/g, "%27") + "')"
       : "";
-    $("photoPreviewCover").style.backgroundImage = coverUrl ? "url('" + coverUrl.replace(/'/g, "%27") + "')" : "";
-    $("photoPreviewCover").textContent = coverUrl ? "" : "Cover photo";
   }
   async function showDashboard(user) {
     currentUser = user;
@@ -117,17 +113,7 @@
     $("profileAbout").scrollIntoView({ behavior: "smooth", block: "center" });
     $("profileName").focus();
   });
-  document.querySelectorAll("[data-profile-tab]").forEach((button) => {
-    button.addEventListener("click", () => {
-      document.querySelectorAll("[data-profile-tab]").forEach((item) => item.classList.toggle("active", item === button));
-      const tab = button.dataset.profileTab;
-      $("profileAbout").style.display = tab === "about" ? "block" : "none";
-      $("profileFeed").style.display = tab === "posts" ? "block" : "none";
-      $("profilePhotos").style.display = tab === "photos" ? "block" : "none";
-      $("profileSaved").style.display = tab === "saved" ? "block" : "none";
-    });
-  })
-  document.querySelector('[data-profile-tab="posts"]').click();
+
   async function showAuth() {
     currentUser = null;
     $("dashboard").style.display = "none";
