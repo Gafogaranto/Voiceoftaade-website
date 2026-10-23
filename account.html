@@ -79,9 +79,9 @@
     .profile-action-main{border:1px solid #07172b;background:#07172b;color:#fff}
     .profile-action-secondary{border:1px solid #d5dbe2;background:#f0f2f5;color:#172334}
     .profile-tabs{display:flex;gap:4px;padding:0 24px;background:#fff;overflow-x:auto}
-    .profile-tabs button{flex:0 0 auto;padding:17px 16px;border:0;border-bottom:3px solid transparent;background:transparent;color:#657184;font-weight:800;font-size:.82rem;cursor:pointer}
-    .profile-tabs button.active{color:#173e5b;border-bottom-color:#d9ad4f}
-    .profile-content{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:18px;padding:22px;background:#f0f2f5}
+    .profile-tabs a{flex:0 0 auto;padding:17px 16px;border:0;border-bottom:3px solid transparent;background:transparent;color:#657184;font-weight:800;font-size:.82rem;text-decoration:none;white-space:nowrap}
+    .profile-tabs a.active{color:#173e5b;border-bottom-color:#d9ad4f}
+    .profile-content{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;padding:22px;background:#f0f2f5}.profile-settings-content .profile-card{max-width:680px;width:100%;margin:0 auto}
     .profile-card{min-width:0;padding:22px;border:1px solid #e0e4e9;border-radius:11px;background:#fff;box-shadow:0 2px 5px #07172b08}
     .profile-card h3{margin:0 0 10px;color:#182536;font:600 1.35rem/1.2 var(--serif)}
     .profile-card>p:not(.eyebrow){color:#687486;font-size:.84rem;line-height:1.7}
@@ -109,9 +109,9 @@
       .profile-name-block{padding:0 0 14px}
       .profile-primary-actions{justify-content:center}
       .profile-tabs{padding:0 6px;justify-content:flex-start}
-      .profile-tabs button{padding:15px 13px}
+      .profile-tabs a{padding:15px 13px}
       .profile-content{grid-template-columns:1fr;padding:12px;gap:12px}
-      .profile-about-card,.profile-feed-card{grid-column:1;grid-row:auto}
+      .profile-about-card{grid-column:1;grid-row:auto}
       .profile-card{padding:18px}
       .cover-upload{right:9px;bottom:9px;padding:8px 10px;font-size:.68rem}
       .cover-brand{margin-bottom:40px}
@@ -181,37 +181,20 @@
                   <button type="button" class="profile-action-secondary" id="signOut">Sign out</button>
                 </div>
               </div>
-              <nav class="profile-tabs" aria-label="Profile sections">
-                <button type="button" class="active" data-profile-tab="posts">Posts</button>
-                <button type="button" data-profile-tab="about">About</button>
-                <button type="button" data-profile-tab="photos">Photos</button>
-                <button type="button" data-profile-tab="saved">Saved</button>
+              <nav class="profile-tabs" aria-label="Reader collections">
+                <a class="active" href="./#savedReflections">Saved Journals</a>
+                <a href="./#favouriteReflections">Favourite Journals</a>
               </nav>
-              <div class="profile-content">
+              <div class="profile-content profile-settings-content">
                 <section class="profile-card profile-about-card" id="profileAbout">
-                  <p class="eyebrow">ABOUT YOU</p>
-                  <h3>Your profile, your space.</h3>
-                  <p>Choose how you appear in the Voiceoftaade reader community. Your email address is private and is shown only to you.</p>
+                  <p class="eyebrow">PROFILE DETAILS</p>
+                  <h3>Edit your reader profile</h3>
+                  <p>Update the name shown on your Voiceoftaade profile. Your email address remains private.</p>
                   <form class="account-form" id="profileForm">
                     <label>Display name<input id="profileName" type="text" maxlength="80" autocomplete="nickname" placeholder="Your display name"></label>
                     <button class="button button-dark" type="submit">Save profile <span>→</span></button>
                   </form>
                   <p class="account-status" id="profileStatus" role="status" aria-live="polite"></p>
-                </section>
-                <section class="profile-card profile-feed-card" id="profileFeed">
-                  <div class="feed-heading"><div class="mini-avatar">V</div><div><strong id="feedDisplayName">Your Voiceoftaade space</strong><small>Reader profile · Just for you</small></div></div>
-                  <h3>Your reading journey starts here.</h3>
-                  <p>This is where future reading updates, reflections and community posts can appear. Your public articles remain open to everyone.</p>
-                  <div class="feed-placeholder"><span>✦</span><strong>Words that stay with you.</strong><small>Discover an idea. Save a thought. Grow at your own pace.</small></div>
-                </section>
-                <section class="profile-card profile-photos-card" id="profilePhotos">
-                  <p class="eyebrow">YOUR PHOTOS</p><h3>Profile photos</h3>
-                  <p>Your current profile and cover images appear here when you add them.</p>
-                  <div class="photo-preview-grid"><img id="photoPreviewAvatar" alt="Current profile photo"><div id="photoPreviewCover" class="photo-preview-cover">Cover photo</div></div>
-                </section>
-                <section class="profile-card profile-saved-card" id="profileSaved">
-                  <p class="eyebrow">YOUR COLLECTION</p><h3>Saved for later</h3>
-                  <p>Saved articles, favourite quotes and reading progress are planned for a future update.</p>
                 </section>
               </div>
             </section>
