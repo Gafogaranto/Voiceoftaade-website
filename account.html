@@ -54,6 +54,69 @@
     @media(max-width:760px){.account-layout{grid-template-columns:1fr;filter:drop-shadow(0 18px 30px rgba(17,39,28,.12))}.account-story{min-height:auto;border-radius:16px 16px 0 0;padding:28px 25px 25px}.story-mark{width:43px;height:43px;font-size:1.55rem}.story-kicker{margin-top:24px}.account-story h1{font-size:clamp(2.5rem,11vw,3.5rem);max-width:480px}.story-copy{margin-top:15px;font-size:.88rem}.story-quote{margin-top:22px;padding-top:15px}.story-quote p{font-size:1.08rem}.account-panel{border-left:1px solid #e7dfd0;border-radius:0 0 16px 16px;padding:28px 24px 30px}.auth-heading h2{font-size:2rem}.account-page{padding-top:22px}}
     @media(max-width:380px){.account-panel{padding:24px 17px}.account-tabs button{font-size:.77rem}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+
+    /* Facebook-inspired reader profile */
+    .account-layout:has(.account-dashboard[style*="block"]){display:block;filter:none}
+    .account-layout:has(.account-dashboard[style*="block"])>.account-story{display:none}
+    .account-layout:has(.account-dashboard[style*="block"])>.account-panel{padding:0;background:transparent;border:0;border-radius:0;display:block;filter:none}
+    .account-dashboard{width:100%;max-width:1000px;margin:0 auto}
+    .social-profile{overflow:hidden;background:#f4f6f8;border:1px solid #dfe3e8;border-radius:14px;box-shadow:0 12px 35px #07172b12}
+    .profile-cover{height:clamp(190px,32vw,340px);position:relative;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,#34536d 0%,transparent 48%),linear-gradient(135deg,#07172b,#153c56 55%,#07172b);background-position:center;background-size:cover}
+    .cover-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,10,18,.78),transparent 65%)}
+    .cover-brand{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;margin-bottom:30px;color:#fff4d8;text-align:center;letter-spacing:.22em;font-size:clamp(1rem,3vw,1.8rem);font-weight:800}
+    .cover-brand small{margin-top:7px;color:#e1bd69;font-size:clamp(.48rem,1.3vw,.67rem);letter-spacing:.16em}
+    .cover-upload{position:absolute;right:18px;bottom:16px;z-index:2;padding:10px 13px;border-radius:7px;background:#fff;color:#172334;font-size:.75rem;font-weight:800;cursor:pointer;box-shadow:0 2px 8px #0002}
+    .profile-identity{display:flex;align-items:flex-end;gap:20px;padding:0 28px 20px;background:#fff;border-bottom:1px solid #e0e4e9;min-height:130px}
+    .profile-avatar-wrap{position:relative;flex:0 0 auto;width:148px;height:148px;margin-top:-68px;padding:5px;border:1px solid #e0e4e9;border-radius:50%;background:#fff}
+    .profile-avatar{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;background:#07172b}
+    .avatar-upload{position:absolute;right:5px;bottom:8px;display:grid;place-items:center;width:37px;height:37px;border:3px solid #fff;border-radius:50%;background:#e5bd60;color:#07172b;font-size:1.5rem;font-weight:700;cursor:pointer}
+    .profile-name-block{flex:1;min-width:0;padding:0 0 7px}
+    .profile-name-block .eyebrow{margin:0 0 5px;font-size:.62rem}
+    .profile-name-block h2{font-size:clamp(1.55rem,3.4vw,2.35rem);margin:0 0 4px;overflow-wrap:anywhere}
+    .profile-friends{margin:0;color:#697586;font-size:.8rem;overflow-wrap:anywhere}
+    .profile-primary-actions{display:flex;gap:9px;flex-wrap:wrap;padding-bottom:7px}
+    .profile-primary-actions button{padding:10px 14px;border-radius:7px;font-size:.77rem;font-weight:800;cursor:pointer}
+    .profile-action-main{border:1px solid #07172b;background:#07172b;color:#fff}
+    .profile-action-secondary{border:1px solid #d5dbe2;background:#f0f2f5;color:#172334}
+    .profile-tabs{display:flex;gap:4px;padding:0 24px;background:#fff;overflow-x:auto}
+    .profile-tabs button{flex:0 0 auto;padding:17px 16px;border:0;border-bottom:3px solid transparent;background:transparent;color:#657184;font-weight:800;font-size:.82rem;cursor:pointer}
+    .profile-tabs button.active{color:#173e5b;border-bottom-color:#d9ad4f}
+    .profile-content{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:18px;padding:22px;background:#f0f2f5}
+    .profile-card{min-width:0;padding:22px;border:1px solid #e0e4e9;border-radius:11px;background:#fff;box-shadow:0 2px 5px #07172b08}
+    .profile-card h3{margin:0 0 10px;color:#182536;font:600 1.35rem/1.2 var(--serif)}
+    .profile-card>p:not(.eyebrow){color:#687486;font-size:.84rem;line-height:1.7}
+    .profile-card .account-form{margin-top:18px;padding:0;background:transparent;border:0}
+    .profile-card .account-form input{background:#fff}
+    .profile-feed-card{grid-column:2;grid-row:1}
+    .profile-about-card{grid-column:1;grid-row:1}
+    .feed-heading{display:flex;align-items:center;gap:12px;padding-bottom:17px;border-bottom:1px solid #edf0f3}
+    .mini-avatar{display:grid;place-items:center;width:43px;height:43px;border-radius:50%;background:#07172b;color:#e5bd60;font:italic 1.4rem Georgia,serif}
+    .feed-heading strong,.feed-heading small{display:block}.feed-heading strong{font-size:.84rem;color:#172334}.feed-heading small{font-size:.72rem;color:#748094;margin-top:2px}
+    .profile-feed-card>h3{margin-top:18px}
+    .feed-placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;margin-top:20px;padding:25px 15px;border-radius:9px;background:linear-gradient(145deg,#f7f1e4,#eef2f6);color:#253a4d}
+    .feed-placeholder span{color:#a77c2d;font-size:1.6rem}.feed-placeholder strong{font:600 1.1rem var(--serif)}.feed-placeholder small{max-width:270px;color:#748094;line-height:1.6}
+    .profile-photos-card,.profile-saved-card{display:none;grid-column:1/-1}
+    .photo-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+    .photo-preview-grid img,.photo-preview-cover{width:100%;height:150px;object-fit:cover;border-radius:8px;background:#e9edf1}
+    .photo-preview-cover{display:grid;place-items:center;color:#687486;font-size:.8rem;background:linear-gradient(135deg,#07172b,#31546c)}
+    .account-dashboard>.account-note{margin:15px auto 0;max-width:1000px;border-radius:8px}
+    @media(max-width:720px){
+      .account-page{padding:18px 10px 42px}
+      .profile-cover{height:190px}
+      .profile-identity{position:relative;display:block;padding:0 16px 18px;text-align:center}
+      .profile-avatar-wrap{width:124px;height:124px;margin:-58px auto 10px}
+      .avatar-upload{width:33px;height:33px;right:1px;bottom:5px}
+      .profile-name-block{padding:0 0 14px}
+      .profile-primary-actions{justify-content:center}
+      .profile-tabs{padding:0 6px;justify-content:flex-start}
+      .profile-tabs button{padding:15px 13px}
+      .profile-content{grid-template-columns:1fr;padding:12px;gap:12px}
+      .profile-about-card,.profile-feed-card{grid-column:1;grid-row:auto}
+      .profile-card{padding:18px}
+      .cover-upload{right:9px;bottom:9px;padding:8px 10px;font-size:.68rem}
+      .cover-brand{margin-bottom:40px}
+    }
+
   </style>
 </head>
 <body>
@@ -95,15 +158,64 @@
             <p class="account-status" id="authStatus" role="status" aria-live="polite"></p>
           </div>
           <div class="account-dashboard" id="dashboard">
-            <p class="eyebrow">YOUR READER DASHBOARD</p><h2>Welcome to your space.</h2>
-            <p class="account-email" id="signedInEmail"></p>
-            <form class="account-form" id="profileForm">
-              <label>Display name<input id="profileName" type="text" maxlength="80" autocomplete="nickname" placeholder="Your display name"></label>
-              <button class="button button-dark" type="submit">Save profile <span>→</span></button>
-            </form>
-            <p class="account-status" id="profileStatus" role="status" aria-live="polite"></p>
-            <div class="account-actions"><button type="button" id="signOut">Sign out</button></div>
-            <p class="account-note">Saved reflections, reading progress, private journal entries, and notification preferences are planned for later stages. They are not yet synced to this account.</p>
+            <section class="social-profile" aria-label="Your reader profile">
+              <div class="profile-cover" id="profileCover">
+                <div class="cover-shade"></div>
+                <div class="cover-brand"><span>VOICEOFTAADE</span><small>WORDS FOR WISDOM · IDEAS FOR LIFE</small></div>
+                <label class="cover-upload" for="coverUpload">＋ Add cover photo</label>
+                <input id="coverUpload" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+              </div>
+              <div class="profile-identity">
+                <div class="profile-avatar-wrap">
+                  <img id="profileAvatar" class="profile-avatar" alt="Your profile picture" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%2307172b'/%3E%3Ccircle cx='60' cy='43' r='23' fill='%23d9ad4f'/%3E%3Cpath d='M18 115c3-28 19-43 42-43s39 15 42 43' fill='%23d9ad4f'/%3E%3C/svg%3E">
+                  <label class="avatar-upload" for="avatarUpload" aria-label="Upload profile picture" title="Change profile picture">＋</label>
+                  <input id="avatarUpload" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+                </div>
+                <div class="profile-name-block">
+                  <p class="eyebrow">YOUR READER PROFILE</p>
+                  <h2 id="profileDisplayName">Welcome to your space.</h2>
+                  <p class="profile-friends" id="profileEmail">Signed in to Voiceoftaade</p>
+                </div>
+                <div class="profile-primary-actions">
+                  <button type="button" class="profile-action-main" id="editProfileButton">✎ Edit profile</button>
+                  <button type="button" class="profile-action-secondary" id="signOut">Sign out</button>
+                </div>
+              </div>
+              <nav class="profile-tabs" aria-label="Profile sections">
+                <button type="button" class="active" data-profile-tab="posts">Posts</button>
+                <button type="button" data-profile-tab="about">About</button>
+                <button type="button" data-profile-tab="photos">Photos</button>
+                <button type="button" data-profile-tab="saved">Saved</button>
+              </nav>
+              <div class="profile-content">
+                <section class="profile-card profile-about-card" id="profileAbout">
+                  <p class="eyebrow">ABOUT YOU</p>
+                  <h3>Your profile, your space.</h3>
+                  <p>Choose how you appear in the Voiceoftaade reader community. Your email address is private and is shown only to you.</p>
+                  <form class="account-form" id="profileForm">
+                    <label>Display name<input id="profileName" type="text" maxlength="80" autocomplete="nickname" placeholder="Your display name"></label>
+                    <button class="button button-dark" type="submit">Save profile <span>→</span></button>
+                  </form>
+                  <p class="account-status" id="profileStatus" role="status" aria-live="polite"></p>
+                </section>
+                <section class="profile-card profile-feed-card" id="profileFeed">
+                  <div class="feed-heading"><div class="mini-avatar">V</div><div><strong id="feedDisplayName">Your Voiceoftaade space</strong><small>Reader profile · Just for you</small></div></div>
+                  <h3>Your reading journey starts here.</h3>
+                  <p>This is where future reading updates, reflections and community posts can appear. Your public articles remain open to everyone.</p>
+                  <div class="feed-placeholder"><span>✦</span><strong>Words that stay with you.</strong><small>Discover an idea. Save a thought. Grow at your own pace.</small></div>
+                </section>
+                <section class="profile-card profile-photos-card" id="profilePhotos">
+                  <p class="eyebrow">YOUR PHOTOS</p><h3>Profile photos</h3>
+                  <p>Your current profile and cover images appear here when you add them.</p>
+                  <div class="photo-preview-grid"><img id="photoPreviewAvatar" alt="Current profile photo"><div id="photoPreviewCover" class="photo-preview-cover">Cover photo</div></div>
+                </section>
+                <section class="profile-card profile-saved-card" id="profileSaved">
+                  <p class="eyebrow">YOUR COLLECTION</p><h3>Saved for later</h3>
+                  <p>Saved articles, favourite quotes and reading progress are planned for a future update.</p>
+                </section>
+              </div>
+            </section>
+            <p class="account-note">Your profile name and photos are saved to your reader account. Private journal and saved-content syncing will be added in a later stage.</p>
           </div>
         </section>
       </div>
