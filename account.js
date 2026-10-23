@@ -186,9 +186,6 @@
     const { error } = await supabase.auth.signOut();
     if (error) { status("profileStatus", error.message, "error"); return; }
     await showAuth();
-  
-
-  setMode("signin");
     status("authStatus", "You have signed out.", "success");
   });
 
