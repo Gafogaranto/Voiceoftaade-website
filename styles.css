@@ -11,3 +11,50 @@
   color: var(--muted, #777);
   font-size: 0.92em;
 }
+
+
+/* Daily Wisdom and reader-saved reflections */
+.daily-wisdom {
+  padding: 76px 24px;
+  background: #07172b;
+  color: #f5f0e5;
+  text-align: center;
+}
+.daily-wisdom-inner { max-width: 850px; margin: 0 auto; }
+.daily-wisdom .eyebrow { color: #d9ad4f; }
+.daily-wisdom h2 {
+  margin: 0;
+  font: 600 clamp(2.1rem, 4vw, 3.3rem)/1.15 var(--serif);
+}
+.daily-wisdom h2 em { color: #d9ad4f; font-weight: 500; }
+.daily-wisdom blockquote {
+  margin: 25px auto 16px;
+  font: 500 clamp(1.4rem, 3vw, 2.25rem)/1.4 var(--serif);
+}
+.daily-wisdom-date {
+  margin: 0 0 24px;
+  color: #c5c0b4;
+  font-size: .75rem;
+  letter-spacing: .08em;
+}
+.daily-wisdom .button { border: 0; cursor: pointer; }
+.saved-section { background: #f5f6f8; }
+.saved-inner { padding-top: 75px; padding-bottom: 80px; }
+.saved-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.saved-card {
+  padding: 22px;
+  background: #fff;
+  border: 1px solid #d7dce3;
+}
+.saved-card .eyebrow { margin-bottom: 10px; }
+.saved-card h3 { font: 600 1.25rem/1.3 var(--serif); margin: 0 0 20px; }
+.saved-actions { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+.saved-actions button { border: 0; background: none; padding: 0; cursor: pointer; }
+.saved-remove { color: #8c513d; }
+.saved-empty { color: #5e6877; background: #fff; padding: 22px; border: 1px dashed #c9ced5; }
+#saveReflection { border: 0; cursor: pointer; margin-top: 10px; }
+#saveReflection[aria-pressed="true"] { background: #e8dfca; color: #07172b; }
+@media (max-width: 680px) {
+  .daily-wisdom { padding: 60px 23px; }
+  .saved-list { grid-template-columns: 1fr; }
+}
