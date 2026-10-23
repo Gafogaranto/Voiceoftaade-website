@@ -285,7 +285,7 @@
         const card=document.createElement("article");card.className="saved-card";
         const h=document.createElement("h3");h.textContent=JOURNALS[row.journal_id][0]+" — Daily Journal";
         const actions=document.createElement("div");actions.className="saved-actions";
-        const open=document.createElement("button");open.type="button";open.textContent="Read journal →";open.addEventListener("click",()=>location.href="./?openJournal="+encodeURIComponent(row.journal_id)+"#journal");
+        const open=document.createElement("button");open.type="button";open.textContent="Read journal →";open.addEventListener("click",()=>location.href="journals.html?openJournal="+encodeURIComponent(row.journal_id)+"#journal");
         const remove=document.createElement("button");remove.type="button";remove.textContent=type==="saved"?"Remove saved":"Remove favourite";
         remove.addEventListener("click",async()=>{remove.disabled=true;const out=await supabase.from("reader_journal_collections").delete().eq("user_id",currentUser.id).eq("journal_id",row.journal_id).eq("collection_type",type);if(out.error){status("profileStatus","Could not remove this journal. Try again.","error");remove.disabled=false;}else await renderCloudCollections();});
         actions.append(open,remove);card.append(h,actions);list.append(card);
@@ -303,7 +303,7 @@
     const {data,error}=await supabase.from("reader_reading_progress").select("journal_id,progress_percent,last_read_at").eq("user_id",currentUser.id).order("updated_at",{ascending:false}).limit(50);
     if(error){console.error(error);return;}target.replaceChildren();const rows=(data||[]).filter(row=>JOURNALS[row.journal_id]);
     if(!rows.length){const p=document.createElement("p");p.className="saved-empty";p.textContent="Your reading history will appear here as you open journals.";target.append(p);return;}
-    rows.forEach(row=>{const card=document.createElement("article");card.className="saved-card";const h=document.createElement("h3");h.textContent=JOURNALS[row.journal_id][0];const p=document.createElement("p");p.textContent=Math.round(Number(row.progress_percent))+"% read · Last opened "+new Date(row.last_read_at).toLocaleDateString();const open=document.createElement("button");open.type="button";open.textContent="Continue reading →";open.addEventListener("click",()=>location.href="./?openJournal="+encodeURIComponent(row.journal_id)+"#journal");card.append(h,p,open);target.append(card);});
+    rows.forEach(row=>{const card=document.createElement("article");card.className="saved-card";const h=document.createElement("h3");h.textContent=JOURNALS[row.journal_id][0];const p=document.createElement("p");p.textContent=Math.round(Number(row.progress_percent))+"% read · Last opened "+new Date(row.last_read_at).toLocaleDateString();const open=document.createElement("button");open.type="button";open.textContent="Continue reading →";open.addEventListener("click",()=>location.href="journals.html?openJournal="+encodeURIComponent(row.journal_id)+"#journal");card.append(h,p,open);target.append(card);});
   }
 
   setMode("signin");
