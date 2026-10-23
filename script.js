@@ -300,6 +300,23 @@ function buildDailyChapterJournals() {
 buildDailyChapterJournals();
 renderCollections();
 
+// Reopen the exact saved/favourite journal selected from the reader profile.
+(() => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("openJournal");
+  if (!id) return;
+  window.setTimeout(() => {
+    if (articles[id]) {
+      const journalSection = document.getElementById("journal");
+      if (journalSection) journalSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      openArticle(id);
+    }
+    params.delete("openJournal");
+    const query = params.toString();
+    history.replaceState({}, "", window.location.pathname + (query ? "?" + query : "") + window.location.hash);
+  }, 0);
+})();
+
 
 // One short signature reveal per browser tab session; accessible and lightweight.
 (() => {
