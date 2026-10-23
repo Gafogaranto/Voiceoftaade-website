@@ -350,3 +350,232 @@ body > main, main { flex: 1 0 auto; }
   .contact-page-grid, .community-feed-section, .social-hub-section { margin-left: 12px; margin-right: 12px; }
   .contact-form-panel, .contact-side-panel { padding: 20px 15px; }
 }
+
+
+/* Responsive foundation: fluid layouts across phones, foldables, tablets and desktop. */
+:root {
+  --page-gutter: clamp(1rem, 4vw, 4.5rem);
+}
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+img, picture, video, canvas, svg, iframe {
+  max-width: 100%;
+}
+img, video {
+  height: auto;
+}
+button, input, select, textarea {
+  max-width: 100%;
+  font: inherit;
+}
+button, a, input, select, textarea, summary {
+  touch-action: manipulation;
+}
+a, p, h1, h2, h3, h4, li, small, strong, label, span {
+  overflow-wrap: anywhere;
+}
+main, section, header, footer, nav, article, aside, form, fieldset {
+  min-width: 0;
+}
+:where(.hero, .section, .section-inner, .about-section, .community-section,
+.contact-section, .inner-hero, .contact-page-grid, .community-feed-section,
+.social-hub-section, .account-page, .account-wrap, .account-layout) {
+  min-width: 0;
+  max-width: 100%;
+}
+:where(.article-grid, .saved-list, .community-feed, .social-hub-grid,
+.profile-details-grid, .profile-content, .contact-page-grid, .account-layout) > * {
+  min-width: 0;
+  max-width: 100%;
+}
+:where(.button, .nav-cta, .hero-actions a, .book-actions a, .community-actions a) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+:where(input, select, textarea) {
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, .85fr);
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+  .hero-art {
+    min-width: 0;
+    max-width: 100%;
+    transform: scale(.82);
+    transform-origin: center;
+    margin-inline: -12px;
+  }
+  .section, .community-section, .site-footer {
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
+  }
+  .article-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .saved-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 680px) {
+  .site-header {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    gap: 8px;
+  }
+  .brand-logo {
+    width: clamp(112px, 38vw, 145px);
+    max-width: 45vw;
+  }
+  .site-header nav {
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: calc(100dvh - 76px);
+    overflow-y: auto;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding: clamp(30px, 8vw, 52px) var(--page-gutter) 38px;
+    gap: 14px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 9.5vw, 3.8rem);
+    line-height: 1.08;
+  }
+  .hero-art {
+    width: 100%;
+    height: clamp(280px, 90vw, 390px);
+    margin: 0 auto;
+    transform: none;
+    overflow: hidden;
+  }
+  .orb { width: min(86vw, 340px); height: min(86vw, 340px); }
+  .orb-two { width: min(70vw, 280px); height: min(70vw, 280px); }
+  .book-cover {
+    width: clamp(175px, 55vw, 230px);
+    height: auto;
+    aspect-ratio: 250 / 370;
+    padding: clamp(15px, 4vw, 23px);
+  }
+  .cover-title { font-size: clamp(1.5rem, 7vw, 2rem); }
+  .art-caption { left: 2%; right: 2%; font-size: clamp(.48rem, 2vw, .6rem); gap: 8px; }
+  .hero-actions, .book-actions, .community-actions {
+    gap: 12px;
+  }
+  .hero-actions .button, .book-actions .button {
+    max-width: 100%;
+  }
+  .section, .section-inner, .about-section, .community-section,
+  .contact-section, .daily-wisdom, .saved-inner {
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
+  }
+  .section-heading {
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .section-heading h2, .about-copy h2, .community-copy h2,
+  .contact-section h2 {
+    font-size: clamp(1.8rem, 7.8vw, 2.6rem);
+    line-height: 1.12;
+  }
+  .book-feature {
+    grid-template-columns: minmax(0, 1fr);
+    padding: clamp(16px, 5vw, 26px);
+    gap: 28px;
+  }
+  .book-poster { width: min(100%, 250px); }
+  .coming-soon { flex-wrap: wrap; }
+  .coming-label { margin-left: 0; white-space: normal; }
+  .article-grid, .saved-list, .community-feed, .social-hub-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .article-card, .saved-card, .feed-card { min-width: 0; }
+  .article-art { height: clamp(170px, 56vw, 230px); }
+  .journal-tools { align-items: stretch; flex-direction: column; }
+  .search-box { width: 100%; min-width: 0; }
+  .filter-buttons { flex-wrap: wrap; }
+  .contact-page-grid, .community-feed-section, .social-hub-section {
+    width: auto;
+    margin-left: var(--page-gutter);
+    margin-right: var(--page-gutter);
+  }
+  .contact-form-panel, .contact-side-panel, .account-panel,
+  .profile-card, .profile-collections { min-width: 0; }
+  .contact-form input, .contact-form select, .contact-form textarea,
+  .account-form input, .account-form textarea, .account-form select {
+    width: 100%;
+    min-width: 0;
+    font-size: 16px;
+  }
+  .contact-form button, .account-form > button.button {
+    min-height: 44px;
+  }
+  .wisdom-art-card {
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    padding: clamp(22px, 6vw, 32px);
+  }
+  .wisdom-art-card::before { width: 78vw; height: 78vw; max-width: 330px; max-height: 330px; }
+  .wisdom-art-card::after { width: 64vw; height: 64vw; max-width: 270px; max-height: 270px; }
+  .article-dialog {
+    width: calc(100% - 24px);
+    max-width: 650px;
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+    padding: clamp(20px, 6vw, 34px);
+  }
+  .profile-tabs, .profile-tabs-bottom {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .profile-tabs a, .profile-tabs-bottom button { flex: 0 0 auto; }
+  .footer-bottom { overflow-wrap: anywhere; }
+}
+@media (max-width: 380px) {
+  :root { --page-gutter: 14px; }
+  .announcement { padding: 8px 12px; font-size: .62rem; letter-spacing: .03em; }
+  .site-header { height: 70px; }
+  .brand-logo { width: 112px; max-width: 42vw; height: 62px; }
+  .menu-toggle { padding: 5px 8px; font-size: 1.2rem; }
+  .site-header nav { top: 70px; }
+  .hero h1 { font-size: clamp(1.85rem, 9.2vw, 2.25rem); }
+  .hero-art { height: 275px; }
+  .cover-kicker, .cover-author { font-size: .4rem; }
+  .cover-title { font-size: 1.42rem; }
+  .section-heading h2, .about-copy h2, .community-copy h2,
+  .contact-section h2 { font-size: 1.8rem; }
+  .button { gap: 10px; padding: 12px 14px; }
+  .wisdom-art-brand { margin-bottom: 20px; }
+  .wisdom-art-brand span:nth-child(2) { font-size: 14px; }
+  .wisdom-art-brand small { font-size: 8px; }
+  .wisdom-art-card blockquote { font-size: 1.2rem; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .site-header nav { max-height: calc(100dvh - 60px); }
+  .hero { padding-top: 24px; padding-bottom: 24px; }
+  .hero-art { height: 250px; }
+  .article-dialog { max-height: calc(100dvh - 16px); }
+}
+@supports not (overflow: clip) {
+  html, body { overflow-x: hidden; }
+}
