@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07172b">
+  <meta name="description" content="Read Voiceoftaade Journals: reflections on wisdom, relationships, mindset, and purposeful living.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <title>Voiceoftaade Journal | Read, Reflect, Repeat</title>
+</head>
+<body>
+  <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav id="mainNav" aria-label="Main navigation">
+      <a href="./#books">Books</a><a href="journals.html" aria-current="page">Journal</a><a href="./#about">Our Story</a><a href="./#community">Community</a><a class="nav-cta" href="./#contact">Contact</a>
+      <a class="account-avatar-link" href="account.html" aria-label="Open your reader profile" title="Reader profile"><span class="account-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg><span class="avatar-add">+</span></span></a>
+    </nav>
+  </header>
+  <main>
+    <section class="journal-section" id="journal">
+      <div class="section section-inner">
+        <div class="section-heading">
+          <div><p class="eyebrow">THE VOICEOFTAADE JOURNAL</p><h1>Ideas for the <em>inner life.</em></h1></div>
+          <p>Notes on living with more awareness — because a good sentence can open a door, but reflection is what lets us walk through it.</p>
+        </div>
+        <div class="journal-tools">
+          <label class="search-box"><span>⌕</span><input id="articleSearch" type="search" placeholder="Search journals..." aria-label="Search journals"></label>
+          <div class="filter-buttons" id="filterButtons">
+            <button class="filter active" data-filter="All">All chapters</button>
+            <button class="filter" data-filter="Foundations of a Good Life">Foundations</button>
+            <button class="filter" data-filter="Matters of the Heart">Matters of the Heart</button>
+            <button class="filter" data-filter="Mindset and Motivation">Mindset</button>
+            <button class="filter" data-filter="Social Truth &amp; Modern Struggles">Social Truth</button>
+          </div>
+        </div>
+        <div class="article-grid" id="articleGrid">
+          <article class="article-card" data-category="Mindset"><div class="article-art art-olive"><span>01</span><b>THE<br>INNER<br>WORK</b></div><div class="article-meta"><span>MINDSET</span><span>5 MIN READ</span></div><h3>Discipline is the quiet architecture of a meaningful life</h3><p>Motivation may open the door, but the habits we keep are what build the room.</p><button class="read-more" data-article="discipline">Read reflection <span>→</span></button></article>
+          <article class="article-card" data-category="Relationships"><div class="article-art art-clay"><span>02</span><b>LOVE<br>WITH<br>CLARITY</b></div><div class="article-meta"><span>RELATIONSHIPS</span><span>4 MIN READ</span></div><h3>Boundaries are not walls; they are instructions</h3><p>Healthy boundaries help people understand how to meet us with respect.</p><button class="read-more" data-article="boundaries">Read reflection <span>→</span></button></article>
+          <article class="article-card" data-category="Modern Life"><div class="article-art art-blue"><span>03</span><b>BEYOND<br>THE<br>NOISE</b></div><div class="article-meta"><span>MODERN LIFE</span><span>6 MIN READ</span></div><h3>Your life is bigger than the audience watching it</h3><p>Not every meaningful achievement needs a witness, a caption, or applause.</p><button class="read-more" data-article="audience">Read reflection <span>→</span></button></article>
+        </div>
+        <p class="no-results" id="noResults" hidden>No journals match that search. Try another word or category.</p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="./"><img class="brand-logo footer-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
+    <p>Words for wisdom. Ideas for life.</p>
+    <div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications · Founded by Taiwo Abdulgafar Adekunle (Taade)</span><span>Built for readers, thinkers, and doers.</span><a href="#journal">Back to top ↑</a></div>
+  </footer>
+  <dialog id="articleDialog" class="article-dialog"><button type="button" class="dialog-close" id="dialogClose" aria-label="Close reflection">×</button><p class="eyebrow" id="dialogCategory">REFLECTION</p><h2 id="dialogTitle"></h2><div id="dialogBody"></div><div class="reflection-actions"><button class="button button-dark" id="saveReflection" type="button">＋ Save reflection</button><button class="button button-outline" id="favouriteReflection" type="button" aria-pressed="false">♡ Add to favourites</button></div><p class="dialog-signoff">VOICEOFTAADE JOURNAL · READ, REFLECT, REPEAT</p></dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(error => console.error("Service worker registration failed:", error)));
+    }
+  </script>
+</body>
+</html>
