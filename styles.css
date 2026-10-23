@@ -159,3 +159,20 @@
 @keyframes intro-spark{from{opacity:.1;transform:scale(.6)}to{opacity:.9;transform:scale(1.5)}}
 @media(max-width:600px){.intro-logo-wrap{width:min(88vw,440px)}.intro-tagline{letter-spacing:.17em}}
 @media(prefers-reduced-motion:reduce){.brand-intro{transition:none}.intro-logo-wrap,.intro-logo,.intro-sheen,.intro-tagline,.intro-stars i{animation:none!important}.intro-logo-wrap,.intro-logo,.intro-tagline{opacity:1;transform:none;clip-path:none}.intro-sheen,.intro-stars{display:none}}
+
+/* Layer-by-layer Voiceoftaade emblem reveal */
+.intro-logo-wrap{width:min(88vw,590px);opacity:1;transform:none;filter:none;animation:none}
+.intro-emblem{display:block;width:100%;height:auto;overflow:visible}
+.emblem-globe{stroke-dasharray:1100;stroke-dashoffset:1100;animation:draw-emblem 1.5s ease-out .2s forwards}
+.emblem-feather{opacity:0;transform:translateY(16px) scale(.88);transform-origin:300px 125px;animation:feather-arrive .85s cubic-bezier(.2,.8,.2,1) 1.25s forwards}
+.emblem-pen{opacity:0;transform:translateY(10px);animation:pen-arrive .65s ease-out 1.75s forwards}
+.emblem-wordmark{opacity:0;transform:translateY(14px);transform-origin:center;animation:wordmark-arrive .85s cubic-bezier(.2,.7,.2,1) 2.05s forwards}
+.emblem-publications{opacity:0;animation:wordmark-arrive .6s ease 2.55s forwards}
+.intro-sheen{top:0;bottom:10%;left:-35%;width:22%;animation:intro-sheen-pass 1s ease-in-out 2.85s forwards}
+.intro-tagline{animation:intro-tagline-arrive .7s ease 3s forwards}
+@keyframes draw-emblem{to{stroke-dashoffset:0}}
+@keyframes feather-arrive{to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes pen-arrive{to{opacity:1;transform:translateY(0)}}
+@keyframes wordmark-arrive{to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.intro-logo-wrap{width:94vw}.intro-emblem{max-height:58vh}}
+@media(prefers-reduced-motion:reduce){.emblem-globe,.emblem-feather,.emblem-pen,.emblem-wordmark,.emblem-publications{animation:none!important;stroke-dashoffset:0;opacity:1;transform:none}.intro-tagline{animation:none;opacity:1;transform:none}}
