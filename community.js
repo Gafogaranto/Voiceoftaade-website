@@ -53,13 +53,14 @@
    const post=$("newPostPanel"); if(post) post.hidden=!state.user||!state.selected;
   }
   async function loadModeration(){
-   const requests=$("creatorRequestsList"),reports=$("communityReportsList");
+   const approvals=$("communityApprovalsList"),requests=$("creatorRequestsList"),reports=$("communityReportsList");
    if(!state.staff||!state.user)return;
+   if(approvals)approvals.innerHTML='<p class="community-loading">Loading communities awaiting approval…</p>';
    if(requests)requests.innerHTML='<p class="community-loading">Loading creator requests…</p>';
    if(reports)reports.innerHTML='<p class="community-loading">Loading reports…</p>';
    const [reqRes,reportRes]=await Promise.all([
     client.from("community_creator_requests").select("id,user_id,message,status,created_at").eq("status","pending").order("created_at",{ascending:true}).limit(50),
-    client.from("community_reports").select("id,community_id,reporter_id,post_id,reason,status,created_at").order("created_at",{ascending:false}).limit(50)
+    client.from("community_reports").select("id,community_id,reporter_id,post_id,reason,status,created_at").in("status",["open","reviewing"]).order("created_at",{ascending:false}).limit(50)
    ]);
    if(requests){
     if(reqRes.error){console.warn("Creator request moderation unavailable",reqRes.error);requests.innerHTML='<p class="community-loading">Creator requests could not be loaded. Check owner permissions.</p>';}
@@ -79,17 +80,24 @@
    if(!state.staff)return;button.disabled=true;
    const reviewedAt=new Date().toISOString();
    if(decision==="approved"){
-    const roleResult=await client.from("community_platform_roles").upsert({user_id:userId,role:"creator",granted_by:state.user.id},{onConflict:"user_id"});
+    const roleResult=await client.from("community_platform_roles").upsert({user_id:userId,role:"approved_creator",granted_by:state.user.id},{onConflict:"user_id"});
     if(roleResult.error){status("Could not grant creator role. "+roleResult.error.message,true);button.disabled=false;return;}
    }
-   const {error}=await client.from("community_creator_requests").update({status:decision,reviewed_by:state.user.id,reviewed_at:reviewedAt}).eq("id",requestId).eq("status","pending");
+   const {error}=await client.from("community_creator_requests").update({status:decision==="rejected"?"declined":decision,reviewed_by:state.user.id,reviewed_at:reviewedAt}).eq("id",requestId).eq("status","pending");
    if(error){status("Could not update creator request. "+error.message,true);button.disabled=false;return;}
    const host=$("moderationStatus");if(host)host.textContent=decision==="approved"?"Creator approved. Their account can now create communities.":"Creator request declined.";
    await loadModeration();
   }
+  async function reviewCommunity(communityId,decision,button){
+   if(!state.staff)return;button.disabled=true;
+   const {error}=await client.from("communities").update({status:decision}).eq("id",communityId).eq("status","pending");
+   if(error){const host=$("moderationStatus");if(host)host.textContent="Could not update community: "+error.message;button.disabled=false;return;}
+   const host=$("moderationStatus");if(host)host.textContent=decision==="active"?"Community approved and published.":"Community declined.";
+   await loadModeration();await loadCommunities();
+  }
   async function dismissReport(reportId,button){
    if(!state.staff)return;button.disabled=true;
-   const {error}=await client.from("community_reports").update({status:"reviewed"}).eq("id",reportId);
+   const {error}=await client.from("community_reports").update({status:"resolved",reviewed_by:state.user.id}).eq("id",reportId);
    if(error){const host=$("moderationStatus");if(host)host.textContent="Could not mark report reviewed: "+error.message;button.disabled=false;return;}
    const host=$("moderationStatus");if(host)host.textContent="Report marked reviewed.";
    await loadModeration();
@@ -175,9 +183,9 @@
    if(event?.preventDefault)event.preventDefault();if(!requireLogin()||!(state.creator||state.staff)){status("Community creation is limited to approved creators and the platform owner.",true);return;}
    const form=$("communityCreateForm");const name=form.elements.name.value.trim(),description=form.elements.description.value.trim(),visibility=form.elements.visibility.value;
    const slug=name.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-   const {error}=await client.from("communities").insert({name,slug,description,visibility,created_by:state.user.id});
+   const {error}=await client.from("communities").insert({name,slug,description,visibility,created_by:state.user.id,status:"pending"});
    if(error){status("Could not create community. "+error.message,true);return;}
-   form.reset();status("Community created.");await loadCommunities();
+   form.reset();status("Community submitted for owner approval. It will appear in Community approvals.");await loadModeration();await loadCommunities();
   }
   init().catch(error=>{console.error(error);status("Community services could not start. Please refresh the page.",true);});
  })();
