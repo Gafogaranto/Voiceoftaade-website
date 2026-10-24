@@ -639,3 +639,11 @@ input, textarea, select, [contenteditable="true"] {
   -webkit-user-select: text !important;
   user-select: text !important;
 }
+
+
+/* Global page frame: keep footers after page content on short pages. */
+html{min-height:100%;scroll-padding-top:90px}
+body{min-height:100vh;display:flex;flex-direction:column}
+body>main{flex:1 0 auto;width:100%;min-width:0}
+body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:relative}
+@supports(min-height:100dvh){body{min-height:100dvh}}
