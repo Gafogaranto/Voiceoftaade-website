@@ -28,7 +28,7 @@
    $("postForm")?.addEventListener("submit",createPost);
    $("backToDiscover")?.addEventListener("click",()=>showWorkspace("discover"));
    $("chatJoinBtn")?.addEventListener("click",()=>state.selected&&joinCommunity(state.selected));
-   $("chatRoomInfo")?.addEventListener("click",showCommunityInfo);$("closeCommunityInfo")?.addEventListener("click",()=>{$("communityInfoPanel").hidden=true;});
+   $("chatRoomInfo")?.addEventListener("click",showCommunityInfo);$("closeCommunityInfo")?.addEventListener("click",()=>{$("communityInfoPanel").hidden=true;});\n   $("mobileAdminNav")?.addEventListener("click",()=>showWorkspace("admin"));
    $("refreshForYou")?.addEventListener("click",loadForYou);
    $("refreshFollowing")?.addEventListener("click",loadFollowing);
    $("refreshMentions")?.addEventListener("click",loadMentions);
@@ -149,10 +149,10 @@
       const author=authors.get(p.author_id)||{name:"Community member",owner:false};
       const badge=author.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner">✦</span>':"";
       const likes=reactions.filter(r=>r.post_id===p.id&&r.reaction==="like").length,liked=!!state.user&&reactions.some(r=>r.post_id===p.id&&r.user_id===state.user.id&&r.reaction==="like"),comments=replies.filter(r=>r.post_id===p.id).length;
-      return '<article class="social-feed-item"><div class="feed-community">'+escape(community?.name||"Voiceoftaade community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(author.name)+'</a>'+badge+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-feed-like="'+p.id+'" data-community="'+p.community_id+'">'+(liked?"♥":"♡")+' Like · '+likes+'</button><button type="button" data-feed-open="'+p.community_id+'">Open conversation · '+comments+' replies</button></article>';
+      return '<article class="social-feed-item"><div class="feed-community">'+escape(community?.name||"Voiceoftaade community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(author.name)+'</a>'+badge+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-feed-like="'+p.id+'" data-community="'+p.community_id+'">'+(liked?"♥":"♡")+' Like · '+likes+'</button><button type="button" data-feed-open="'+p.community_id+'">Open conversation · '+comments+' replies</button><button type="button" data-feed-report="'+p.id+'" data-feed-community="'+p.community_id+'" data-feed-author="'+p.author_id+'">Report</button><button type="button" data-feed-block="'+p.author_id+'">Block reader</button></article>';
     }).join("");
     host.querySelectorAll("[data-feed-like]").forEach(b=>b.addEventListener("click",()=>toggleFeedLike(b.dataset.feedLike,b.dataset.community)));
-    host.querySelectorAll("[data-feed-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.feedOpen)));
+    host.querySelectorAll("[data-feed-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.feedOpen)));\n    host.querySelectorAll("[data-feed-report]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.feedAuthor,b.dataset.feedCommunity,b.dataset.feedReport)));\n    host.querySelectorAll("[data-feed-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.feedBlock)));
    }catch(error){console.error("For You feed crashed",error);host.innerHTML='<p class="community-loading">The feed stopped unexpectedly. <button type="button" id="retryForYou">Try again</button></p>';$("retryForYou")?.addEventListener("click",loadForYou);}
   }
   async function loadFollowing(){
@@ -167,8 +167,8 @@
    if(state.blockedUsers?.length)q.data.splice(0,q.data.length,...q.data.filter(p=>!state.blockedUsers.includes(p.author_id)));
    if(!q.data?.length){host.innerHTML='<p class="community-loading">The readers you follow have not posted publicly yet.</p>';return;}
    const authors=await getAuthorMeta(q.data.map(p=>p.author_id));
-   host.innerHTML=q.data.map(p=>{const a=authors.get(p.author_id)||{name:"Reader",owner:false},cm=Array.isArray(p.communities)?p.communities[0]:p.communities;return '<article class="social-feed-item"><div class="feed-community">'+escape(cm?.name||"Public community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(a.name)+'</a>'+(a.owner?'<span class="vt-verified-badge">✓</span>':"")+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-follow-open="'+p.community_id+'">Open conversation</button></article>';}).join("");
-   host.querySelectorAll("[data-follow-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.followOpen)));
+   host.innerHTML=q.data.map(p=>{const a=authors.get(p.author_id)||{name:"Reader",owner:false},cm=Array.isArray(p.communities)?p.communities[0]:p.communities;return '<article class="social-feed-item"><div class="feed-community">'+escape(cm?.name||"Public community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(a.name)+'</a>'+(a.owner?'<span class="vt-verified-badge">✓</span>':"")+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-follow-open="'+p.community_id+'">Open conversation</button><button type="button" data-follow-report="'+p.id+'" data-follow-community="'+p.community_id+'" data-follow-author="'+p.author_id+'">Report</button><button type="button" data-follow-block="'+p.author_id+'">Block reader</button></article>';}).join("");
+   host.querySelectorAll("[data-follow-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.followOpen)));\n   host.querySelectorAll("[data-follow-report]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.followAuthor,b.dataset.followCommunity,b.dataset.followReport)));\n   host.querySelectorAll("[data-follow-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.followBlock)));
   }
   async function loadMentions(){
    const host=$("mentionsFeed"),badge=$("mentionCount");if(!host||!client)return;
@@ -225,14 +225,14 @@
    const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="ai"?$("workspaceAI"):which==="forYou"?$("workspaceForYou"):which==="following"?$("workspaceFollowing"):which==="mentions"?$("workspaceMentions"):which==="notifications"?$("workspaceNotifications"):$("workspaceDiscover");
    if(target)target.hidden=false;
    document.querySelectorAll("[data-workspace]").forEach(b=>b.classList.toggle("active",b.dataset.workspace===which));
-   if(which==="admin"&&state.staff)loadModeration();
+   if(which==="admin"&&state.staff)loadModeration();\n   const mobileAdmin=$("mobileAdminNav");if(mobileAdmin)mobileAdmin.hidden=!(state.user&&state.staff);
    if(which==="forYou")loadForYou();
    if(which==="following")loadFollowing();
    if(which==="mentions")loadMentions();
    if(which==="notifications")loadNotifications();
   }
   function showAdminNav(){const panel=$("ownerModerationPanel");if(panel){panel.hidden=false;}const btn=$("adminNavBtn");if(btn)btn.onclick=()=>showWorkspace("admin");}
-  async function loadBlockedUsers(){if(!state.user||!client){state.blockedUsers=[];return;}const {data,error}=await client.from("reader_blocks").select("blocked_id").eq("blocker_id",state.user.id);state.blockedUsers=error?[]:(data||[]).map(x=>x.blocked_id);}
+  async async function loadBlockedUsers(){if(!state.user||!client){state.blockedUsers=[];return;}const {data,error}=await client.from("reader_blocks").select("blocked_id").eq("blocker_id",state.user.id);state.blockedUsers=error?[]:(data||[]).map(x=>x.blocked_id);}
   async function loadJoinedCommunities(){
    if(!state.user){state.joined=[];renderJoinedNav();return;}
    const {data,error}=await client.from("community_members").select("community_id,status,communities(id,name,slug,description,visibility,status)").eq("user_id",state.user.id).eq("status","active");
@@ -367,8 +367,8 @@
    const members=membersRes.data||[],ids=members.map(m=>m.user_id);let profiles=[];
    if(ids.length){const q=await client.from("profiles").select("id,display_name").in("id",ids);profiles=q.data||[];}
    const map=new Map(profiles.map(p=>[p.id,p]));
-   const admins=members.map(m=>'<div class="info-stat"><strong>'+escape(map.get(m.user_id)?.display_name||"Community admin")+'</strong><br><small>'+escape(m.role)+'</small><div class="info-actions"><button type="button" data-info-profile="'+m.user_id+'">View profile</button></div></div>').join("");
-   host.innerHTML='<div class="info-stat"><strong>'+(room.visibility==="private"?"🔒 Private community":"🌐 Public community")+'</strong><p>'+escape(room.description||"A Voiceoftaade reader community.")+'</p></div><div class="info-stat"><strong>Created by</strong><br>'+escape(creatorRes.data?.display_name||"Community creator")+'</div><div class="info-stat"><strong>Admins and moderators</strong>'+(admins||'<p>No community-specific admin roles are listed.</p>')+'</div><div class="info-actions"><button id="infoLeaveCommunity" type="button">Leave community</button><button id="infoReportCommunity" type="button" class="community-safety-action">Report community</button></div>';
+   const memberCountRes=await client.from("community_members").select("user_id",{count:"exact",head:true}).eq("community_id",room.id).eq("status","active");\n   const admins=members.map(m=>'<div class="info-stat"><strong>'+escape(map.get(m.user_id)?.display_name||"Community admin")+'</strong><br><small>'+escape(m.role)+'</small><div class="info-actions"><button type="button" data-info-profile="'+m.user_id+'">View profile</button></div></div>').join("");
+   host.innerHTML='<div class="info-stat"><strong>'+(room.visibility==="private"?"🔒 Private community":"🌐 Public community")+'</strong><p>'+escape(room.description||"A Voiceoftaade reader community.")+'</p><small>'+(memberCountRes.count||0)+' active members</small></div><div class="info-stat"><strong>Created by</strong><br><a href="profile.html?id='+encodeURIComponent(room.created_by)+'">'+escape(creatorRes.data?.display_name||"Community creator")+'</a></div><div class="info-stat"><strong>Admins and moderators</strong>'+(admins||'<p>No community-specific admin roles are listed.</p>')+'</div><div class="info-actions"><button id="infoLeaveCommunity" type="button">Leave community</button><button id="infoReportCommunity" type="button" class="community-safety-action">Report community</button></div>';
    host.querySelectorAll("[data-info-profile]").forEach(b=>b.addEventListener("click",()=>location.href="profile.html?id="+encodeURIComponent(b.dataset.infoProfile)));
    $("infoLeaveCommunity")?.addEventListener("click",async()=>{if(!state.user||!confirm("Leave this community?"))return;const z=await client.from("community_members").delete().eq("community_id",room.id).eq("user_id",state.user.id);if(z.error){status("Could not leave community. "+z.error.message,true);return;}panel.hidden=true;state.selected=null;await loadJoinedCommunities();showWorkspace("discover");});
    $("infoReportCommunity")?.addEventListener("click",async()=>{if(!requireLogin())return;const reason=prompt("Why are you reporting this community?");if(!reason?.trim())return;const z=await client.from("community_reports").insert({community_id:room.id,reporter_id:state.user.id,reason:reason.trim()});status(z.error?"Could not report community.":"Community report sent to moderation.",!!z.error);});
