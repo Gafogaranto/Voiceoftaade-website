@@ -60,7 +60,7 @@
     : 'You are browsing as a visitor. <a href="account.html">Sign in or create a reader account</a> to join discussions.';
    const req=$("creatorRequestBtn"); if(req) req.hidden=true;
    const ownerPanel=$("ownerModerationPanel"); if(ownerPanel) ownerPanel.hidden=!(state.user&&state.staff);
-   const adminNav=$("adminNavBtn");if(adminNav)adminNav.hidden=!(state.user&&state.staff);
+   const adminNav=$("adminNavBtn");if(adminNav)adminNav.hidden=!(state.user&&state.staff);const mobileAdmin=$("mobileAdminNav");if(mobileAdmin)mobileAdmin.hidden=!(state.user&&state.staff);
    if(state.user)loadJoinedCommunities();else{state.joined=[];renderJoinedNav();}
    if(state.user&&state.staff){loadModeration();showAdminNav();}
    const create=$("createCommunityPanel"); if(create) create.hidden=!state.user;
