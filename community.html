@@ -207,6 +207,14 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
  body.community-chat-open .community-info-cover{width:calc(100% + 36px)}
 }
 @media(prefers-reduced-motion:reduce){.community-sidebar{transition:none!important}}
+
+@media(max-width:760px){
+ body.community-chat-open #chatMenuToggle{display:inline-grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border:1px solid #344b63;border-radius:10px;background:#132b43;color:#f3c969;font-size:1.05rem}
+ body:not(.community-chat-open) #chatMenuToggle{display:none}
+ body.community-chat-open .chat-topbar{gap:7px}
+ body.community-chat-open .chat-back{font-size:.75rem;padding:7px 8px}
+}
+@media(min-width:761px){#chatMenuToggle{display:none}}
 </style>
 <style id="community-responsive-upgrade">
 /* Mobile-first, chat-app style community navigation */
@@ -306,7 +314,7 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
    <div id="communityList" class="community-list" aria-live="polite" hidden></div>
   </section>
   <section id="workspaceChat" class="workspace-view" hidden>
-   <div class="chat-topbar"><button id="backToDiscover" class="chat-back" type="button">← Communities</button><div class="chat-room-mark">✦</div><div class="chat-room-title"><h2 id="chatHeading">Choose a community</h2><p id="chatDescription">Your reading-room conversation starts here.</p></div><button id="chatRoomInfo" class="chat-info-button" type="button" title="Community information" aria-label="View community information, members and admins">ⓘ</button></div>
+   <div class="chat-topbar"><button id="chatMenuToggle" class="chat-menu-button" type="button" aria-label="Open community navigation" aria-expanded="false">☰</button><button id="backToDiscover" class="chat-back" type="button">← Communities</button><div class="chat-room-mark">✦</div><div class="chat-room-title"><h2 id="chatHeading">Choose a community</h2><p id="chatDescription">Your reading-room conversation starts here.</p></div><button id="chatRoomInfo" class="chat-info-button" type="button" title="Community information" aria-label="View community information, members and admins">ⓘ</button></div>
    <div id="communityInfoPanel" class="community-info-panel" hidden><div class="community-info-head"><h3>Community info</h3><button id="closeCommunityInfo" type="button" aria-label="Close community info">×</button></div><div id="communityInfoContent"></div></div><div id="chatMessageArea" class="chat-message-area"><div class="chat-welcome"><span>✧</span><h3>Welcome to the reading room</h3><p>Choose a community and join a thoughtful conversation.</p></div></div>
    <div id="newPostPanel" class="chat-composer-wrap" hidden><form id="postForm" class="chat-composer"><label class="sr-only" for="chatPostTitle">Discussion title</label><input id="chatPostTitle" name="title" required minlength="3" maxlength="180" placeholder="Give your discussion a title…"><label class="sr-only" for="chatPostBody">Message</label><textarea id="chatPostBody" name="body" required maxlength="10000" placeholder="Share a thought, question, or passage to discuss…"></textarea><div class="composer-bottom"><span>Keep it thoughtful and respectful.</span><button class="button button-gold" type="submit">Send to room ↗</button></div></form></div>
    <div id="chatJoinPrompt" class="chat-join-prompt" hidden>Join this community to post and reply. <button id="chatJoinBtn" class="button button-gold" type="button">Join community</button></div>
