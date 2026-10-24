@@ -124,11 +124,21 @@ try { localStorage.setItem(wisdomVisitKey, String(wisdomIndex)); } catch (error)
   console.warn("Daily wisdom rotation could not be saved.", error);
   wisdomIndex = (Math.floor(Date.now() / 1000) % dailyWisdomMessages.length);
 }
-const wisdomQuote = dailyWisdomMessages[wisdomIndex];
+let wisdomQuote = dailyWisdomMessages[wisdomIndex];
 const wisdomQuoteElement = document.getElementById("dailyWisdomQuote");
 const wisdomDateElement = document.getElementById("dailyWisdomDate");
 if (wisdomQuoteElement) wisdomQuoteElement.textContent = "“" + wisdomQuote + "”";
 if (wisdomDateElement) wisdomDateElement.textContent = today.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+
+function advanceDailyWisdom() {
+  wisdomIndex = (wisdomIndex + 1) % dailyWisdomMessages.length;
+  wisdomQuote = dailyWisdomMessages[wisdomIndex];
+  try { localStorage.setItem(wisdomVisitKey, String(wisdomIndex)); } catch (error) {
+    console.warn("Daily wisdom rotation could not be saved.", error);
+  }
+  if (wisdomQuoteElement) wisdomQuoteElement.textContent = "“" + wisdomQuote + "”";
+  if (wisdomDateElement) wisdomDateElement.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+}
 
 function drawWisdomCard() {
   const canvas = document.createElement("canvas"); canvas.width = 1080; canvas.height = 1350;
@@ -176,6 +186,7 @@ if (shareWisdomButton) shareWisdomButton.addEventListener("click", async () => {
       try {
         await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: shareText, files: [file] });
         if (wisdomShareStatus) wisdomShareStatus.textContent = "Shared. Your branded image includes Voiceoftaade attribution.";
+        advanceDailyWisdom();
       } catch (shareError) {
         if (shareError.name === "AbortError") {
           if (wisdomShareStatus) wisdomShareStatus.textContent = "Sharing cancelled. You can still download the image below.";
@@ -188,6 +199,7 @@ if (shareWisdomButton) shareWisdomButton.addEventListener("click", async () => {
       link.style.display = "none"; document.body.appendChild(link); link.click(); link.remove();
       window.setTimeout(() => URL.revokeObjectURL(objectUrl), 5000);
       if (wisdomShareStatus) wisdomShareStatus.textContent = "Your branded wisdom image has been downloaded. Share the PNG from your Downloads folder.";
+      advanceDailyWisdom();
     }
   } catch (error) {
     console.error("Voiceoftaade share card failed:", error);
