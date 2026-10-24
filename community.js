@@ -17,7 +17,7 @@
     state.user=session?.user??null;
     if(!state.user){state.staff=false;state.creator=false;}
     renderAccount();
-    refreshPermissions().then(()=>{renderAccount();loadCommunities();}).catch(error=>{console.error("Permission refresh failed",error);renderAccount();loadCommunities();});
+    refreshPermissions().then(()=>{renderAccount();loadCommunities();loadForYou();loadNotifications();}).catch(error=>{console.error("Permission refresh failed",error);renderAccount();loadCommunities();loadForYou();loadNotifications();});
    });
    renderAccount();
    await refreshPermissions();
@@ -28,9 +28,13 @@
    $("backToDiscover")?.addEventListener("click",()=>showWorkspace("discover"));
    $("chatJoinBtn")?.addEventListener("click",()=>state.selected&&joinCommunity(state.selected));
    $("chatRoomInfo")?.addEventListener("click",()=>state.selected&&window.alert(state.selected.description));
+   $("refreshForYou")?.addEventListener("click",loadForYou);
+   $("refreshNotifications")?.addEventListener("click",loadNotifications);
    document.querySelectorAll("[data-workspace]").forEach(btn=>btn.addEventListener("click",()=>showWorkspace(btn.dataset.workspace)));
    const moderation=$("ownerModerationPanel"),mount=$("adminModerationMount");if(moderation&&mount)mount.appendChild(moderation);
    await loadCommunities();
+   await loadForYou();
+   await loadNotifications();
   }
   async function refreshPermissions(){
    state.staff=false;state.creator=false;
@@ -116,6 +120,47 @@
    const host=$("moderationStatus");if(host)host.textContent="Report marked reviewed.";
    await loadModeration();
   }
+  async function loadForYou(){
+   const host=$("forYouFeed");if(!host||!client)return;
+   host.innerHTML='<p class="community-loading">Loading your feed…</p>';
+   try{
+    const {data:posts,error}=await client.from("community_posts").select("id,community_id,author_id,title,body,created_at,communities!inner(id,name,visibility,status)").eq("status","published").eq("communities.status","active").eq("communities.visibility","public").order("created_at",{ascending:false}).limit(40);
+    if(error){console.error("For You feed failed",error);host.innerHTML='<p class="community-loading">The feed could not load: '+escape(error.message)+' <button type="button" id="retryForYou">Try again</button></p>';$("retryForYou")?.addEventListener("click",loadForYou);return;}
+    if(!posts?.length){host.innerHTML='<div class="chat-welcome"><span>✧</span><h3>Your public feed is getting ready</h3><p>When public community conversations are published, they will appear here.</p></div>';return;}
+    const ids=posts.map(p=>p.id);
+    const [reactRes,replyRes]=await Promise.all([client.from("community_reactions").select("post_id,user_id,reaction").in("post_id",ids),client.from("community_replies").select("id,post_id").in("post_id",ids).eq("status","published")]);
+    const reactions=reactRes.data||[],replies=replyRes.data||[],authors=await getAuthorMeta(posts.map(p=>p.author_id));
+    host.innerHTML=posts.map(p=>{
+      const community=Array.isArray(p.communities)?p.communities[0]:p.communities;
+      const author=authors.get(p.author_id)||{name:"Community member",owner:false};
+      const badge=author.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner">✦</span>':"";
+      const likes=reactions.filter(r=>r.post_id===p.id&&r.reaction==="like").length,liked=!!state.user&&reactions.some(r=>r.post_id===p.id&&r.user_id===state.user.id&&r.reaction==="like"),comments=replies.filter(r=>r.post_id===p.id).length;
+      return '<article class="social-feed-item"><div class="feed-community">'+escape(community?.name||"Voiceoftaade community")+'</div><div class="feed-author">'+escape(author.name)+badge+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-feed-like="'+p.id+'" data-community="'+p.community_id+'">'+(liked?"♥":"♡")+' Like · '+likes+'</button><button type="button" data-feed-open="'+p.community_id+'">Open conversation · '+comments+' replies</button></article>';
+    }).join("");
+    host.querySelectorAll("[data-feed-like]").forEach(b=>b.addEventListener("click",()=>toggleFeedLike(b.dataset.feedLike,b.dataset.community)));
+    host.querySelectorAll("[data-feed-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.feedOpen)));
+   }catch(error){console.error("For You feed crashed",error);host.innerHTML='<p class="community-loading">The feed stopped unexpectedly. <button type="button" id="retryForYou">Try again</button></p>';$("retryForYou")?.addEventListener("click",loadForYou);}
+  }
+  async function toggleFeedLike(postId,communityId){
+   if(!requireLogin())return;
+   const existing=await client.from("community_reactions").select("post_id").eq("post_id",postId).eq("user_id",state.user.id).eq("reaction","like").maybeSingle();
+   if(existing.error){status("Could not check your reaction.",true);return;}
+   const result=existing.data?await client.from("community_reactions").delete().eq("post_id",postId).eq("user_id",state.user.id).eq("reaction","like"):await client.from("community_reactions").insert({post_id:postId,user_id:state.user.id,reaction:"like"});
+   if(result.error){status("Could not update your like. "+result.error.message,true);return;}
+   await loadForYou();await loadNotifications();
+  }
+  async function loadNotifications(){
+   const host=$("notificationsFeed"),badge=$("notificationCount");if(!host||!client)return;
+   if(!state.user){host.innerHTML='<div class="chat-welcome"><span>♧</span><h3>Your activity lives here</h3><p><a href="account.html">Sign in</a> to receive notifications about replies and likes.</p></div>';if(badge)badge.hidden=true;return;}
+   const {data,error}=await client.from("community_notifications").select("id,actor_id,notification_type,community_id,post_id,reply_id,preview,read_at,created_at").eq("recipient_id",state.user.id).order("created_at",{ascending:false}).limit(50);
+   if(error){console.warn("Notifications could not load",error);host.innerHTML='<p class="community-loading">Notifications could not load: '+escape(error.message)+'</p>';if(badge)badge.hidden=true;return;}
+   const items=data||[],unread=items.filter(n=>!n.read_at).length;if(badge){badge.textContent=String(unread);badge.hidden=unread===0;}
+   if(!items.length){host.innerHTML='<div class="chat-welcome"><span>♧</span><h3>You are all caught up</h3><p>Replies and likes on your community posts will appear here.</p></div>';return;}
+   const authors=await getAuthorMeta(items.map(n=>n.actor_id));
+   host.innerHTML=items.map(n=>{const person=authors.get(n.actor_id)||{name:"A reader",owner:false};const action=n.notification_type==="reply"?"replied to your post":"liked your post";return '<article class="social-feed-item '+(!n.read_at?"notification-unread":"")+'"><div class="feed-author">'+escape(person.name)+(person.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner">✓</span>':"")+'</div><p>'+escape(action)+'</p><p>'+escape(n.preview||"")+'</p><div class="feed-meta">'+dateText(n.created_at)+'</div><button type="button" data-notification-read="'+n.id+'" '+(n.read_at?"disabled":"")+'>'+(n.read_at?"Read":"Mark as read")+'</button>'+(n.community_id?'<button type="button" data-notification-open="'+n.community_id+'">Open conversation</button>':"")+'</article>';}).join("");
+   host.querySelectorAll("[data-notification-read]").forEach(b=>b.addEventListener("click",async()=>{const {error}=await client.from("community_notifications").update({read_at:new Date().toISOString()}).eq("id",b.dataset.notificationRead).eq("recipient_id",state.user.id);if(error){status("Could not update notification.",true);return;}await loadNotifications();}));
+   host.querySelectorAll("[data-notification-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.notificationOpen)));
+  }
   async function loadCommunities(){
    const list=$("communityList");
    list.innerHTML='<p class="community-loading">Finding communities…</p>';
@@ -128,10 +173,12 @@
   }
   function showWorkspace(which){
    document.querySelectorAll(".workspace-view").forEach(v=>v.hidden=true);
-   const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="ai"?$("workspaceAI"):$("workspaceDiscover");
+   const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="ai"?$("workspaceAI"):which==="forYou"?$("workspaceForYou"):which==="notifications"?$("workspaceNotifications"):$("workspaceDiscover");
    if(target)target.hidden=false;
    document.querySelectorAll("[data-workspace]").forEach(b=>b.classList.toggle("active",b.dataset.workspace===which));
    if(which==="admin"&&state.staff)loadModeration();
+   if(which==="forYou")loadForYou();
+   if(which==="notifications")loadNotifications();
   }
   function showAdminNav(){const panel=$("ownerModerationPanel");if(panel){panel.hidden=false;}const btn=$("adminNavBtn");if(btn)btn.onclick=()=>showWorkspace("admin");}
   async function loadJoinedCommunities(){
