@@ -69,16 +69,16 @@
   }
   async function loadPosts(community){
    const feed=$("discussionFeed");feed.innerHTML='<p class="community-loading">Loading conversations…</p>';
-   const {data:posts,error}=await client.from("community_posts").select("id,community_id,author_id,title,body,is_pinned,created_at,profiles:author_id(display_name)").eq("community_id",community.id).eq("status","published").order("is_pinned",{ascending:false}).order("created_at",{ascending:false}).limit(50);
+   const {data:posts,error}=await client.from("community_posts").select("id,community_id,author_id,title,body,is_pinned,created_at").eq("community_id",community.id).eq("status","published").order("is_pinned",{ascending:false}).order("created_at",{ascending:false}).limit(50);
    if(error){console.error(error);feed.innerHTML='<p class="community-loading">Posts are not available. If this is a private community, you may need membership approval.</p>';return;}
    if(!posts?.length){feed.innerHTML='<div class="community-empty"><h3>Start a thoughtful conversation.</h3><p>There are no discussions here yet.</p></div>';return;}
-   feed.innerHTML=posts.map(p=>'<article class="discussion-card">'+(p.is_pinned?'<span class="community-type">Pinned discussion</span>':'')+'<h3>'+escape(p.title)+'</h3><p class="discussion-meta">'+escape(p.profiles?.display_name||"Voiceoftaade reader")+' · '+dateText(p.created_at)+'</p><p class="discussion-body">'+escape(p.body).replace(/\n/g,"<br>")+'</p><div class="discussion-actions"><button type="button" class="text-button" data-reply="'+p.id+'">Reply</button><button type="button" class="text-button" data-report="'+p.id+'">Report</button></div><div id="replies-'+p.id+'" class="reply-list"></div></article>').join("");
+   feed.innerHTML=posts.map(p=>'<article class="discussion-card">'+(p.is_pinned?'<span class="community-type">Pinned discussion</span>':'')+'<h3>'+escape(p.title)+'</h3><p class="discussion-meta">'+"Community member"+' · '+dateText(p.created_at)+'</p><p class="discussion-body">'+escape(p.body).replace(/\n/g,"<br>")+'</p><div class="discussion-actions"><button type="button" class="text-button" data-reply="'+p.id+'">Reply</button><button type="button" class="text-button" data-report="'+p.id+'">Report</button></div><div id="replies-'+p.id+'" class="reply-list"></div></article>').join("");
    for(const p of posts){loadReplies(p);feed.querySelector('[data-reply="'+p.id+'"]')?.addEventListener("click",()=>replyTo(p));feed.querySelector('[data-report="'+p.id+'"]')?.addEventListener("click",()=>reportPost(p));}
   }
   async function loadReplies(post){
-   const host=$("replies-"+post.id);const {data}=await client.from("community_replies").select("body,created_at,author_id,profiles:author_id(display_name)").eq("post_id",post.id).eq("status","published").order("created_at",{ascending:true}).limit(30);
+   const host=$("replies-"+post.id);const {data}=await client.from("community_replies").select("body,created_at,author_id").eq("post_id",post.id).eq("status","published").order("created_at",{ascending:true}).limit(30);
    if(!host||!data?.length)return;
-   host.innerHTML=data.map(r=>'<p class="reply-item"><strong>'+escape(r.profiles?.display_name||"Reader")+'</strong> <span>'+dateText(r.created_at)+'</span><br>'+escape(r.body).replace(/\n/g,"<br>")+'</p>').join("");
+   host.innerHTML=data.map(r=>'<p class="reply-item"><strong>'+"Reader"+'</strong> <span>'+dateText(r.created_at)+'</span><br>'+escape(r.body).replace(/\n/g,"<br>")+'</p>').join("");
   }
   async function createPost(event){
    event.preventDefault();if(!requireLogin()||!state.selected)return;
