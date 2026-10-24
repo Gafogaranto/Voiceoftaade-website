@@ -260,7 +260,31 @@
       .profile-primary-actions button{padding:9px 11px}
     }
 
-  </style>
+  /* Reader dashboard v2 refinements */
+.account-dashboard{max-width:1120px}
+.account-dashboard>h2{font-size:clamp(2.15rem,5vw,3.25rem);margin:0 0 8px}
+.account-dashboard>.eyebrow{font-size:.72rem;letter-spacing:.2em}
+.account-dashboard .account-email{background:#e8edf3;border:1px solid #d7e0e9;color:#3b4c60}
+.account-dashboard .social-profile{border-radius:18px;background:#f8fafc;border:1px solid #d9e1e9;box-shadow:0 22px 58px rgba(7,23,43,.12)}
+.account-dashboard .profile-cover{background-color:#0b2037}
+.account-dashboard .profile-identity{background:linear-gradient(180deg,#fff 0%,#f8fafc 100%)}
+.account-dashboard .profile-name-block h2{font-family:var(--serif);font-weight:600;color:#102942}
+.account-dashboard .profile-primary-actions button{min-height:43px;border-radius:9px;transition:transform .18s ease,box-shadow .18s ease}
+.account-dashboard .profile-primary-actions button:hover{transform:translateY(-1px);box-shadow:0 5px 14px #07172b18}
+.account-dashboard .profile-tabs{border-bottom:1px solid #dce3eb}
+.account-dashboard .profile-tabs a.active{color:#102f4b;border-bottom-color:#c99c42}
+.account-dashboard .profile-tabs-bottom{border-bottom:1px solid #dce3eb}
+.account-dashboard .profile-collections,.account-dashboard .profile-content{background:linear-gradient(145deg,#f5f7fa,#e9eef4)}
+.account-dashboard .profile-card{border-color:#dce4ec;border-radius:14px;box-shadow:0 8px 22px rgba(7,23,43,.045)}
+.account-dashboard .profile-card h3{font-size:1.45rem}
+.account-dashboard .profile-card .eyebrow{color:#a17a32}
+.account-dashboard .profile-detail-item{background:#fff;border-color:#e0e6ed;border-radius:10px}
+.account-dashboard .profile-collections .saved-card{border-radius:12px;border-color:#dce4ec;box-shadow:0 4px 12px #07172b06}
+.account-dashboard .profile-collections .saved-actions button{padding:7px 0;min-height:36px}
+.account-dashboard .continue-reading-button{min-height:48px;border-radius:10px}
+.account-dashboard .account-note{border-radius:10px;line-height:1.7}
+@media(max-width:720px){.account-dashboard>h2{font-size:2.15rem}.account-dashboard .profile-collections{padding:14px}.account-dashboard .profile-tabs{scroll-snap-type:x proximity}.account-dashboard .profile-tabs a,.account-dashboard .profile-tabs-bottom .profile-collection-tab{scroll-snap-align:start}.account-dashboard .profile-card{padding:17px}}
+</style>
 </head>
 <body>
   <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
