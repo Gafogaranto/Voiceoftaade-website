@@ -1,8 +1,10 @@
-const CACHE_NAME = "voiceoftaade-pwa-v9";
+const CACHE_NAME = "voiceoftaade-pwa-v10";
 
 const APP_FILES = [
   "./",
   "./index.html",
+  "./about.html",
+  "./books.html",
   "./contact.html",
   "./contact.js",
   "./community.html",
