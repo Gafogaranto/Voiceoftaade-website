@@ -423,6 +423,7 @@
    const {error}=await client.from("community_reports").insert({community_id:post.community_id,reporter_id:state.user.id,post_id:post.id,reason:reason.trim()});
    status(error?"Could not submit report. Please try again.":"Report submitted for administrator review.",!!error);
   }
+  async function reportReply(replyId,post){if(!requireLogin())return;const reason=prompt("Why are you reporting this reply? Please include at least 5 characters.");if(!reason?.trim()||reason.trim().length<5)return;const {error}=await client.from("community_reports").insert({community_id:post.community_id,reporter_id:state.user.id,post_id:post.id,reply_id:replyId,reason:reason.trim()});status(error?"Could not submit reply report: "+error.message:"Reply report sent to the administrator for review.",!!error);}
   async function requestCreator(){
    if(!requireLogin())return;
    const message=window.prompt("Tell us briefly what kind of community you would like to create (10–1,000 characters):");if(!message?.trim())return;
