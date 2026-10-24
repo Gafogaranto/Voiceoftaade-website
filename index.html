@@ -73,7 +73,14 @@
     // Play the signature reveal only on a fresh entry, never when returning from another site page.
     try {
       const sameSiteNavigation = document.referrer && new URL(document.referrer).origin === window.location.origin;
-      if (sameSiteNavigation) sessionStorage.setItem("voiceoftaade-intro-seen", "yes");
+      const skipIntroRequested = new URLSearchParams(window.location.search).has("skipIntro");
+      if (sameSiteNavigation || skipIntroRequested) sessionStorage.setItem("voiceoftaade-intro-seen", "yes");
+      if (skipIntroRequested) {
+        const params = new URLSearchParams(window.location.search);
+        params.delete("skipIntro");
+        const cleanQuery = params.toString();
+        history.replaceState({}, "", window.location.pathname + (cleanQuery ? "?" + cleanQuery : "") + window.location.hash);
+      }
       if (sessionStorage.getItem("voiceoftaade-intro-seen") === "yes") {
         document.documentElement.classList.add("intro-seen-this-session");
       }
