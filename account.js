@@ -303,7 +303,18 @@
     const {data,error}=await supabase.from("reader_reading_progress").select("journal_id,progress_percent,last_read_at").eq("user_id",currentUser.id).order("updated_at",{ascending:false}).limit(50);
     if(error){console.error(error);return;}target.replaceChildren();const rows=(data||[]).filter(row=>JOURNALS[row.journal_id]);
     if(!rows.length){const p=document.createElement("p");p.className="saved-empty";p.textContent="Your reading history will appear here as you open journals.";target.append(p);return;}
-    rows.forEach(row=>{const card=document.createElement("article");card.className="saved-card";const h=document.createElement("h3");h.textContent=JOURNALS[row.journal_id][0];const p=document.createElement("p");p.textContent=Math.round(Number(row.progress_percent))+"% read · Last opened "+new Date(row.last_read_at).toLocaleDateString();const open=document.createElement("button");open.type="button";open.textContent="Continue reading →";open.addEventListener("click",()=>location.href="journals.html?openJournal="+encodeURIComponent(row.journal_id)+"#journal");card.append(h,p,open);target.append(card);});
+    rows.forEach(row=>{
+      const percent=Math.max(0,Math.min(100,Math.round(Number(row.progress_percent)||0)));
+      const card=document.createElement("article");card.className="saved-card progress-card";
+      const heading=document.createElement("div");heading.className="progress-card-heading";
+      const h=document.createElement("h3");h.textContent=JOURNALS[row.journal_id][0];
+      const badge=document.createElement("span");badge.className="progress-percent";badge.textContent=percent+"%";heading.append(h,badge);
+      const track=document.createElement("div");track.className="reading-progress-track";track.setAttribute("role","progressbar");track.setAttribute("aria-label","Reading progress for "+JOURNALS[row.journal_id][0]);track.setAttribute("aria-valuemin","0");track.setAttribute("aria-valuemax","100");track.setAttribute("aria-valuenow",String(percent));
+      const fill=document.createElement("span");fill.className="reading-progress-fill";fill.style.width=percent+"%";track.append(fill);
+      const p=document.createElement("p");p.className="progress-last-read";p.textContent="Last opened "+(row.last_read_at?new Date(row.last_read_at).toLocaleDateString():"recently");
+      const open=document.createElement("button");open.type="button";open.className="continue-reading-button";open.innerHTML='<span class="continue-reading-icon" aria-hidden="true">▶</span><span>Continue reading</span><span class="continue-reading-arrow" aria-hidden="true">↗</span>';open.addEventListener("click",()=>location.href="journals.html?openJournal="+encodeURIComponent(row.journal_id)+"#journal");
+      card.append(heading,track,p,open);target.append(card);
+    });
   }
 
   setMode("signin");
