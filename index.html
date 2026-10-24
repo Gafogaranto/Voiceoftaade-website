@@ -10,11 +10,11 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Voiceoftaade">
-  <meta name="description" content="Voiceoftaade Publications, founded by Taiwo Abdulgafar Adekunle, professionally known as Taade — books, reflections, and ideas for purposeful living.">
+  <meta name="description" content="Voiceoftaade Publications is an independent publishing house for thoughtful books, daily wisdom, and purposeful living.">
   <meta name="author" content="Taiwo Abdulgafar Adekunle">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Voiceoftaade Publications | Founded by Taiwo Abdulgafar Adekunle">
-  <meta property="og:description" content="Meet Taiwo Abdulgafar Adekunle, professionally known as Taade, founder of Voiceoftaade Publications.">
+  <meta property="og:description" content="Explore the Voiceoftaade reading room, daily wisdom, journals, and community.">
   <meta property="og:url" content="https://gafogaranto.github.io/Voiceoftaade-website/">
   <title>Voiceoftaade Publications | Taiwo Abdulgafar Adekunle (Taade)</title>
   <!-- OneSignal web push notifications -->
@@ -94,12 +94,12 @@
   </script>
   <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
   <header class="site-header">
-    <a class="brand" href="#home" aria-label="Voiceoftaade home">
+    <a class="brand" href="index.html" aria-label="Voiceoftaade home">
       <img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo">
     </a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav id="mainNav" aria-label="Main navigation">
-      <a href="#books">Books</a><a href="journals.html">Journal</a><a href="#about">Our Story</a><a href="community.html">Community</a><a class="nav-cta" href="contact.html">Contact</a>
+      <a href="books.html">Books</a><a href="journals.html">Journal</a><a href="about.html">About Us</a><a href="community.html">Community</a><a class="nav-cta" href="contact.html">Contact</a>
       <a class="account-avatar-link" href="account.html" aria-label="Open your reader profile" title="Profile / upload picture"><span class="account-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg><span class="avatar-add">+</span></span></a>
     </nav>
   </header>
@@ -107,22 +107,19 @@
   <main>
     <section class="hero" id="home">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> WORDS THAT SHAPE PERSPECTIVES</p>
-        <h1>Ideas worth reading.<br><em>Wisdom worth living.</em></h1>
-        <p class="hero-intro">A publishing home for books, reflections, and honest conversations about life, love, growth, and the choices that shape us.</p>
-        <div class="hero-actions"><a class="button button-gold" href="#books">Explore the books <span>↗</span></a><a class="text-link" href="journals.html">Read the journal <span>→</span></a></div>
+        <p class="eyebrow"><span></span> AN INDEPENDENT PUBLISHING HOUSE</p>
+        <h1>Words that open minds.<br><em>Ideas that stay with you.</em></h1>
+        <p class="hero-intro">Welcome to Voiceoftaade Publications, a home for thoughtful writing, meaningful reading, and wisdom for the way we live. Explore reflections, discover books, and make room for ideas that matter.</p>
+        <div class="hero-actions"><a class="button button-gold" href="books.html">Enter the bookshelf <span>↗</span></a><a class="text-link" href="journals.html">Explore the journal <span>→</span></a></div>
         <div class="hero-note"><span class="note-line"></span><span>Read deeply. Think clearly. Live deliberately.</span></div>
       </div>
-      <div class="hero-art" aria-label="Decorative book-inspired artwork">
-        <div class="orb orb-one"></div><div class="orb orb-two"></div>
-        <div class="book-shadow"></div>
-        <div class="book-cover">
-          <div class="cover-rule"></div><span class="cover-kicker">A VOICEOFTAADE BOOK</span>
-          <div class="cover-title">SERIES OF<br><i>LIFE HACKS</i><br>TO LIVE BY</div>
-          <div class="cover-subtitle">Reflections for a life of wisdom, courage & purpose</div>
-          <div class="cover-symbol">✳</div><div class="cover-author">voiceoftaade</div>
+      <div class="hero-art hero-library-art" aria-label="Decorative illustration of a curated bookshelf">
+        <div class="library-glow"></div>
+        <div class="library-shelf">
+          <span class="shelf-book shelf-book-one"><b>WISDOM</b></span><span class="shelf-book shelf-book-two"><b>THE ART OF LIVING</b></span><span class="shelf-book shelf-book-three"><b>REFLECTIONS</b></span><span class="shelf-book shelf-book-four"><b>NEW PERSPECTIVES</b></span>
+          <div class="shelf-plank"></div>
         </div>
-        <div class="art-caption">THE DEBUT PUBLICATION <span>01 / 01</span></div>
+        <p class="library-art-caption">A QUIETER PLACE FOR GOOD IDEAS</p>
       </div>
     </section>
 
@@ -135,42 +132,30 @@
           <p class="eyebrow">DAILY WISDOM</p>
           <blockquote id="dailyWisdomQuote">Small choices, repeated with care, can shape a remarkable life.</blockquote>
           <div class="wisdom-art-rule"></div>
-          <p class="wisdom-art-book">INSPIRED BY <strong>SERIES OF LIFE HACKS TO LIVE BY</strong></p>
+          <p class="wisdom-art-book">A VOICEOFTAADE REFLECTION</p>
           <p class="wisdom-art-date" id="dailyWisdomDate"></p>
           <p class="wisdom-art-footer">READ · REFLECT · LIVE DELIBERATELY</p>
         </div>
-        <p class="wisdom-caption">A daily reflection from the themes of the Voiceoftaade book.</p>
+        <p class="wisdom-caption">A daily pause for reflection, perspective, and purposeful living.</p>
         <button class="button button-gold wisdom-share-button" id="shareWisdom" type="button">Share wisdom card ↗</button>
         <p class="wisdom-share-status" id="wisdomShareStatus" aria-live="polite"></p>
       </div>
     </section>
 
-    <section class="section books-section" id="books">
+    <section class="section home-library-section" id="books">
       <div class="section-heading">
-        <div><p class="eyebrow">THE BOOKSHELF</p><h2>Read something that <em>stays with you.</em></h2></div>
-        <p>Thoughtfully assembled ideas for readers who want more than noise — words with something to say and something to leave behind.</p>
+        <div><p class="eyebrow">THE VOICEOFTAADE READING ROOM</p><h2>Find a book.<br><em>Keep an idea.</em></h2></div>
+        <p>A growing collection of thoughtful writing, practical reflections, and books made to be read at your own pace.</p>
       </div>
-      <div class="book-feature">
-        <div class="book-poster"><div class="poster-top">VOICEOFTAADE PUBLICATIONS</div><div class="poster-main">SERIES OF<br><em>LIFE HACKS</em><br>TO LIVE BY</div><div class="poster-rule"></div><div class="poster-bottom">WISDOM FOR THE ROAD AHEAD</div><div class="poster-author">voiceoftaade</div></div>
-        <div class="book-details">
-          <span class="pill">DEBUT PUBLICATION</span>
-          <h3>Series of Life Hacks to Live By</h3>
-          <p class="book-byline">By <strong>Taiwo Abdulgafar Adekunle</strong> <span>(Taade / voiceoftaade)</span></p>
-          <p>A collection of thoughtful reflections on perspective, discipline, time, love, boundaries, fear, ambition, and the realities of modern life. Written to encourage clearer judgment and more deliberate living.</p>
-          <ul class="book-points"><li>Four parts covering life foundations, relationships, mindset, and modern struggles</li><li>Short reflections designed to invite deeper thought</li><li>For readers building a more intentional relationship with life</li></ul>
-          <div class="book-actions"><a class="button button-dark" href="https://payhip.com/b/stSQH" target="_blank" rel="noopener noreferrer">Get the ebook <span>↗</span></a><a class="text-link" href="#contact">Bulk & partnership enquiries →</a></div>
-          <small class="fine-print">Purchases are handled securely by Payhip. Price and available formats are shown on the checkout page.</small>
-        </div>
+      <div class="home-library-panel">
+        <div class="home-library-symbol" aria-hidden="true">✳</div>
+        <div><span class="pill">THE BOOKSHELF</span><h3>A library built for curious minds.</h3><p>Our dedicated Books page is being prepared as a home for free reading, new releases, and future publications. The first free title will be added when its reader-ready file is available.</p><a class="button button-dark" href="books.html">Browse the Books page <span>↗</span></a></div>
       </div>
-      <div class="coming-soon"><span class="coming-icon">✳</span><div><strong>The next chapter is in progress.</strong><p>New publications and themed reading projects are being developed. Visit the Journal page and community for updates.</p></div><span class="coming-label">COMING SOON</span></div>
     </section>
 
     <section class="quote-section"><div class="quote-mark">“</div><blockquote>In a noisy world, wisdom is not always the loudest voice. Sometimes, it is the one that helps you hear yourself clearly.</blockquote><p>— THE VOICEOFTAADE PHILOSOPHY</p></section>
 
-    <section class="section about-section" id="about">
-      <div class="about-stamp">EST.<br><strong>VOT</strong><br>PUBLICATIONS</div>
-      <div class="about-copy"><p class="eyebrow">OUR STORY & FOUNDER</p><h2>Founded by <em>Taiwo Abdulgafar Adekunle.</em></h2><p class="founder-alias">Professionally known as <strong>Taade</strong> (voiceoftaade), Taiwo is the founder and publisher of Voiceoftaade Publications.</p><p>Voiceoftaade is an independent creative and publishing platform built around ideas that encourage wisdom, inspiration, and purpose-driven living. We believe words should do more than fill a page: they should challenge assumptions, offer perspective, and give readers something useful to carry into everyday life.</p><p>From books and essays to future themed projects, our aim is to create work that respects the reader’s intelligence and the enduring value of thoughtful expression.</p><a class="text-link" href="#contact">Start a conversation →</a><p class="cv-note">For professional opportunities and collaborations, you can also view my CV.</p><a class="button button-gold cv-button" href="Taiwo_Abdulgafar_Publishing_Content_CV_Final.PDF" download>Download CV <span>↓</span></a></div>
-    </section>
+    
 
     <section class="community-section" id="community"><div class="community-copy"><p class="eyebrow">STAY IN THE LOOP</p><h2>Good ideas are better <em>shared.</em></h2><p>Join the Voiceoftaade community for publication news, new reflections, and project announcements.</p><div class="community-actions"><a class="button button-gold" href="https://chat.whatsapp.com/IR6dkKefPvXEmSbqfiatM9" target="_blank" rel="noopener noreferrer">Join WhatsApp community ↗</a><a class="social-link" href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer">Telegram channel ↗</a></div></div><div class="community-mark"><img src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"><small>READ · REFLECT · REPEAT</small></div></section>
 
@@ -180,7 +165,7 @@
     </section>
   </main>
 
-  <footer class="site-footer"><a class="brand footer-brand" href="#home"><img class="brand-logo footer-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a><p>Words for wisdom. Ideas for life.</p><div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications · Founded by Taiwo Abdulgafar Adekunle (Taade)</span><span>Built for readers, thinkers, and doers.</span><a href="#home">Back to top ↑</a></div></footer>
+  <footer class="site-footer"><a class="brand footer-brand" href="index.html"><img class="brand-logo footer-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a><p>A home for thoughtful words and purposeful living.</p><div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications · Founded by Taiwo Abdulgafar Adekunle (Taade)</span><span>Built for readers, thinkers, and doers.</span><a href="#home">Back to top ↑</a></div></footer>
 
   <dialog id="articleDialog" class="article-dialog"><button class="dialog-close" id="dialogClose" aria-label="Close reflection">×</button><p class="eyebrow" id="dialogCategory">REFLECTION</p><h2 id="dialogTitle"></h2><div id="dialogBody"></div><div class="reflection-actions"><button class="button button-dark" id="saveReflection" type="button">＋ Save reflection</button><button class="button button-outline" id="favouriteReflection" type="button" aria-pressed="false">♡ Add to favourites</button></div><p class="dialog-signoff">VOICEOFTAADE JOURNAL · READ, REFLECT, REPEAT</p></dialog>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
