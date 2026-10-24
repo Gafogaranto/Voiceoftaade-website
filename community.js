@@ -334,7 +334,7 @@
     feed.querySelector('[data-comment="'+p.id+'"]')?.addEventListener("click",()=>document.getElementById("comment-"+p.id)?.focus());
     feed.querySelector('[data-share="'+p.id+'"]')?.addEventListener("click",()=>sharePost(p));
     feed.querySelector('[data-repost="'+p.id+'"]')?.addEventListener("click",()=>resharePost(p));
-    feed.querySelector('[data-report="'+p.id+'"]')?.addEventListener("click",()=>reportPost(p));feed.querySelector('[data-report-reader="'+p.author_id+'"]')?.addEventListener("click",()=>reportReader(p.author_id,p.community_id,p.id));feed.querySelectorAll('[data-block-reader="'+p.author_id+'"]').forEach(b=>b.addEventListener("click",()=>blockReader(p.author_id)));feed.querySelectorAll('[data-report-reply]').forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.replyAuthor,p.community_id,p.id,b.dataset.reportReply)));
+    feed.querySelector('[data-report="'+p.id+'"]')?.addEventListener("click",()=>reportPost(p));feed.querySelector('[data-report-reader="'+p.author_id+'"]')?.addEventListener("click",()=>reportReader(p.author_id,p.community_id,p.id));feed.querySelectorAll('[data-block-reader="'+p.author_id+'"]').forEach(b=>b.addEventListener("click",()=>blockReader(p.author_id)));feed.querySelectorAll('[data-report-reply]').forEach(b=>b.addEventListener("click",()=>reportReply(b.dataset.reportReply,p)));
     feed.querySelector('[data-comment-form="'+p.id+'"]')?.addEventListener("submit",e=>submitComment(e,p));
    });
    } catch(error) {
