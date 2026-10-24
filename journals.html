@@ -55,10 +55,6 @@
   <dialog id="articleDialog" class="article-dialog"><button type="button" class="dialog-close" id="dialogClose" aria-label="Close reflection">×</button><p class="eyebrow" id="dialogCategory">REFLECTION</p><h2 id="dialogTitle"></h2><div id="dialogBody"></div><div class="reflection-actions"><button class="button button-dark" id="saveReflection" type="button">＋ Save reflection</button><button class="button button-outline" id="favouriteReflection" type="button" aria-pressed="false">♡ Add to favourites</button></div><div class="journal-share-actions"><button class="button button-dark" id="downloadJournalImage" type="button">↓ Download as image</button><button class="button button-outline" id="shareJournalImage" type="button">↗ Share journal</button></div><p class="share-image-status" id="journalShareStatus" role="status" aria-live="polite"></p><p class="dialog-signoff">VOICEOFTAADE JOURNAL · READ, REFLECT, REPEAT</p></dialog>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(error => console.error("Service worker registration failed:", error)));
-    }
-  </script>
+
 </body>
 </html>
