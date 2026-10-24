@@ -238,7 +238,7 @@
    if(which==="notifications")loadNotifications();
   }
   function showAdminNav(){const panel=$("ownerModerationPanel");if(panel){panel.hidden=false;}const btn=$("adminNavBtn");if(btn)btn.onclick=()=>showWorkspace("admin");}
-  async async function loadBlockedUsers(){if(!state.user||!client){state.blockedUsers=[];return;}const {data,error}=await client.from("reader_blocks").select("blocked_id").eq("blocker_id",state.user.id);state.blockedUsers=error?[]:(data||[]).map(x=>x.blocked_id);}
+  async function loadBlockedUsers(){if(!state.user||!client){state.blockedUsers=[];return;}const {data,error}=await client.from("reader_blocks").select("blocked_id").eq("blocker_id",state.user.id);state.blockedUsers=error?[]:(data||[]).map(x=>x.blocked_id);}
   async function loadJoinedCommunities(){
    if(!state.user){state.joined=[];renderJoinedNav();return;}
    const {data,error}=await client.from("community_members").select("community_id,status,communities(id,name,slug,description,visibility,status)").eq("user_id",state.user.id).eq("status","active");
