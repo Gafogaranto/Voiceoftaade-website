@@ -28,7 +28,7 @@
    $("postForm")?.addEventListener("submit",createPost);
    $("backToDiscover")?.addEventListener("click",()=>showWorkspace("discover"));
    $("chatJoinBtn")?.addEventListener("click",()=>state.selected&&joinCommunity(state.selected));
-   $("chatRoomInfo")?.addEventListener("click",()=>state.selected&&window.alert(state.selected.description));
+   $("chatRoomInfo")?.addEventListener("click",showCommunityInfo);$("closeCommunityInfo")?.addEventListener("click",()=>{$("communityInfoPanel").hidden=true;});
    $("refreshForYou")?.addEventListener("click",loadForYou);
    $("refreshFollowing")?.addEventListener("click",loadFollowing);
    $("refreshMentions")?.addEventListener("click",loadMentions);
@@ -149,7 +149,7 @@
       const author=authors.get(p.author_id)||{name:"Community member",owner:false};
       const badge=author.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner">✦</span>':"";
       const likes=reactions.filter(r=>r.post_id===p.id&&r.reaction==="like").length,liked=!!state.user&&reactions.some(r=>r.post_id===p.id&&r.user_id===state.user.id&&r.reaction==="like"),comments=replies.filter(r=>r.post_id===p.id).length;
-      return '<article class="social-feed-item"><div class="feed-community">'+escape(community?.name||"Voiceoftaade community")+'</div><div class="feed-author">'+escape(author.name)+badge+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-feed-like="'+p.id+'" data-community="'+p.community_id+'">'+(liked?"♥":"♡")+' Like · '+likes+'</button><button type="button" data-feed-open="'+p.community_id+'">Open conversation · '+comments+' replies</button></article>';
+      return '<article class="social-feed-item"><div class="feed-community">'+escape(community?.name||"Voiceoftaade community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(author.name)+'</a>'+badge+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-feed-like="'+p.id+'" data-community="'+p.community_id+'">'+(liked?"♥":"♡")+' Like · '+likes+'</button><button type="button" data-feed-open="'+p.community_id+'">Open conversation · '+comments+' replies</button></article>';
     }).join("");
     host.querySelectorAll("[data-feed-like]").forEach(b=>b.addEventListener("click",()=>toggleFeedLike(b.dataset.feedLike,b.dataset.community)));
     host.querySelectorAll("[data-feed-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.feedOpen)));
@@ -298,14 +298,14 @@
     const person=authors.get(p.author_id)||{name:"Community member",avatar:"",owner:false};
     const avatar=person.avatar?'<img class="chat-avatar-image" src="'+escape(person.avatar)+'" alt="">':escape((person.name||"M").trim().slice(0,1).toUpperCase());
     const badge=person.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner" aria-label="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner" aria-label="Voiceoftaade owner">✦</span>':"";
-    return '<article class="chat-post" data-post-card="'+p.id+'">'+(p.is_pinned?'<span class="community-type">Pinned</span>':'')+'<div class="chat-post-head"><span class="chat-avatar">'+avatar+'</span><div><div class="chat-post-author">'+escape(person.name)+badge+'</div><div class="chat-post-date">'+dateText(p.created_at)+'</div></div></div><h3>'+escape(p.title)+'</h3><div class="chat-post-body">'+escape(p.body)+'</div><div class="chat-post-actions"><button type="button" data-like="'+p.id+'" class="'+(liked?'is-liked':'')+'">♡ Like · '+likes+'</button><button type="button" data-comment="'+p.id+'">Comment · '+comments.length+'</button><button type="button" data-share="'+p.id+'">Share ↗</button><button type="button" data-repost="'+p.id+'">Reshare</button><button type="button" data-report="'+p.id+'">Report</button></div><div class="chat-comments" id="comments-'+p.id+'">'+comments.map(r=>{const author=authors.get(r.author_id)||{name:"Community member",avatar:"",owner:false};const initial=author.avatar?'<img class="chat-avatar-image" src="'+escape(author.avatar)+'" alt="">':escape((author.name||"M").trim().slice(0,1).toUpperCase());const authorBadge=author.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner" aria-label="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner" aria-label="Voiceoftaade owner">✦</span>':"";return '<div class="chat-comment"><span class="chat-avatar">'+initial+'</span><div class="chat-comment-content"><div class="chat-comment-meta">'+escape(author.name)+authorBadge+' · '+dateText(r.created_at)+'</div>'+escape(r.body)+'</div></div>';}).join("")+'</div>'+(state.user?'<form class="comment-form" data-comment-form="'+p.id+'"><label class="sr-only" for="comment-'+p.id+'">Write a comment</label><input id="comment-'+p.id+'" name="body" required maxlength="5000" placeholder="Write a comment…"><button type="submit">Reply</button></form>':'')+'</article>';
+    return '<article class="chat-post" data-post-card="'+p.id+'">'+(p.is_pinned?'<span class="community-type">Pinned</span>':'')+'<div class="chat-post-head"><span class="chat-avatar">'+avatar+'</span><div><div class="chat-post-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(person.name)+'</a>'+badge+'</div><div class="chat-post-date">'+dateText(p.created_at)+'</div></div></div><h3>'+escape(p.title)+'</h3><div class="chat-post-body">'+escape(p.body)+'</div><div class="chat-post-actions"><button type="button" data-like="'+p.id+'" class="'+(liked?'is-liked':'')+'">♡ Like · '+likes+'</button><button type="button" data-comment="'+p.id+'">Comment · '+comments.length+'</button><button type="button" data-share="'+p.id+'">Share ↗</button><button type="button" data-repost="'+p.id+'">Reshare</button><button type="button" data-report="'+p.id+'">Report post</button><button type="button" data-report-reader="'+p.author_id+'" data-post-id="'+p.id+'">Report reader</button><button type="button" data-block-reader="'+p.author_id+'">Block reader</button></div><div class="chat-comments" id="comments-'+p.id+'">'+comments.map(r=>{const author=authors.get(r.author_id)||{name:"Community member",avatar:"",owner:false};const initial=author.avatar?'<img class="chat-avatar-image" src="'+escape(author.avatar)+'" alt="">':escape((author.name||"M").trim().slice(0,1).toUpperCase());const authorBadge=author.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner" aria-label="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner" aria-label="Voiceoftaade owner">✦</span>':"";return '<div class="chat-comment"><span class="chat-avatar">'+initial+'</span><div class="chat-comment-content"><div class="chat-comment-meta"><a href="profile.html?id='+encodeURIComponent(r.author_id)+'">'+escape(author.name)+'</a>'+authorBadge+' · '+dateText(r.created_at)+'</div>'+escape(r.body)+'</div></div>';}).join("")+'</div>'+(state.user?'<form class="comment-form" data-comment-form="'+p.id+'"><label class="sr-only" for="comment-'+p.id+'">Write a comment</label><input id="comment-'+p.id+'" name="body" required maxlength="5000" placeholder="Write a comment…"><button type="submit">Reply</button></form>':'')+'</article>';
    }).join("");
    posts.forEach(p=>{
     feed.querySelector('[data-like="'+p.id+'"]')?.addEventListener("click",()=>reactTo(p,"like"));
     feed.querySelector('[data-comment="'+p.id+'"]')?.addEventListener("click",()=>document.getElementById("comment-"+p.id)?.focus());
     feed.querySelector('[data-share="'+p.id+'"]')?.addEventListener("click",()=>sharePost(p));
     feed.querySelector('[data-repost="'+p.id+'"]')?.addEventListener("click",()=>resharePost(p));
-    feed.querySelector('[data-report="'+p.id+'"]')?.addEventListener("click",()=>reportPost(p));
+    feed.querySelector('[data-report="'+p.id+'"]')?.addEventListener("click",()=>reportPost(p));feed.querySelector('[data-report-reader="'+p.author_id+'"]')?.addEventListener("click",()=>reportReader(p.author_id,p.community_id,p.id));feed.querySelectorAll('[data-block-reader="'+p.author_id+'"]').forEach(b=>b.addEventListener("click",()=>blockReader(p.author_id)));feed.querySelectorAll('[data-report-reply]').forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.replyAuthor,p.community_id,p.id,b.dataset.reportReply)));
     feed.querySelector('[data-comment-form="'+p.id+'"]')?.addEventListener("submit",e=>submitComment(e,p));
    });
    } catch(error) {
@@ -346,6 +346,32 @@
    const {error}=await client.from("community_reactions").insert({post_id:post.id,user_id:state.user.id,reaction});
    if(error&&error.code==="23505"){const removed=await client.from("community_reactions").delete().eq("post_id",post.id).eq("user_id",state.user.id).eq("reaction",reaction);if(removed.error){status("Could not update reaction.",true);return;}status("Like removed.");await loadPosts(state.selected);return;}
    if(error){status("Could not add reaction. Join this community first.",true);return;}status("Like updated.");await loadPosts(state.selected);
+  }
+  async function reportReader(userId,communityId=null,postId=null,replyId=null){
+   if(!requireLogin()||userId===state.user.id)return;
+   const reason=window.prompt("Report this reader. Describe the concern (at least 5 characters):");if(!reason?.trim()||reason.trim().length<5)return;
+   const {error}=await client.from("reader_safety_reports").insert({reporter_id:state.user.id,reported_user_id:userId,community_id:communityId,post_id:postId,reply_id:replyId,reason:reason.trim()});
+   status(error?"Could not submit reader report. Please try again.":"Reader report sent to the Voiceoftaade moderation queue.",!!error);
+  }
+  async function blockReader(userId){
+   if(!requireLogin()||userId===state.user.id)return;
+   if(!window.confirm("Block this reader? Their posts will be hidden from your feeds where supported."))return;
+   const {error}=await client.from("reader_blocks").insert({blocker_id:state.user.id,blocked_id:userId});
+   status(error?(error.code==="23505"?"You have already blocked this reader.":"Could not block this reader. "+error.message):"Reader blocked.",!!error);
+   await loadBlockedUsers();await loadForYou();await loadFollowing();if(state.selected)await loadPosts(state.selected);
+  }
+  async function showCommunityInfo(){
+   const panel=$("communityInfoPanel"),host=$("communityInfoContent"),room=state.selected;if(!panel||!host||!room)return;
+   panel.hidden=false;host.innerHTML='<p>Loading community details…</p>';
+   const [membersRes,creatorRes]=await Promise.all([client.from("community_members").select("user_id,role,status").eq("community_id",room.id).eq("status","active").in("role",["owner","admin","moderator"]).limit(30),client.from("profiles").select("display_name").eq("id",room.created_by).maybeSingle()]);
+   const members=membersRes.data||[],ids=members.map(m=>m.user_id);let profiles=[];
+   if(ids.length){const q=await client.from("profiles").select("id,display_name").in("id",ids);profiles=q.data||[];}
+   const map=new Map(profiles.map(p=>[p.id,p]));
+   const admins=members.map(m=>'<div class="info-stat"><strong>'+escape(map.get(m.user_id)?.display_name||"Community admin")+'</strong><br><small>'+escape(m.role)+'</small><div class="info-actions"><button type="button" data-info-profile="'+m.user_id+'">View profile</button></div></div>').join("");
+   host.innerHTML='<div class="info-stat"><strong>'+(room.visibility==="private"?"🔒 Private community":"🌐 Public community")+'</strong><p>'+escape(room.description||"A Voiceoftaade reader community.")+'</p></div><div class="info-stat"><strong>Created by</strong><br>'+escape(creatorRes.data?.display_name||"Community creator")+'</div><div class="info-stat"><strong>Admins and moderators</strong>'+(admins||'<p>No community-specific admin roles are listed.</p>')+'</div><div class="info-actions"><button id="infoLeaveCommunity" type="button">Leave community</button><button id="infoReportCommunity" type="button" class="community-safety-action">Report community</button></div>';
+   host.querySelectorAll("[data-info-profile]").forEach(b=>b.addEventListener("click",()=>location.href="profile.html?id="+encodeURIComponent(b.dataset.infoProfile)));
+   $("infoLeaveCommunity")?.addEventListener("click",async()=>{if(!state.user||!confirm("Leave this community?"))return;const z=await client.from("community_members").delete().eq("community_id",room.id).eq("user_id",state.user.id);if(z.error){status("Could not leave community. "+z.error.message,true);return;}panel.hidden=true;state.selected=null;await loadJoinedCommunities();showWorkspace("discover");});
+   $("infoReportCommunity")?.addEventListener("click",async()=>{if(!requireLogin())return;const reason=prompt("Why are you reporting this community?");if(!reason?.trim())return;const z=await client.from("community_reports").insert({community_id:room.id,reporter_id:state.user.id,reason:reason.trim()});status(z.error?"Could not report community.":"Community report sent to moderation.",!!z.error);});
   }
   async function reportPost(post){
    if(!requireLogin())return;
