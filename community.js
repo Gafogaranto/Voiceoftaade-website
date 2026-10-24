@@ -74,10 +74,11 @@
    if(approvals)approvals.innerHTML='<p class="community-loading">Loading communities awaiting approval…</p>';
    if(requests)requests.innerHTML='<p class="community-loading">Loading creator requests…</p>';
    if(reports)reports.innerHTML='<p class="community-loading">Loading reports…</p>';
-   const [communityRes,reqRes,reportRes,safetyRes]=await Promise.all([
+   const [communityRes,reqRes,reportRes,groupReportRes,safetyRes]=await Promise.all([
     client.from("communities").select("id,name,description,visibility,created_at").eq("status","pending").order("created_at",{ascending:true}).limit(50),
     client.from("community_creator_requests").select("id,user_id,message,status,created_at").eq("status","pending").order("created_at",{ascending:true}).limit(50),
     client.from("community_reports").select("id,community_id,reporter_id,post_id,reason,status,created_at").in("status",["open","reviewing"]).order("created_at",{ascending:false}).limit(50),
+    client.from("community_group_reports").select("id,community_id,reporter_id,reason,status,created_at").in("status",["open","reviewing"]).order("created_at",{ascending:false}).limit(50),
     client.from("reader_safety_reports").select("id,reporter_id,reported_user_id,reason,status,created_at").in("status",["new","reviewing"]).order("created_at",{ascending:false}).limit(50)
    ]);
    if(approvals){
@@ -93,6 +94,13 @@
     else requests.innerHTML=reqRes.data.map(r=>'<article class="moderation-item"><strong>Creator application</strong><p>'+escape(r.message)+'</p><small>User ID: '+escape(r.user_id)+' · '+dateText(r.created_at)+'</small><div class="moderation-item-actions"><button class="approve" data-approve-creator="'+r.id+'" data-user-id="'+r.user_id+'">Approve creator</button><button data-reject-creator="'+r.id+'">Decline</button></div></article>').join("");
     requests.querySelectorAll("[data-approve-creator]").forEach(b=>b.addEventListener("click",()=>reviewCreatorRequest(b.dataset.approveCreator,b.dataset.userId,"approved",b)));
     requests.querySelectorAll("[data-reject-creator]").forEach(b=>b.addEventListener("click",()=>reviewCreatorRequest(b.dataset.rejectCreator,null,"rejected",b)));
+   }
+   const groupHost=$("communityGroupReportsList");
+   if(groupHost){
+    if(groupReportRes.error){groupHost.innerHTML='<p class="community-loading">Group reports could not be loaded.</p>';console.warn(groupReportRes.error);}
+    else if(!groupReportRes.data?.length)groupHost.innerHTML='<p class="community-loading">No group reports awaiting review.</p>';
+    else groupHost.innerHTML=groupReportRes.data.map(r=>'<article class="moderation-item"><strong>Community report · '+escape(r.status)+'</strong><p>'+escape(r.reason)+'</p><small>Community: '+escape(r.community_id)+' · '+dateText(r.created_at)+'</small><div class="moderation-item-actions"><button data-group-report="'+r.id+'" data-group-status="resolved">Mark resolved</button><button data-group-report="'+r.id+'" data-group-status="dismissed">Dismiss</button></div></article>').join("");
+    groupHost.querySelectorAll("[data-group-report]").forEach(b=>b.addEventListener("click",async()=>{const q=await client.from("community_group_reports").update({status:b.dataset.groupStatus,reviewed_by:state.user.id}).eq("id",b.dataset.groupReport);if(q.error){status("Could not update group report: "+q.error.message,true);return;}await loadModeration();}));
    }
    const safetyHost=$("readerSafetyReportsList");
    const safetyIds=[...new Set((safetyRes.data||[]).flatMap(x=>[x.reporter_id,x.reported_user_id]).filter(Boolean))];
@@ -223,7 +231,7 @@
   async function loadCommunities(){
    const list=$("communityList");
    list.innerHTML='<p class="community-loading">Finding communities…</p>';
-   const {data,error}=await client.from("communities").select("id,name,slug,description,visibility,created_at").eq("status","active").order("created_at",{ascending:false});
+   const {data,error}=await client.from("communities").select("id,name,slug,description,visibility,avatar_url,cover_url,rules,created_by,created_at").eq("status","active").order("created_at",{ascending:false});
    if(error){console.error(error);list.innerHTML='<p class="community-loading">Communities could not load. Please refresh and try again.</p>';return;}
    state.communities=data||[];
    if(!state.communities.length){list.innerHTML='<div class="community-empty"><span>✳</span><h3>A new space for meaningful conversation.</h3><p>Our community spaces are being prepared. Approved community creators will be able to launch the first groups here.</p></div>';return;}
@@ -247,7 +255,7 @@
   async function loadBlockedUsers(){if(!state.user||!client){state.blockedUsers=[];return;}const {data,error}=await client.from("reader_blocks").select("blocked_id").eq("blocker_id",state.user.id);state.blockedUsers=error?[]:(data||[]).map(x=>x.blocked_id);}
   async function loadJoinedCommunities(){
    if(!state.user){state.joined=[];renderJoinedNav();return;}
-   const {data,error}=await client.from("community_members").select("community_id,status,communities(id,name,slug,description,visibility,status)").eq("user_id",state.user.id).eq("status","active");
+   const {data,error}=await client.from("community_members").select("community_id,status,communities(id,name,slug,description,visibility,avatar_url,cover_url,rules,created_by,status)").eq("user_id",state.user.id).eq("status","active");
    if(error){console.warn("Joined rooms unavailable",error);return;}
    state.joined=(data||[]).map(x=>x.communities).filter(c=>c&&c.status==="active");renderJoinedNav();
   }
@@ -258,7 +266,7 @@
   }
   async function openCommunity(id){
    const community=state.communities.find(c=>c.id===id)||state.joined.find(c=>c.id===id);if(!community)return;
-   state.selected=community;renderAccount();renderJoinedNav();showWorkspace("chat");const roomMark=$("workspaceChat")?.querySelector(".chat-room-mark");if(roomMark)roomMark.textContent=(community.name||"✦").trim().slice(0,1).toUpperCase();
+   state.selected=community;renderAccount();renderJoinedNav();showWorkspace("chat");const roomMark=$("workspaceChat")?.querySelector(".chat-room-mark");if(roomMark)roomMark.innerHTML=community.avatar_url?'<img src="'+escape(community.avatar_url)+'" alt="">':escape((community.name||"✦").trim().slice(0,1).toUpperCase());
    $("chatHeading").textContent=community.name;$("chatDescription").textContent=community.visibility==="private"?"Private reading room":"Community conversation";
    const {data:member}=state.user?await client.from("community_members").select("status,role").eq("community_id",id).eq("user_id",state.user.id).maybeSingle():{data:null};
    const active=member?.status==="active";
