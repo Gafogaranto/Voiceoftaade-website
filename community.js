@@ -17,7 +17,7 @@
     state.user=session?.user??null;
     if(!state.user){state.staff=false;state.creator=false;}
     renderAccount();
-    refreshPermissions().then(()=>{renderAccount();loadCommunities();loadForYou();loadNotifications();}).catch(error=>{console.error("Permission refresh failed",error);renderAccount();loadCommunities();loadForYou();loadNotifications();});
+    refreshPermissions().then(()=>{renderAccount();loadCommunities();loadForYou();loadFollowing();loadMentions();loadNotifications();}).catch(error=>{console.error("Permission refresh failed",error);renderAccount();loadCommunities();loadForYou();loadNotifications();});
    });
    renderAccount();
    await refreshPermissions();
@@ -29,11 +29,15 @@
    $("chatJoinBtn")?.addEventListener("click",()=>state.selected&&joinCommunity(state.selected));
    $("chatRoomInfo")?.addEventListener("click",()=>state.selected&&window.alert(state.selected.description));
    $("refreshForYou")?.addEventListener("click",loadForYou);
+   $("refreshFollowing")?.addEventListener("click",loadFollowing);
+   $("refreshMentions")?.addEventListener("click",loadMentions);
    $("refreshNotifications")?.addEventListener("click",loadNotifications);
    document.querySelectorAll("[data-workspace]").forEach(btn=>btn.addEventListener("click",()=>showWorkspace(btn.dataset.workspace)));
    const moderation=$("ownerModerationPanel"),mount=$("adminModerationMount");if(moderation&&mount)mount.appendChild(moderation);
    await loadCommunities();
    await loadForYou();
+   await loadFollowing();
+   await loadMentions();
    await loadNotifications();
   }
   async function refreshPermissions(){
@@ -141,6 +145,40 @@
     host.querySelectorAll("[data-feed-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.feedOpen)));
    }catch(error){console.error("For You feed crashed",error);host.innerHTML='<p class="community-loading">The feed stopped unexpectedly. <button type="button" id="retryForYou">Try again</button></p>';$("retryForYou")?.addEventListener("click",loadForYou);}
   }
+  async function loadFollowing(){
+   const host=$("followingFeed");if(!host||!client)return;
+   if(!state.user){host.innerHTML='<div class="chat-welcome"><h3>Your network starts here</h3><p><a href="account.html">Sign in</a> to follow readers and see their public conversations.</p></div>';return;}
+   const f=await client.from("reader_follows").select("followed_id").eq("follower_id",state.user.id);
+   if(f.error){host.textContent="Following list could not load: "+f.error.message;return;}
+   const ids=(f.data||[]).map(x=>x.followed_id);
+   if(!ids.length){host.innerHTML='<div class="chat-welcome"><h3>Build your reading network</h3><p>Open a reader profile from a post and choose Follow reader. Their public posts will appear here.</p></div>';return;}
+   const q=await client.from("community_posts").select("id,community_id,author_id,title,body,created_at,communities!inner(id,name,visibility,status)").in("author_id",ids).eq("status","published").eq("communities.status","active").eq("communities.visibility","public").order("created_at",{ascending:false}).limit(40);
+   if(q.error){host.textContent="Following feed could not load: "+q.error.message;return;}
+   if(!q.data?.length){host.innerHTML='<p class="community-loading">The readers you follow have not posted publicly yet.</p>';return;}
+   const authors=await getAuthorMeta(q.data.map(p=>p.author_id));
+   host.innerHTML=q.data.map(p=>{const a=authors.get(p.author_id)||{name:"Reader",owner:false},cm=Array.isArray(p.communities)?p.communities[0]:p.communities;return '<article class="social-feed-item"><div class="feed-community">'+escape(cm?.name||"Public community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(a.name)+'</a>'+(a.owner?'<span class="vt-verified-badge">✓</span>':"")+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-follow-open="'+p.community_id+'">Open conversation</button></article>';}).join("");
+   host.querySelectorAll("[data-follow-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.followOpen)));
+  }
+  async function loadMentions(){
+   const host=$("mentionsFeed"),badge=$("mentionCount");if(!host||!client)return;
+   if(!state.user){host.innerHTML='<div class="chat-welcome"><h3>Your mentions live here</h3><p><a href="account.html">Sign in</a> to see when readers mention you.</p></div>';if(badge)badge.hidden=true;return;}
+   const q=await client.from("reader_mentions").select("id,mentioned_by,post_id,reply_id,created_at,read_at").eq("mentioned_user_id",state.user.id).order("created_at",{ascending:false}).limit(50);
+   if(q.error){host.textContent="Mentions could not load: "+q.error.message;if(badge)badge.hidden=true;return;}
+   const items=q.data||[],unread=items.filter(x=>!x.read_at).length;if(badge){badge.textContent=String(unread);badge.hidden=!unread;}
+   if(!items.length){host.innerHTML='<div class="chat-welcome"><h3>No mentions yet</h3><p>Readers can mention you by typing @your-handle in a post or reply.</p></div>';return;}
+   const authors=await getAuthorMeta(items.map(x=>x.mentioned_by)),pids=items.map(x=>x.post_id).filter(Boolean),rids=items.map(x=>x.reply_id).filter(Boolean);
+   const [pr,rr]=await Promise.all([pids.length?client.from("community_posts").select("id,title,body,community_id").in("id",pids):Promise.resolve({data:[]}),rids.length?client.from("community_replies").select("id,body,post_id").in("id",rids):Promise.resolve({data:[]})]);
+   const posts=new Map((pr.data||[]).map(x=>[x.id,x])),replies=new Map((rr.data||[]).map(x=>[x.id,x]));
+   host.innerHTML=items.map(n=>{const a=authors.get(n.mentioned_by)||{name:"A reader"},src=n.post_id?posts.get(n.post_id):replies.get(n.reply_id),post=n.post_id?src:posts.get(src?.post_id);return '<article class="social-feed-item '+(!n.read_at?"notification-unread":"")+'"><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(n.mentioned_by)+'">'+escape(a.name)+'</a> mentioned you</div><p>'+escape(src?.body||src?.title||"Mentioned content is unavailable.")+'</p><div class="feed-meta">'+dateText(n.created_at)+'</div><button type="button" data-mention-read="'+n.id+'" '+(n.read_at?"disabled":"")+'>'+(n.read_at?"Read":"Mark as read")+'</button>'+(post?.community_id?'<button type="button" data-mention-open="'+post.community_id+'">Open conversation</button>':"")+'</article>';}).join("");
+   host.querySelectorAll("[data-mention-read]").forEach(b=>b.addEventListener("click",async()=>{const z=await client.from("reader_mentions").update({read_at:new Date().toISOString()}).eq("id",b.dataset.mentionRead);if(!z.error)loadMentions();}));
+   host.querySelectorAll("[data-mention-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.mentionOpen)));
+  }
+  async function createMentions(body,kind,sourceId){
+   if(!state.user||!sourceId)return;const tokens=[...new Set((body.match(/@[a-z0-9][a-z0-9_.-]{1,39}/gi)||[]).map(t=>t.slice(1).toLowerCase()))];if(!tokens.length)return;
+   const q=await client.from("profiles").select("id,display_name").not("display_name","is",null);if(q.error)return;
+   const targets=(q.data||[]).filter(p=>tokens.includes(String(p.display_name||"").toLowerCase().normalize("NFKD").replace(/[\\u0300-\\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""))&&p.id!==state.user.id);
+   for(const p of targets){const row={mentioned_user_id:p.id,mentioned_by:state.user.id};row[kind==="post"?"post_id":"reply_id"]=sourceId;const z=await client.from("reader_mentions").insert(row);if(z.error&&z.error.code!=="23505")console.warn("Mention save failed",z.error);}
+  }
   async function toggleFeedLike(postId,communityId){
    if(!requireLogin())return;
    const existing=await client.from("community_reactions").select("post_id").eq("post_id",postId).eq("user_id",state.user.id).eq("reaction","like").maybeSingle();
@@ -173,11 +211,13 @@
   }
   function showWorkspace(which){
    document.querySelectorAll(".workspace-view").forEach(v=>v.hidden=true);
-   const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="ai"?$("workspaceAI"):which==="forYou"?$("workspaceForYou"):which==="notifications"?$("workspaceNotifications"):$("workspaceDiscover");
+   const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="ai"?$("workspaceAI"):which==="forYou"?$("workspaceForYou"):which==="following"?$("workspaceFollowing"):which==="mentions"?$("workspaceMentions"):which==="notifications"?$("workspaceNotifications"):$("workspaceDiscover");
    if(target)target.hidden=false;
    document.querySelectorAll("[data-workspace]").forEach(b=>b.classList.toggle("active",b.dataset.workspace===which));
    if(which==="admin"&&state.staff)loadModeration();
    if(which==="forYou")loadForYou();
+   if(which==="following")loadFollowing();
+   if(which==="mentions")loadMentions();
    if(which==="notifications")loadNotifications();
   }
   function showAdminNav(){const panel=$("ownerModerationPanel");if(panel){panel.hidden=false;}const btn=$("adminNavBtn");if(btn)btn.onclick=()=>showWorkspace("admin");}
@@ -266,6 +306,7 @@
    const form=event.currentTarget,body=form.elements.body.value.trim();if(!body)return;
    const {error}=await client.from("community_replies").insert({post_id:post.id,author_id:state.user.id,body});
    if(error){status("Could not add comment. Join the community first.",true);return;}
+   const latest=await client.from("community_replies").select("id").eq("post_id",post.id).eq("author_id",state.user.id).order("created_at",{ascending:false}).limit(1).maybeSingle();if(!latest.error&&latest.data)await createMentions(body,"reply",latest.data.id);
    await loadPosts(state.selected);
   }
   async function sharePost(post){
@@ -285,7 +326,7 @@
    const form=event.currentTarget,title=form.elements.title.value.trim(),body=form.elements.body.value.trim();if(!title||!body)return;
    const {error}=await client.from("community_posts").insert({community_id:state.selected.id,author_id:state.user.id,title,body});
    if(error){status("Could not publish. Make sure you have joined this community. "+error.message,true);return;}
-   form.reset();status("Your discussion has been published.");await loadPosts(state.selected);
+   const latest=await client.from("community_posts").select("id").eq("community_id",state.selected.id).eq("author_id",state.user.id).order("created_at",{ascending:false}).limit(1).maybeSingle();if(!latest.error&&latest.data)await createMentions(body,"post",latest.data.id);form.reset();status("Your discussion has been published.");await loadPosts(state.selected);
   }
   async function reactTo(post,reaction){
    if(!requireLogin())return;
