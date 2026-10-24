@@ -628,3 +628,14 @@ body.inner-page > main { min-width: 0; }
 
 /* The brand reveal is for the first visit in a tab session, not every return to Home. */
 html.intro-seen-this-session .brand-intro { display: none !important; }
+
+
+/* Copy deterrence: prevents ordinary text selection, but cannot stop screenshots or determined extraction. */
+body, body * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+input, textarea, select, [contenteditable="true"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
