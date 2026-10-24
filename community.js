@@ -27,6 +27,13 @@
    $("communityCreateForm")?.addEventListener("submit",createCommunity);
    $("postForm")?.addEventListener("submit",createPost);
    $("backToDiscover")?.addEventListener("click",()=>showWorkspace("discover"));
+   const mobileMenu=$("mobileMenuToggle"),backdrop=$("mobileMenuBackdrop");
+   const closeMobileMenu=()=>{document.body.classList.remove("community-mobile-menu-open");mobileMenu?.setAttribute("aria-expanded","false");};
+   mobileMenu?.addEventListener("click",()=>{const open=document.body.classList.toggle("community-mobile-menu-open");mobileMenu.setAttribute("aria-expanded",String(open));});
+   backdrop?.addEventListener("click",closeMobileMenu);
+   $("mobileMenuOverlayClose")?.addEventListener("click",closeMobileMenu);
+   document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeMobileMenu();const info=$("communityInfoPanel");if(info)info.hidden=true;}});
+
    $("chatJoinBtn")?.addEventListener("click",()=>state.selected&&joinCommunity(state.selected));
    $("chatRoomInfo")?.addEventListener("click",showCommunityInfo);$("closeCommunityInfo")?.addEventListener("click",()=>{$("communityInfoPanel").hidden=true;});
    $("mobileAdminNav")?.addEventListener("click",()=>showWorkspace("admin"));
@@ -34,7 +41,7 @@
    $("refreshFollowing")?.addEventListener("click",loadFollowing);
    $("refreshMentions")?.addEventListener("click",loadMentions);
    $("refreshNotifications")?.addEventListener("click",loadNotifications);
-   document.querySelectorAll("[data-workspace]").forEach(btn=>btn.addEventListener("click",()=>showWorkspace(btn.dataset.workspace)));
+   document.querySelectorAll("[data-workspace]").forEach(btn=>btn.addEventListener("click",()=>{showWorkspace(btn.dataset.workspace);document.body.classList.remove("community-mobile-menu-open");$("mobileMenuToggle")?.setAttribute("aria-expanded","false");}));
    const moderation=$("ownerModerationPanel"),mount=$("adminModerationMount");if(moderation&&mount)mount.appendChild(moderation);
    await loadCommunities();
    await loadForYou();
@@ -161,11 +168,11 @@
       const author=authors.get(p.author_id)||{name:"Community member",owner:false};
       const badge=author.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner">✦</span>':"";
       const likes=reactions.filter(r=>r.post_id===p.id&&r.reaction==="like").length,liked=!!state.user&&reactions.some(r=>r.post_id===p.id&&r.user_id===state.user.id&&r.reaction==="like"),comments=replies.filter(r=>r.post_id===p.id).length;
-      return '<article class="social-feed-item"><div class="feed-community">'+escape(community?.name||"Voiceoftaade community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(author.name)+'</a>'+badge+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-feed-like="'+p.id+'" data-community="'+p.community_id+'">'+(liked?"♥":"♡")+' Like · '+likes+'</button><button type="button" data-feed-open="'+p.community_id+'">Open conversation · '+comments+' replies</button><button type="button" data-feed-report="'+p.id+'" data-feed-community="'+p.community_id+'" data-feed-author="'+p.author_id+'">Report</button><button type="button" data-feed-block="'+p.author_id+'">Block reader</button></article>';
+      return '<article class="social-feed-item"><div class="feed-community">'+escape(community?.name||"Voiceoftaade community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(author.name)+'</a>'+badge+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-feed-like="'+p.id+'" data-community="'+p.community_id+'">'+(liked?"♥":"♡")+' Like · '+likes+'</button><button type="button" data-feed-open="'+p.community_id+'">Open conversation · '+comments+' replies</button><button type="button" data-feed-report="'+p.id+'" data-feed-community="'+p.community_id+'">Report post</button><button type="button" data-feed-report-reader="'+p.author_id+'" data-feed-post="'+p.id+'" data-feed-community="'+p.community_id+'">Report reader</button><button type="button" data-feed-block="'+p.author_id+'">Block reader</button></article>';
     }).join("");
     host.querySelectorAll("[data-feed-like]").forEach(b=>b.addEventListener("click",()=>toggleFeedLike(b.dataset.feedLike,b.dataset.community)));
     host.querySelectorAll("[data-feed-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.feedOpen)));
-    host.querySelectorAll("[data-feed-report]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.feedAuthor,b.dataset.feedCommunity,b.dataset.feedReport)));
+    host.querySelectorAll("[data-feed-report]").forEach(b=>b.addEventListener("click",()=>reportPost({id:b.dataset.feedReport,community_id:b.dataset.feedCommunity})));\n    host.querySelectorAll("[data-feed-report-reader]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.feedReportReader,b.dataset.feedCommunity,b.dataset.feedPost)));
     host.querySelectorAll("[data-feed-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.feedBlock)));
    }catch(error){console.error("For You feed crashed",error);host.innerHTML='<p class="community-loading">The feed stopped unexpectedly. <button type="button" id="retryForYou">Try again</button></p>';$("retryForYou")?.addEventListener("click",loadForYou);}
   }
@@ -181,11 +188,9 @@
    if(state.blockedUsers?.length)q.data.splice(0,q.data.length,...q.data.filter(p=>!state.blockedUsers.includes(p.author_id)));
    if(!q.data?.length){host.innerHTML='<p class="community-loading">The readers you follow have not posted publicly yet.</p>';return;}
    const authors=await getAuthorMeta(q.data.map(p=>p.author_id));
-   host.innerHTML=q.data.map(p=>{const a=authors.get(p.author_id)||{name:"Reader",owner:false},cm=Array.isArray(p.communities)?p.communities[0]:p.communities;return '<article class="social-feed-item"><div class="feed-community">'+escape(cm?.name||"Public community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(a.name)+'</a>'+(a.owner?'<span class="vt-verified-badge">✓</span>':"")+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-follow-open="'+p.community_id+'">Open conversation</button><button type="button" data-follow-report="'+p.id+'" data-follow-community="'+p.community_id+'" data-follow-author="'+p.author_id+'">Report</button><button type="button" data-follow-block="'+p.author_id+'">Block reader</button></article>';}).join("");
+   host.innerHTML=q.data.map(p=>{const a=authors.get(p.author_id)||{name:"Reader",owner:false},cm=Array.isArray(p.communities)?p.communities[0]:p.communities;return '<article class="social-feed-item"><div class="feed-community">'+escape(cm?.name||"Public community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(a.name)+'</a>'+(a.owner?'<span class="vt-verified-badge">✓</span>':"")+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-follow-open="'+p.community_id+'">Open conversation</button><button type="button" data-follow-report-post="'+p.id+'" data-follow-community="'+p.community_id+'">Report post</button><button type="button" data-follow-report-reader="'+p.author_id+'" data-follow-post="'+p.id+'" data-follow-community="'+p.community_id+'">Report reader</button><button type="button" data-follow-block="'+p.author_id+'">Block reader</button></article>';}).join("");
    host.querySelectorAll("[data-follow-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.followOpen)));
-   host.querySelectorAll("[data-follow-report]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.followReport,b.dataset.followCommunity,b.dataset.followPost)));
-   host.querySelectorAll("[data-follow-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.followBlock)));
-   host.querySelectorAll("[data-follow-report]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.followAuthor,b.dataset.followCommunity,b.dataset.followReport)));
+   host.querySelectorAll("[data-follow-report-post]").forEach(b=>b.addEventListener("click",()=>reportPost({id:b.dataset.followReportPost,community_id:b.dataset.followCommunity})));\n   host.querySelectorAll("[data-follow-report-reader]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.followReportReader,b.dataset.followCommunity,b.dataset.followPost)));\n   host.querySelectorAll("[data-follow-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.followBlock)));
    host.querySelectorAll("[data-follow-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.followBlock)));
   }
   async function loadMentions(){
@@ -242,6 +247,8 @@
    document.querySelectorAll(".workspace-view").forEach(v=>v.hidden=true);
    const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="ai"?$("workspaceAI"):which==="forYou"?$("workspaceForYou"):which==="following"?$("workspaceFollowing"):which==="mentions"?$("workspaceMentions"):which==="notifications"?$("workspaceNotifications"):$("workspaceDiscover");
    if(target)target.hidden=false;
+   const titleMap={forYou:"For You",following:"Following",mentions:"Mentions",notifications:"Notifications",discover:"Discover communities",chat:state.selected?.name||"Community chat",ai:"AI reading companion",admin:"Admin requests"};
+   const mobileTitle=$("mobileWorkspaceTitle");if(mobileTitle)mobileTitle.textContent=titleMap[which]||"Voiceoftaade Community";
    document.body.classList.toggle("community-chat-open",which==="chat");
    document.querySelectorAll("[data-workspace]").forEach(b=>b.classList.toggle("active",b.dataset.workspace===which));
    if(which==="admin"&&state.staff)loadModeration();
