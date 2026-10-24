@@ -160,7 +160,58 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 
 .community-info-panel .info-community-mark{display:grid;place-items:center;width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#f5d787,#dba94f);color:#12243b;font-size:1.6rem;font-weight:800;margin:8px 0}.community-info-panel .info-community-name{margin:0 0 10px;font-size:1.2rem;color:#142238}
 </style>
-</head>
+<style id="community-responsive-upgrade">
+/* Mobile-first, chat-app style community navigation */
+.mobile-community-nav{position:sticky;top:0;z-index:80;display:flex;align-items:center;gap:7px;overflow-x:auto;overscroll-behavior-x:contain;white-space:nowrap;padding:10px 12px;background:#07172bf2;border-bottom:1px solid #d7b36a55;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.mobile-community-nav>button,.mobile-community-nav .room-nav-button{flex:0 0 auto;border:1px solid #ffffff20;border-radius:999px;background:#142d46;color:#eaf0f6;padding:9px 13px;font:600 .8rem/1.2 system-ui;min-height:38px}
+.mobile-community-nav>button.active,.mobile-community-nav .room-nav-button.active{background:#d7b36a;color:#07172b;border-color:#d7b36a}
+.mobile-community-nav #mobileJoinedCommunityNav{display:flex;gap:7px;flex:0 0 auto}
+.community-workspace{min-width:0}
+.community-workspace-main,.workspace-view{min-width:0;max-width:100%}
+.chat-topbar{position:sticky;top:58px;z-index:30;display:flex;align-items:center;gap:10px;padding:12px clamp(12px,3vw,22px);background:#07172bf7;border-bottom:1px solid #d7b36a44;backdrop-filter:blur(12px)}
+.chat-room-mark{flex:0 0 42px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#d7b36a,#f3dfaa);color:#07172b;font-weight:800}
+.chat-room-title{flex:1;min-width:0}.chat-room-title h2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chat-room-title p{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-info-button{flex:0 0 40px;width:40px;height:40px;border-radius:50%;border:1px solid #d7b36a66;background:#142d46;color:#f5d78e;font-size:1.25rem}
+.chat-avatar-link{display:inline-flex;flex:0 0 auto;border-radius:50%;text-decoration:none}.chat-avatar-link .chat-avatar{cursor:pointer}
+.chat-post-author a,.chat-comment-meta a,.feed-author a{color:inherit;text-decoration:none}.chat-post-author a:hover,.chat-comment-meta a:hover,.feed-author a:hover{text-decoration:underline;text-underline-offset:3px}
+.community-info-panel{position:absolute;z-index:60;right:clamp(8px,2vw,22px);top:112px;width:min(420px,calc(100% - 16px));max-height:min(72vh,680px);overflow:auto;background:#0b1e32;border:1px solid #d7b36a66;border-radius:18px;box-shadow:0 20px 60px #0007;padding:18px}
+.info-community-mark{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,#d7b36a,#f2dfad);color:#07172b;font-size:1.8rem;font-weight:800;margin-bottom:12px}
+.info-community-name{font-size:1.3rem;margin:0 0 14px}.info-stat{padding:12px 0;border-bottom:1px solid #ffffff18;overflow-wrap:anywhere}.info-stat p{line-height:1.6}.info-actions,.info-stat .info-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.info-actions button,.info-stat button{border:1px solid #d7b36a66;border-radius:10px;padding:8px 12px;background:#142d46;color:#f4f6f9}
+.chat-message-area{min-width:0;overflow-x:hidden;overscroll-behavior:contain}.chat-post,.chat-comment{min-width:0;overflow-wrap:anywhere}.chat-post-actions,.chat-comment-actions{display:flex;flex-wrap:wrap;gap:7px}.chat-post-actions button,.chat-comment-actions button{min-height:36px}
+@media(max-width:760px){
+ .mobile-community-nav{top:0}
+ .community-workspace{display:block!important;margin:0!important;border-radius:0!important;width:100%;max-width:100%;min-height:60vh}
+ .community-sidebar{display:none!important}
+ .community-workspace-main{width:100%;max-width:100%;padding:0!important}
+ .workspace-topbar{padding:17px 15px;gap:10px;align-items:flex-start}
+ .workspace-topbar h2{font-size:1.35rem}
+ .workspace-topbar p{max-width:100%;line-height:1.5}
+ .social-feed{padding:0 15px}
+ .social-feed-item{overflow-wrap:anywhere}
+ .community-hub-hero,.community-account{transition:none}
+ body.community-chat-open .community-hub-hero,body.community-chat-open .community-account{display:none!important}
+ body.community-chat-open .community-workspace{min-height:calc(100dvh - 58px);height:calc(100dvh - 58px)}
+ body.community-chat-open .community-workspace-main{height:100%;min-height:0}
+ body.community-chat-open #workspaceChat{height:100%;min-height:0;display:flex;flex-direction:column}
+ body.community-chat-open #workspaceChat[hidden]{display:none!important}
+ body.community-chat-open .chat-topbar{top:0;flex:0 0 auto}
+ body.community-chat-open #chatMessageArea{flex:1;min-height:0;overflow-y:auto;padding-bottom:20px}
+ body.community-chat-open .chat-composer-wrap,body.community-chat-open .chat-join-prompt{position:sticky;bottom:0;z-index:25;flex:0 0 auto;background:#07172bf5;padding:10px;border-top:1px solid #d7b36a44}
+ body.community-chat-open .chat-composer{display:grid;gap:8px}
+ body.community-chat-open .chat-composer input,body.community-chat-open .chat-composer textarea{width:100%;min-width:0}
+ body.community-chat-open .chat-composer textarea{min-height:64px;max-height:140px}
+ body.community-chat-open .composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+ body.community-chat-open .chat-back{display:inline-flex;flex:0 0 auto}
+ body.community-chat-open .community-info-panel{position:fixed;top:76px;right:8px;left:8px;width:auto;max-height:calc(100dvh - 95px)}
+ .chat-post{padding:15px!important;margin:10px 10px!important;border-radius:14px}
+ .chat-post-head{gap:9px}
+ .chat-post-actions button,.chat-comment-actions button{font-size:.78rem;padding:7px 9px}
+ .chat-comment{gap:8px}
+ .chat-comment-content{min-width:0}
+ .mobile-community-nav{box-shadow:0 3px 14px #0002}
+}
+@media(min-width:761px){.mobile-community-nav{display:none}}
+</style></head>
 <body>
 <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
 <header class="site-header"><a class="brand" href="./" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a><button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button><nav id="mainNav" aria-label="Main navigation"><a href="books.html">Books</a><a href="journals.html">Journal</a><a href="about.html">About Us</a><a href="community.html" aria-current="page">Community</a><a class="nav-cta" href="contact.html">Contact</a><a class="account-avatar-link" href="account.html" aria-label="Open reader profile" title="Reader profile"><span class="account-avatar" aria-hidden="true">＋</span></a></nav></header>
@@ -185,7 +236,7 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
    <div id="communityList" class="community-list" aria-live="polite" hidden></div>
   </section>
   <section id="workspaceChat" class="workspace-view" hidden>
-   <div class="chat-topbar"><button id="backToDiscover" class="chat-back" type="button">← Communities</button><div class="chat-room-mark">✦</div><div class="chat-room-title"><h2 id="chatHeading">Choose a community</h2><p id="chatDescription">Your reading-room conversation starts here.</p></div><button id="chatRoomInfo" class="chat-info-button" type="button" title="Community information">ⓘ</button></div>
+   <div class="chat-topbar"><button id="backToDiscover" class="chat-back" type="button">← Communities</button><div class="chat-room-mark">✦</div><div class="chat-room-title"><h2 id="chatHeading">Choose a community</h2><p id="chatDescription">Your reading-room conversation starts here.</p></div><button id="chatRoomInfo" class="chat-info-button" type="button" title="Community information" aria-label="View community information, members and admins">ⓘ</button></div>
    <div id="communityInfoPanel" class="community-info-panel" hidden><div class="community-info-head"><h3>Community info</h3><button id="closeCommunityInfo" type="button" aria-label="Close community info">×</button></div><div id="communityInfoContent"></div></div><div id="chatMessageArea" class="chat-message-area"><div class="chat-welcome"><span>✧</span><h3>Welcome to the reading room</h3><p>Choose a community and join a thoughtful conversation.</p></div></div>
    <div id="newPostPanel" class="chat-composer-wrap" hidden><form id="postForm" class="chat-composer"><label class="sr-only" for="chatPostTitle">Discussion title</label><input id="chatPostTitle" name="title" required minlength="3" maxlength="180" placeholder="Give your discussion a title…"><label class="sr-only" for="chatPostBody">Message</label><textarea id="chatPostBody" name="body" required maxlength="10000" placeholder="Share a thought, question, or passage to discuss…"></textarea><div class="composer-bottom"><span>Keep it thoughtful and respectful.</span><button class="button button-gold" type="submit">Send to room ↗</button></div></form></div>
    <div id="chatJoinPrompt" class="chat-join-prompt" hidden>Join this community to post and reply. <button id="chatJoinBtn" class="button button-gold" type="button">Join community</button></div>
