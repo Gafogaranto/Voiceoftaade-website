@@ -70,12 +70,16 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>
-    // Prevent the homepage intro from flashing again during same-session navigation.
+    // Play the signature reveal only on a fresh entry, never when returning from another site page.
     try {
+      const sameSiteNavigation = document.referrer && new URL(document.referrer).origin === window.location.origin;
+      if (sameSiteNavigation) sessionStorage.setItem("voiceoftaade-intro-seen", "yes");
       if (sessionStorage.getItem("voiceoftaade-intro-seen") === "yes") {
         document.documentElement.classList.add("intro-seen-this-session");
       }
-    } catch (_) {}
+    } catch (_) {
+      // If storage is blocked, keep normal page navigation available.
+    }
   </script>
 </head>
 <body>
