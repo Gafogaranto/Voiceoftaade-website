@@ -343,7 +343,7 @@
     $("retryConversationLoad")?.addEventListener("click",()=>loadPosts(community));
    }
   }
-  async function submitComment(event,post){
+  async async function submitComment(event,post){
    event.preventDefault();if(!requireLogin())return;
    const form=event.currentTarget,body=form.elements.body.value.trim();if(!body)return;
    const {error}=await client.from("community_replies").insert({post_id:post.id,author_id:state.user.id,body});
@@ -363,7 +363,7 @@
    if(error){status("Could not reshare this post. "+error.message,true);return;}
    status("Post reshared to the room.");await loadPosts(state.selected);
   }
-  async function createPost(event){
+  async async function createPost(event){
    event.preventDefault();if(!requireLogin()||!state.selected)return;
    const form=event.currentTarget,title=form.elements.title.value.trim(),body=form.elements.body.value.trim();if(!title||!body)return;
    const {error}=await client.from("community_posts").insert({community_id:state.selected.id,author_id:state.user.id,title,body});
@@ -382,14 +382,14 @@
    const {error}=await client.from("reader_safety_reports").insert({reporter_id:state.user.id,reported_user_id:userId,community_id:communityId,post_id:postId,reply_id:replyId,reason:reason.trim()});
    status(error?"Could not submit reader report. Please try again.":"Reader report sent to the Voiceoftaade moderation queue.",!!error);
   }
-  async function blockReader(userId){
+  async async function blockReader(userId){
    if(!requireLogin()||userId===state.user.id)return;
    if(!window.confirm("Block this reader? Their posts will be hidden from your feeds where supported."))return;
    const {error}=await client.from("reader_blocks").insert({blocker_id:state.user.id,blocked_id:userId});
    status(error?(error.code==="23505"?"You have already blocked this reader.":"Could not block this reader. "+error.message):"Reader blocked.",!!error);
    await loadBlockedUsers();await loadForYou();await loadFollowing();if(state.selected)await loadPosts(state.selected);
   }
-  async function showCommunityInfo(){
+  async async function showCommunityInfo(){
    const panel=$("communityInfoPanel"),host=$("communityInfoContent"),room=state.selected;if(!panel||!host||!room)return;
    panel.hidden=false;host.innerHTML='<p>Loading community details…</p>';
    const [membersRes,creatorRes,myMembership,memberCountRes]=await Promise.all([
