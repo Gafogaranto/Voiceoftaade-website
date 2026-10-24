@@ -13,19 +13,31 @@
    nav?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>nav.classList.remove("open")));
    if(!client){status("Community services are temporarily unavailable.",true);return;}
    const {data:{session}}=await client.auth.getSession(); state.user=session?.user??null;
-   client.auth.onAuthStateChange((_event,session)=>{state.user=session?.user??null;renderAccount();loadCommunities();});
+   client.auth.onAuthStateChange((_event,session)=>{
+    state.user=session?.user??null;
+    if(!state.user){state.staff=false;state.creator=false;}
+    renderAccount();
+    refreshPermissions().then(()=>{renderAccount();loadCommunities();}).catch(error=>{console.error("Permission refresh failed",error);renderAccount();loadCommunities();});
+   });
    renderAccount();
-   if(state.user){
-    const [{data:staff},{data:creator}] = await Promise.all([
-     client.rpc("is_community_platform_staff"), client.rpc("is_community_creator")
-    ]);
-    state.staff=!!staff;state.creator=!!creator;
-   }
+   await refreshPermissions();
+   renderAccount();
    $("creatorRequestBtn")?.addEventListener("click",requestCreator);
    $("createCommunityBtn")?.addEventListener("click",createCommunity);
    $("communityCreateForm")?.addEventListener("submit",createCommunity);
    $("postForm")?.addEventListener("submit",createPost);
    await loadCommunities();
+  }
+  async function refreshPermissions(){
+   state.staff=false;state.creator=false;
+   if(!state.user)return;
+   const [staffResult,creatorResult]=await Promise.all([
+    client.rpc("is_community_platform_staff"),client.rpc("is_community_creator")
+   ]);
+   if(staffResult.error)console.warn("Owner permission check failed",staffResult.error);
+   if(creatorResult.error)console.warn("Creator permission check failed",creatorResult.error);
+   state.staff=staffResult.data===true;
+   state.creator=creatorResult.data===true;
   }
   function renderAccount(){
    const el=$("communityAccountState");
@@ -33,7 +45,8 @@
     ? '<span class="signed-in-dot"></span> Signed in. You can join communities and participate.'
     : 'You are browsing as a visitor. <a href="account.html">Sign in or create a reader account</a> to join discussions.';
    const req=$("creatorRequestBtn"); if(req) req.hidden=!state.user||state.creator||state.staff;
-   const create=$("createCommunityPanel"); if(create) create.hidden=!(state.user&&state.creator);
+   const create=$("createCommunityPanel"); if(create) create.hidden=!(state.user&&(state.creator||state.staff));
+   const createTitle=document.querySelector("#createCommunityPanel .eyebrow"); if(createTitle) createTitle.textContent=state.staff?"VOICEOFTAADE OWNER CONTROLS":"APPROVED CREATORS";
    const request=$("creatorRequestPanel"); if(request) request.hidden=!state.user||state.creator||state.staff;
    const post=$("newPostPanel"); if(post) post.hidden=!state.user||!state.selected;
   }
@@ -115,7 +128,7 @@
    status(error?(error.code==="23505"?"You already have a request with this status.":"Could not submit request. "+error.message):"Creator request submitted. The Voiceoftaade administrator will review it.",!!error);
   }
   async function createCommunity(event){
-   if(event?.preventDefault)event.preventDefault();if(!requireLogin()||!state.creator)return;
+   if(event?.preventDefault)event.preventDefault();if(!requireLogin()||!(state.creator||state.staff)){status("Community creation is limited to approved creators and the platform owner.",true);return;}
    const form=$("communityCreateForm");const name=form.elements.name.value.trim(),description=form.elements.description.value.trim(),visibility=form.elements.visibility.value;
    const slug=name.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
    const {error}=await client.from("communities").insert({name,slug,description,visibility,created_by:state.user.id});
