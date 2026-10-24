@@ -100,6 +100,8 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 /* Keep privileged navigation hidden even if another stylesheet overrides the browser default. */
 [hidden]{display:none!important}
 .admin-nav[hidden],#ownerModerationPanel[hidden],#adminModerationMount #ownerModerationPanel[hidden]{display:none!important}
+
+.social-feed{display:grid;gap:0;padding:0 clamp(16px,3vw,30px)}.social-feed .social-feed-item{padding:20px 0;border-bottom:1px solid #263b50;color:#d0dbe7;min-width:0}.social-feed-item h3{color:#fff;margin:8px 0;line-height:1.5}.social-feed-item p{line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.social-feed-item .feed-community{color:#f3c969;font-size:.78rem;font-weight:700}.social-feed-item .feed-author{color:#f4f6f9;font-weight:700}.social-feed-item .feed-meta{font-size:.78rem;color:#91a4b9}.social-feed-item button{margin:7px 8px 0 0;padding:8px 11px;border:1px solid #30465e;border-radius:8px;background:#10243a;color:#d6e0ec;cursor:pointer}.social-feed-item button:hover{border-color:#f3c969;color:#f3c969}.notification-unread{border-left:3px solid #f3c969;padding-left:14px!important;background:linear-gradient(90deg,#f3c9690b,transparent)}
 </style>
 </head>
 <body>
@@ -111,7 +113,7 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <section class="community-workspace" aria-label="Community workspace">
  <aside class="community-sidebar">
   <div class="sidebar-brand"><span class="sidebar-brand-mark">V</span><div><strong>Reading Room</strong><small>Voiceoftaade community</small></div></div>
-  <button class="workspace-nav active" data-workspace="discover" type="button"><span>⌕</span> Discover</button>
+  <button class="workspace-nav active" data-workspace="forYou" type="button"><span>⌕</span> For You</button><button class="workspace-nav" data-workspace="notifications" type="button"><span>♧</span> Notifications <span id="notificationCount" class="nav-count" hidden>0</span></button><button class="workspace-nav" data-workspace="discover" type="button"><span>＋</span> Discover</button>
   <p class="sidebar-label">YOUR COMMUNITIES</p>
   <nav id="joinedCommunityNav" class="joined-community-nav" aria-label="Your community chats"><p class="sidebar-empty">Join a community to see its chat here.</p></nav>
   <button id="adminNavBtn" class="workspace-nav admin-nav" data-workspace="admin" type="button" hidden><span>⚙</span> Admin requests <span id="adminRequestCount" class="nav-count">0</span></button>
@@ -119,7 +121,9 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
   <div class="sidebar-foot">A thoughtful space for readers.<br><span>Read · Reflect · Connect</span></div>
  </aside>
  <div class="community-workspace-main">
-  <section id="workspaceDiscover" class="workspace-view">
+  <section id="workspaceForYou" class="workspace-view"><div class="workspace-topbar"><div><p class="eyebrow">VOICEOFTAADE SOCIAL</p><h2>For You</h2><p>Recent conversations from public Voiceoftaade communities.</p></div><button class="button button-gold" id="refreshForYou" type="button">Refresh feed ↻</button></div><div id="forYouFeed" class="social-feed" aria-live="polite"><p class="community-loading">Loading your feed…</p></div></section>
+  <section id="workspaceNotifications" class="workspace-view" hidden><div class="workspace-topbar"><div><p class="eyebrow">YOUR ACTIVITY</p><h2>Notifications</h2><p>Replies and likes on your posts appear here.</p></div><button class="button button-dark" id="refreshNotifications" type="button">Refresh ↻</button></div><div id="notificationsFeed" class="social-feed" aria-live="polite"><p class="community-loading">Sign in to see your notifications.</p></div></section>
+  <section id="workspaceDiscover" class="workspace-view" hidden>
    <div class="workspace-topbar"><div><p class="eyebrow">THE READING ROOM</p><h2>Find your community</h2><p>Open a room to join the conversation.</p></div><span class="workspace-status"><i></i> Community online</span></div>
    <div id="communityList" class="community-list" aria-live="polite" hidden></div>
   </section>
@@ -148,5 +152,5 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <p class="community-footer-note">Community conversations should be respectful, constructive, and safe. Use the report option to flag content for review. The Voiceoftaade AI assistant is not connected yet and will appear once its secure AI service is configured. Follow <a href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer">Telegram</a> or join the <a href="https://chat.whatsapp.com/IR6dkKefPvXEmSbqfiatM9" target="_blank" rel="noopener noreferrer">WhatsApp community</a> for updates.</p>
 </main>
 <footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade. Words for a more thoughtful life.</p></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261024-feedfix2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261024-social1"></script>
 </body></html>
