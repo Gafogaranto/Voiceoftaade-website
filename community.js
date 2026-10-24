@@ -164,6 +164,19 @@
    if(isPrivate){status("Access request sent. An administrator must approve it before you can read or post.");$("chatJoinBtn").disabled=true;$("chatJoinBtn").textContent="Request sent";return;}
    status("You have joined "+community.name+".");await loadJoinedCommunities();await openCommunity(community.id);
   }
+  async function getAuthorMeta(userIds){
+   const ids=[...new Set((userIds||[]).filter(Boolean))],result=new Map();
+   if(!ids.length)return result;
+   const {data:profiles,error}=await client.from("profiles").select("id,display_name,avatar_url").in("id",ids);
+   if(error)console.warn("Author profiles could not be loaded",error);
+   (profiles||[]).forEach(p=>result.set(p.id,{name:(p.display_name||"").trim()||"Community member",avatar:p.avatar_url||"",owner:false}));
+   await Promise.all(ids.map(async id=>{
+    const {data,error}=await client.rpc("is_community_platform_owner",{target_user:id});
+    if(!error&&data===true){const current=result.get(id)||{name:"Taiwo Abdulgafar Adekunle",avatar:"",owner:false};current.owner=true;if(!current.name||current.name==="Community member"||current.name==="Voiceoftaade")current.name="Taiwo Abdulgafar Adekunle";result.set(id,current);}
+   }));
+   ids.forEach(id=>{if(!result.has(id))result.set(id,{name:"Community member",avatar:"",owner:false});});
+   return result;
+  }
   async function loadPosts(community){
    const feed=$("chatMessageArea");feed.innerHTML='<p class="community-loading">Loading conversations…</p>';
    const {data:posts,error}=await client.from("community_posts").select("id,community_id,author_id,title,body,is_pinned,created_at").eq("community_id",community.id).eq("status","published").order("is_pinned",{ascending:false}).order("created_at",{ascending:false}).limit(50);
@@ -178,7 +191,10 @@
    feed.innerHTML=posts.map(p=>{
     const likes=reactions.filter(r=>r.post_id===p.id&&r.reaction==="like").length,liked=state.user&&reactions.some(r=>r.post_id===p.id&&r.user_id===state.user.id&&r.reaction==="like");
     const comments=replies.filter(r=>r.post_id===p.id);
-    return '<article class="chat-post" data-post-card="'+p.id+'">'+(p.is_pinned?'<span class="community-type">Pinned</span>':'')+'<div class="chat-post-head"><span class="chat-avatar">'+escape((p.author_id||"R").slice(0,1).toUpperCase())+'</span><div><div class="chat-post-author">Reader</div><div class="chat-post-date">'+dateText(p.created_at)+'</div></div></div><h3>'+escape(p.title)+'</h3><div class="chat-post-body">'+escape(p.body)+'</div><div class="chat-post-actions"><button type="button" data-like="'+p.id+'" class="'+(liked?'is-liked':'')+'">♡ Like · '+likes+'</button><button type="button" data-comment="'+p.id+'">Comment · '+comments.length+'</button><button type="button" data-share="'+p.id+'">Share ↗</button><button type="button" data-repost="'+p.id+'">Reshare</button><button type="button" data-report="'+p.id+'">Report</button></div><div class="chat-comments" id="comments-'+p.id+'">'+comments.map(r=>'<div class="chat-comment"><span class="chat-avatar">R</span><div class="chat-comment-content"><div class="chat-comment-meta">Reader · '+dateText(r.created_at)+'</div>'+escape(r.body)+'</div></div>').join("")+'</div>'+(state.user?'<form class="comment-form" data-comment-form="'+p.id+'"><label class="sr-only" for="comment-'+p.id+'">Write a comment</label><input id="comment-'+p.id+'" name="body" required maxlength="5000" placeholder="Write a comment…"><button type="submit">Reply</button></form>':'')+'</article>';
+    const person=authors.get(p.author_id)||{name:"Community member",avatar:"",owner:false};
+    const avatar=person.avatar?'<img class="chat-avatar-image" src="'+escape(person.avatar)+'" alt="">':escape((person.name||"M").trim().slice(0,1).toUpperCase());
+    const badge=person.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner" aria-label="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner" aria-label="Voiceoftaade owner">✦</span>':"";
+    return '<article class="chat-post" data-post-card="'+p.id+'">'+(p.is_pinned?'<span class="community-type">Pinned</span>':'')+'<div class="chat-post-head"><span class="chat-avatar">'+avatar+'</span><div><div class="chat-post-author">'+escape(person.name)+badge+'</div><div class="chat-post-date">'+dateText(p.created_at)+'</div></div></div><h3>'+escape(p.title)+'</h3><div class="chat-post-body">'+escape(p.body)+'</div><div class="chat-post-actions"><button type="button" data-like="'+p.id+'" class="'+(liked?'is-liked':'')+'">♡ Like · '+likes+'</button><button type="button" data-comment="'+p.id+'">Comment · '+comments.length+'</button><button type="button" data-share="'+p.id+'">Share ↗</button><button type="button" data-repost="'+p.id+'">Reshare</button><button type="button" data-report="'+p.id+'">Report</button></div><div class="chat-comments" id="comments-'+p.id+'">'+comments.map(r=>{const author=authors.get(r.author_id)||{name:"Community member",avatar:"",owner:false};const initial=author.avatar?'<img class="chat-avatar-image" src="'+escape(author.avatar)+'" alt="">':escape((author.name||"M").trim().slice(0,1).toUpperCase());const authorBadge=author.owner?'<span class="vt-verified-badge" title="Verified Voiceoftaade owner" aria-label="Verified Voiceoftaade owner">✓</span><span class="vt-owner-mark" title="Voiceoftaade owner" aria-label="Voiceoftaade owner">✦</span>':"";return '<div class="chat-comment"><span class="chat-avatar">'+initial+'</span><div class="chat-comment-content"><div class="chat-comment-meta">'+escape(author.name)+authorBadge+' · '+dateText(r.created_at)+'</div>'+escape(r.body)+'</div></div>';}).join("")+'</div>'+(state.user?'<form class="comment-form" data-comment-form="'+p.id+'"><label class="sr-only" for="comment-'+p.id+'">Write a comment</label><input id="comment-'+p.id+'" name="body" required maxlength="5000" placeholder="Write a comment…"><button type="submit">Reply</button></form>':'')+'</article>';
    }).join("");
    posts.forEach(p=>{
     feed.querySelector('[data-like="'+p.id+'"]')?.addEventListener("click",()=>reactTo(p,"like"));
