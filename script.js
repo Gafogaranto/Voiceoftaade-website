@@ -272,16 +272,29 @@ function updateReflectionButtons() {
   if (saveButton) { saveButton.textContent = saved ? "✓ Saved — remove" : "＋ Save reflection"; saveButton.setAttribute("aria-pressed", String(saved)); }
   if (favouriteButton) { favouriteButton.textContent = favourite ? "♥ Remove favourite" : "♡ Add to favourites"; favouriteButton.setAttribute("aria-pressed", String(favourite)); }
 }
-function trackReadingProgress(id) {
-  if (!readerSupabase || !articles[id]) return;
-  if (!readerSession) { pendingProgressId = id; return; }
-  const row = { user_id: readerSession.user.id, journal_id: id, progress_percent: 100, last_read_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+let progressSaveTimer = null;
+function trackReadingProgress(id, percent = 5) {
+  if (!articles[id]) return;
+  const safePercent = Math.max(0, Math.min(100, Math.round(percent)));
+  if (!readerSupabase || !readerSession) { pendingProgressId = id; return; }
+  const row = { user_id: readerSession.user.id, journal_id: id, progress_percent: safePercent, last_read_at: new Date().toISOString(), updated_at: new Date().toISOString() };
   readerSupabase.from("reader_reading_progress").upsert(row, { onConflict: "user_id,journal_id" })
     .then(({ error }) => {
       if (error) console.error("Reading progress could not be saved:", error);
-      else window.dispatchEvent(new CustomEvent("voiceoftaade:progress-saved", { detail: { journalId: id } }));
+      else window.dispatchEvent(new CustomEvent("voiceoftaade:progress-saved", { detail: { journalId: id, progressPercent: safePercent } }));
     });
 }
+function measureJournalProgress() {
+  if (!dialog || !currentArticleId) return;
+  const maxScroll = dialog.scrollHeight - dialog.clientHeight;
+  const percent = maxScroll <= 0 ? 100 : Math.round((dialog.scrollTop / maxScroll) * 100);
+  clearTimeout(progressSaveTimer);
+  progressSaveTimer = setTimeout(() => trackReadingProgress(currentArticleId, percent), 450);
+}
+dialog.addEventListener("scroll", measureJournalProgress, { passive: true });
+dialog.addEventListener("close", () => {
+  if (currentArticleId) measureJournalProgress();
+});
 function openArticle(id) {
   const article = articles[id]; if (!article) return;
   currentArticleId = id;
@@ -294,6 +307,62 @@ function openArticle(id) {
   if (!dialog.open) dialog.showModal();
 }
 document.querySelectorAll("[data-article]").forEach(button => button.addEventListener("click", () => openArticle(button.dataset.article)));
+
+function createJournalShareBlob() {
+  const article = articles[currentArticleId];
+  if (!article) throw new Error("Open a journal first.");
+  const canvas = document.createElement("canvas"); canvas.width = 1080; canvas.height = 1350;
+  const ctx = canvas.getContext("2d"); if (!ctx) throw new Error("Image canvas unavailable.");
+  ctx.fillStyle = "#f5f0e5"; ctx.fillRect(0,0,1080,1350);
+  const grad = ctx.createLinearGradient(0,0,1080,1350);
+  grad.addColorStop(0,"#fffdf7"); grad.addColorStop(1,"#e8dfce");
+  ctx.fillStyle=grad;ctx.fillRect(38,38,1004,1274);
+  ctx.strokeStyle="#b58a3a";ctx.lineWidth=3;ctx.strokeRect(58,58,964,1234);
+  ctx.strokeStyle="rgba(181,138,58,.35)";ctx.lineWidth=1;ctx.strokeRect(76,76,928,1198);
+  ctx.textAlign="center";ctx.fillStyle="#b58a3a";ctx.font="28px Georgia";ctx.fillText("✦",540,145);
+  ctx.fillStyle="#07172b";ctx.font="bold 34px Arial";ctx.fillText("VOICEOFTAADE",540,205);
+  ctx.fillStyle="#8e6b2d";ctx.font="18px Arial";ctx.fillText("PUBLICATIONS  ·  DAILY JOURNAL",540,242);
+  ctx.fillStyle="#8e6b2d";ctx.font="bold 19px Arial";ctx.fillText((article.category||"REFLECTION").toUpperCase(),540,325);
+  ctx.fillStyle="#07172b";ctx.font="bold 42px Georgia";
+  const wrap=(text,maxWidth,font)=>{ctx.font=font;const words=text.split(/\s+/),lines=[];let line="";for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}if(line)lines.push(line);return lines;};
+  const titleLines=wrap(article.title,820,"bold 42px Georgia");let y=400;
+  titleLines.forEach(line=>{ctx.fillText(line,540,y);y+=54;});
+  ctx.fillStyle="#b58a3a";ctx.fillRect(445,y+18,190,3);y+=92;
+  const quote=(article.paragraphs[0]||"").length>190?(article.paragraphs[0].slice(0,187).trim()+"…"):article.paragraphs[0]||"A moment to read, reflect, and live deliberately.";
+  ctx.fillStyle="#28384a";ctx.font="29px Georgia";
+  const quoteLines=wrap("“"+quote+"”",790,"29px Georgia").slice(0,8);
+  quoteLines.forEach(line=>{ctx.fillText(line,540,y);y+=43;});
+  ctx.fillStyle="#8e6b2d";ctx.fillRect(420,1085,240,2);
+  ctx.fillStyle="#07172b";ctx.font="bold 20px Arial";ctx.fillText("READ · REFLECT · LIVE DELIBERATELY",540,1140);
+  ctx.fillStyle="#4e5967";ctx.font="18px Arial";ctx.fillText("gafogaranto.github.io/Voiceoftaade-website/",540,1190);
+  ctx.fillStyle="#8e6b2d";ctx.font="16px Arial";ctx.fillText("VOICEOFTAADE JOURNAL",540,1235);
+  return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error("Could not render journal image.")),"image/png"));
+}
+async function handleJournalImage(share) {
+  const status=document.getElementById("journalShareStatus");
+  const button=document.getElementById(share?"shareJournalImage":"downloadJournalImage");
+  if(!currentArticleId)return;
+  button.disabled=true;if(status)status.textContent="Preparing your elegant journal image…";
+  try {
+    const blob=await createJournalShareBlob();
+    const file=new File([blob],"Voiceoftaade-Journal.png",{type:"image/png"});
+    if(share&&navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({title:articles[currentArticleId].title,text:"Read more at https://gafogaranto.github.io/Voiceoftaade-website/",files:[file]});
+      if(status)status.textContent="Journal image shared successfully.";
+    } else {
+      const url=URL.createObjectURL(blob),link=document.createElement("a");
+      link.href=url;link.download="Voiceoftaade-Journal.png";document.body.appendChild(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),5000);
+      if(status)status.textContent=share?"Your browser cannot share image files directly, so the image was downloaded. Share it from your Downloads folder.":"Your journal image has been downloaded and includes the Voiceoftaade website address.";
+    }
+  } catch(error) {
+    if(error.name==="AbortError"){if(status)status.textContent="Sharing cancelled. You can still download the image.";}
+    else {console.error(error);if(status)status.textContent="The image could not be created. Please try again.";}
+  } finally {button.disabled=false;}
+}
+document.getElementById("downloadJournalImage")?.addEventListener("click",()=>handleJournalImage(false));
+document.getElementById("shareJournalImage")?.addEventListener("click",()=>handleJournalImage(true));
+
 const saveReflectionButton = document.getElementById("saveReflection");
 if (saveReflectionButton) saveReflectionButton.addEventListener("click", () => {
   if (currentArticleId) toggleCollection(SAVED_REFLECTIONS_KEY, currentArticleId);
