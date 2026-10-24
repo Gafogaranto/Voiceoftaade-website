@@ -36,6 +36,12 @@
       : "Your account is for reader features. Public articles remain available without signing in.";
     status("authStatus", "");
   }
+  const rememberBox = $("rememberMe");
+  rememberBox?.addEventListener("change", () => {
+    try { localStorage.setItem("voiceoftaade-remember-session", String(rememberBox.checked)); } catch (_) {}
+    // Reinitialise Supabase with the selected storage (persistent or tab-only).
+    window.location.reload();
+  });
   const passwordToggle = $("togglePassword");
   passwordToggle?.addEventListener("click", () => {
     const password = $("password");
