@@ -178,53 +178,77 @@ const wisdomShareStatus = document.getElementById("wisdomShareStatus");
 if (shareWisdomButton) shareWisdomButton.addEventListener("click", async () => {
   shareWisdomButton.disabled = true;
   if (wisdomShareStatus) wisdomShareStatus.textContent = "Preparing your Voiceoftaade wisdom card…";
+  const shareText = "Voiceoftaade Daily Wisdom\n\n“" + wisdomQuote + "”\n\n" + window.location.href;
   try {
-    const blob = await drawWisdomCard();
-    const file = new File([blob], "Voiceoftaade-Daily-Wisdom.png", { type: "image/png" });
-    const shareText = "Voiceoftaade Daily Wisdom | Series of Life Hacks to Live By";
+    let blob = null;
+    try {
+      blob = await drawWisdomCard();
+    } catch (imageError) {
+      console.warn("Could not create the image card; will share the reflection text instead.", imageError);
+    }
 
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+    if (blob && navigator.share) {
       try {
-        await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: shareText, files: [file] });
-        if (wisdomShareStatus) wisdomShareStatus.textContent = "Shared successfully. A new reflection is ready.";
-        advanceDailyWisdom();
-        return;
+        const file = new File([blob], "Voiceoftaade-Daily-Wisdom.png", { type: "image/png" });
+        if (!navigator.canShare || navigator.canShare({ files: [file] })) {
+          await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: "Series of Life Hacks to Live By", files: [file] });
+          if (wisdomShareStatus) wisdomShareStatus.textContent = "Shared successfully. A new reflection is ready.";
+          advanceDailyWisdom();
+          return;
+        }
       } catch (shareError) {
         if (shareError.name === "AbortError") {
           if (wisdomShareStatus) wisdomShareStatus.textContent = "Sharing cancelled. Your current reflection has been kept.";
           return;
         }
-        console.warn("Image sharing is unavailable; trying a download fallback.", shareError);
-      }
-    } else if (navigator.share) {
-      try {
-        await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: shareText + "\\n\\n" + window.location.href });
-        if (wisdomShareStatus) wisdomShareStatus.textContent = "Shared the Daily Wisdom link. Your current reflection remains available on the page.";
-        return;
-      } catch (shareError) {
-        if (shareError.name === "AbortError") {
-          if (wisdomShareStatus) wisdomShareStatus.textContent = "Sharing cancelled. Your current reflection has been kept.";
-          return;
-        }
-        console.warn("Link sharing is unavailable; trying a download fallback.", shareError);
+        console.warn("Image sharing failed; trying text sharing.", shareError);
       }
     }
 
-    const objectUrl = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = objectUrl;
-    link.download = "Voiceoftaade-Daily-Wisdom.png";
-    link.style.position = "fixed";
-    link.style.left = "-9999px";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 10000);
-    if (wisdomShareStatus) wisdomShareStatus.textContent = "Your wisdom card download was started. A new reflection is ready.";
-    advanceDailyWisdom();
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Voiceoftaade Daily Wisdom", text: shareText });
+        if (wisdomShareStatus) wisdomShareStatus.textContent = "Reflection shared successfully.";
+        return;
+      } catch (shareError) {
+        if (shareError.name === "AbortError") {
+          if (wisdomShareStatus) wisdomShareStatus.textContent = "Sharing cancelled. Your current reflection has been kept.";
+          return;
+        }
+        console.warn("Text sharing failed; trying copy/download fallback.", shareError);
+      }
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        if (wisdomShareStatus) wisdomShareStatus.textContent = "Wisdom text copied. Paste it into WhatsApp or any app to share.";
+        return;
+      } catch (copyError) {
+        console.warn("Clipboard copy failed; trying image download.", copyError);
+      }
+    }
+
+    if (blob) {
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = "Voiceoftaade-Daily-Wisdom.png";
+      link.style.position = "fixed";
+      link.style.left = "-9999px";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 10000);
+      if (wisdomShareStatus) wisdomShareStatus.textContent = "Your wisdom card download was requested. If it did not appear, use your browser's download menu.";
+      advanceDailyWisdom();
+      return;
+    }
+
+    if (wisdomShareStatus) wisdomShareStatus.textContent = "Sharing is unavailable in this browser. Please copy the reflection text manually.";
   } catch (error) {
-    console.error("Voiceoftaade share card failed:", error);
-    if (wisdomShareStatus) wisdomShareStatus.textContent = "The card could not be prepared. Please reload the page and try again.";
+    console.error("Voiceoftaade share action failed:", error);
+    if (wisdomShareStatus) wisdomShareStatus.textContent = "Sharing failed in this browser. Please refresh and try again.";
   } finally {
     shareWisdomButton.disabled = false;
   }
