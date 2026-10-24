@@ -26,7 +26,7 @@
    $("createCommunityBtn")?.addEventListener("click",createCommunity);
    $("communityCreateForm")?.addEventListener("submit",createCommunity);
    $("postForm")?.addEventListener("submit",createPost);
-   $("backToDiscover")?.addEventListener("click",()=>showWorkspace("discover"));
+   $("backToDiscover")?.addEventListener("click",()=>{state.selected=null;$("communityInfoPanel").hidden=true;showWorkspace("discover");renderJoinedNav();});
    const mobileMenu=$("mobileMenuToggle"),backdrop=$("mobileMenuBackdrop");
    const chatMenu=$("chatMenuToggle");
    const closeMobileMenu=()=>{document.body.classList.remove("community-mobile-menu-open");mobileMenu?.setAttribute("aria-expanded","false");chatMenu?.setAttribute("aria-expanded","false");if(backdrop)backdrop.hidden=true;};
