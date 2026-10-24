@@ -246,14 +246,13 @@
    state.joined=(data||[]).map(x=>x.communities).filter(c=>c&&c.status==="active");renderJoinedNav();
   }
   function renderJoinedNav(){
-   const nav=$("joinedCommunityNav");if(!nav)return;
-   if(!state.joined.length){nav.innerHTML='<p class="sidebar-empty">Join a community to see its chat here.</p>';return;}
-   nav.innerHTML=state.joined.map(c=>'<button type="button" class="'+(state.selected?.id===c.id?'active':'')+'" data-room="'+c.id+'"><span class="room-nav-icon">'+escape(c.name.slice(0,1).toUpperCase())+'</span><span class="room-nav-name">'+escape(c.name)+'</span></button>').join("");
-   nav.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.room)));
+   const markup=state.joined.length?state.joined.map(room=>'<button type="button" class="'+(state.selected?.id===room.id?'active':'')+'" data-room="'+room.id+'"><span class="room-nav-icon">'+escape(room.name.slice(0,1).toUpperCase())+'</span><span class="room-nav-name">'+escape(room.name)+'</span></button>').join(""):'<p class="sidebar-empty">Join a community to see its chat here.</p>';
+   const nav=$("joinedCommunityNav");if(nav){nav.innerHTML=markup;nav.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.room)));}
+   const mobile=$("mobileJoinedCommunityNav");if(mobile){mobile.innerHTML=state.joined.map(room=>'<button type="button" class="'+(state.selected?.id===room.id?'active':'')+'" data-room="'+room.id+'"><span class="room-nav-icon">'+escape(room.name.slice(0,1).toUpperCase())+'</span><span class="room-nav-name">'+escape(room.name)+'</span></button>').join("");mobile.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.room)));}
   }
   async function openCommunity(id){
    const community=state.communities.find(c=>c.id===id)||state.joined.find(c=>c.id===id);if(!community)return;
-   state.selected=community;renderAccount();renderJoinedNav();showWorkspace("chat");
+   state.selected=community;renderAccount();renderJoinedNav();showWorkspace("chat");const roomMark=$("workspaceChat")?.querySelector(".chat-room-mark");if(roomMark)roomMark.textContent=(community.name||"✦").trim().slice(0,1).toUpperCase();
    $("chatHeading").textContent=community.name;$("chatDescription").textContent=community.visibility==="private"?"Private reading room":"Community conversation";
    const {data:member}=state.user?await client.from("community_members").select("status,role").eq("community_id",id).eq("user_id",state.user.id).maybeSingle():{data:null};
    const active=member?.status==="active";
