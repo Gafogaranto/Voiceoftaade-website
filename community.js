@@ -175,7 +175,8 @@
     }).join("");
     host.querySelectorAll("[data-feed-like]").forEach(b=>b.addEventListener("click",()=>toggleFeedLike(b.dataset.feedLike,b.dataset.community)));
     host.querySelectorAll("[data-feed-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.feedOpen)));
-    host.querySelectorAll("[data-feed-report]").forEach(b=>b.addEventListener("click",()=>reportPost({id:b.dataset.feedReport,community_id:b.dataset.feedCommunity})));\n    host.querySelectorAll("[data-feed-report-reader]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.feedReportReader,b.dataset.feedCommunity,b.dataset.feedPost)));
+    host.querySelectorAll("[data-feed-report]").forEach(b=>b.addEventListener("click",()=>reportPost({id:b.dataset.feedReport,community_id:b.dataset.feedCommunity})));
+    host.querySelectorAll("[data-feed-report-reader]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.feedReportReader,b.dataset.feedCommunity,b.dataset.feedPost)));
     host.querySelectorAll("[data-feed-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.feedBlock)));
    }catch(error){console.error("For You feed crashed",error);host.innerHTML='<p class="community-loading">The feed stopped unexpectedly. <button type="button" id="retryForYou">Try again</button></p>';$("retryForYou")?.addEventListener("click",loadForYou);}
   }
@@ -193,7 +194,8 @@
    const authors=await getAuthorMeta(q.data.map(p=>p.author_id));
    host.innerHTML=q.data.map(p=>{const a=authors.get(p.author_id)||{name:"Reader",owner:false},cm=Array.isArray(p.communities)?p.communities[0]:p.communities;return '<article class="social-feed-item"><div class="feed-community">'+escape(cm?.name||"Public community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(a.name)+'</a>'+(a.owner?'<span class="vt-verified-badge">✓</span>':"")+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-follow-open="'+p.community_id+'">Open conversation</button><button type="button" data-follow-report-post="'+p.id+'" data-follow-community="'+p.community_id+'">Report post</button><button type="button" data-follow-report-reader="'+p.author_id+'" data-follow-post="'+p.id+'" data-follow-community="'+p.community_id+'">Report reader</button><button type="button" data-follow-block="'+p.author_id+'">Block reader</button></article>';}).join("");
    host.querySelectorAll("[data-follow-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.followOpen)));
-   host.querySelectorAll("[data-follow-report-post]").forEach(b=>b.addEventListener("click",()=>reportPost({id:b.dataset.followReportPost,community_id:b.dataset.followCommunity})));\n   host.querySelectorAll("[data-follow-report-reader]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.followReportReader,b.dataset.followCommunity,b.dataset.followPost)));\n   host.querySelectorAll("[data-follow-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.followBlock)));
+   host.querySelectorAll("[data-follow-report-post]").forEach(b=>b.addEventListener("click",()=>reportPost({id:b.dataset.followReportPost,community_id:b.dataset.followCommunity})));
+   host.querySelectorAll("[data-follow-report-reader]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.followReportReader,b.dataset.followCommunity,b.dataset.followPost)));
    host.querySelectorAll("[data-follow-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.followBlock)));
   }
   async function loadMentions(){
