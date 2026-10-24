@@ -5,7 +5,11 @@
   // Publishable/anon keys are intended for browser use; database access is protected by RLS.
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67";
   const ACCOUNT_URL = "https://gafogaranto.github.io/Voiceoftaade-website/account.html";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  const rememberAtLoad = document.getElementById("rememberMe")?.checked !== false;
+  const authStorage = rememberAtLoad ? window.localStorage : window.sessionStorage;
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storage: authStorage }
+  });
   const $ = (id) => document.getElementById(id);
   let mode = "signin";
   let currentUser = null;
@@ -32,6 +36,19 @@
       : "Your account is for reader features. Public articles remain available without signing in.";
     status("authStatus", "");
   }
+  const passwordToggle = $("togglePassword");
+  passwordToggle?.addEventListener("click", () => {
+    const password = $("password");
+    const reveal = password.type === "password";
+    password.type = reveal ? "text" : "password";
+    passwordToggle.setAttribute("aria-label", reveal ? "Hide password" : "Show password");
+    passwordToggle.setAttribute("title", reveal ? "Hide password" : "Show password");
+    passwordToggle.setAttribute("aria-pressed", String(reveal));
+    passwordToggle.innerHTML = reveal
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path><path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3 3.9M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a10.7 10.7 0 0 0 4-.8"></path></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+    password.focus({preventScroll:true});
+  });
   $("signInTab").addEventListener("click", () => setMode("signin"));
   $("signUpTab").addEventListener("click", () => setMode("signup"));
 
