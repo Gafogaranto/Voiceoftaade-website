@@ -175,6 +175,8 @@
    const authors=await getAuthorMeta(q.data.map(p=>p.author_id));
    host.innerHTML=q.data.map(p=>{const a=authors.get(p.author_id)||{name:"Reader",owner:false},cm=Array.isArray(p.communities)?p.communities[0]:p.communities;return '<article class="social-feed-item"><div class="feed-community">'+escape(cm?.name||"Public community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(a.name)+'</a>'+(a.owner?'<span class="vt-verified-badge">✓</span>':"")+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-follow-open="'+p.community_id+'">Open conversation</button><button type="button" data-follow-report="'+p.id+'" data-follow-community="'+p.community_id+'" data-follow-author="'+p.author_id+'">Report</button><button type="button" data-follow-block="'+p.author_id+'">Block reader</button></article>';}).join("");
    host.querySelectorAll("[data-follow-open]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.followOpen)));
+   host.querySelectorAll("[data-follow-report]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.followReport,b.dataset.followCommunity,b.dataset.followPost)));
+   host.querySelectorAll("[data-follow-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.followBlock)));
    host.querySelectorAll("[data-follow-report]").forEach(b=>b.addEventListener("click",()=>reportReader(b.dataset.followAuthor,b.dataset.followCommunity,b.dataset.followReport)));
    host.querySelectorAll("[data-follow-block]").forEach(b=>b.addEventListener("click",()=>blockReader(b.dataset.followBlock)));
   }
