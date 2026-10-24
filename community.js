@@ -188,6 +188,7 @@
     client.from("community_replies").select("id,post_id,author_id,body,created_at").in("post_id",ids).eq("status","published").order("created_at",{ascending:true})
    ]);
    const reactions=reactRes.data||[],replies=replyRes.data||[];
+   const authors=await getAuthorMeta([...posts.map(p=>p.author_id),...replies.map(r=>r.author_id)]);
    feed.innerHTML=posts.map(p=>{
     const likes=reactions.filter(r=>r.post_id===p.id&&r.reaction==="like").length,liked=state.user&&reactions.some(r=>r.post_id===p.id&&r.user_id===state.user.id&&r.reaction==="like");
     const comments=replies.filter(r=>r.post_id===p.id);
