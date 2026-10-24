@@ -3,7 +3,7 @@
   const client = window.supabase?.createClient("https://qnnmbngxunmjerpeoxrr.supabase.co", "sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67");
   const escape = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const dateText = value => value ? new Date(value).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}) : "";
-  const state = { user:null, selected:null, communities:[], joined:[], staff:false, creator:false };
+  const state = { user:null, selected:null, communities:[], joined:[], staff:false, creator:false, blockedUsers:[] };
   const status = (message, bad=false) => { const el=$("communityStatus"); if(el){el.textContent=message;el.classList.toggle("is-error",bad);} };
   const requireLogin = () => { if(!state.user){status("Please sign in from your reader account before joining or posting.");return false;} return true; };
   async function init(){
@@ -12,10 +12,11 @@
    menu?.addEventListener("click",()=>{const open=nav.classList.toggle("open");menu.setAttribute("aria-expanded",String(open));menu.textContent=open?"×":"☰";});
    nav?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>nav.classList.remove("open")));
    if(!client){status("Community services are temporarily unavailable.",true);return;}
-   const {data:{session}}=await client.auth.getSession(); state.user=session?.user??null;
+   const {data:{session}}=await client.auth.getSession(); state.user=session?.user??null;await loadBlockedUsers();
    client.auth.onAuthStateChange((_event,session)=>{
     state.user=session?.user??null;
-    if(!state.user){state.staff=false;state.creator=false;}
+    loadBlockedUsers();
+    if(!state.user){state.staff=false;state.creator=false;state.blockedUsers=[];}
     renderAccount();
     refreshPermissions().then(()=>{renderAccount();loadCommunities();loadForYou();loadFollowing();loadMentions();loadNotifications();}).catch(error=>{console.error("Permission refresh failed",error);renderAccount();loadCommunities();loadForYou();loadNotifications();});
    });
@@ -72,10 +73,11 @@
    if(approvals)approvals.innerHTML='<p class="community-loading">Loading communities awaiting approval…</p>';
    if(requests)requests.innerHTML='<p class="community-loading">Loading creator requests…</p>';
    if(reports)reports.innerHTML='<p class="community-loading">Loading reports…</p>';
-   const [communityRes,reqRes,reportRes]=await Promise.all([
+   const [communityRes,reqRes,reportRes,safetyRes]=await Promise.all([
     client.from("communities").select("id,name,description,visibility,created_at").eq("status","pending").order("created_at",{ascending:true}).limit(50),
     client.from("community_creator_requests").select("id,user_id,message,status,created_at").eq("status","pending").order("created_at",{ascending:true}).limit(50),
-    client.from("community_reports").select("id,community_id,reporter_id,post_id,reason,status,created_at").in("status",["open","reviewing"]).order("created_at",{ascending:false}).limit(50)
+    client.from("community_reports").select("id,community_id,reporter_id,post_id,reason,status,created_at").in("status",["open","reviewing"]).order("created_at",{ascending:false}).limit(50),
+    client.from("reader_safety_reports").select("id,reporter_id,reported_user_id,reason,status,created_at").in("status",["new","reviewing"]).order("created_at",{ascending:false}).limit(50)
    ]);
    if(approvals){
     if(communityRes.error){console.warn("Community approval queue unavailable",communityRes.error);approvals.innerHTML='<p class="community-loading">Community approvals could not be loaded. Check owner permissions.</p>';}
@@ -90,6 +92,13 @@
     else requests.innerHTML=reqRes.data.map(r=>'<article class="moderation-item"><strong>Creator application</strong><p>'+escape(r.message)+'</p><small>User ID: '+escape(r.user_id)+' · '+dateText(r.created_at)+'</small><div class="moderation-item-actions"><button class="approve" data-approve-creator="'+r.id+'" data-user-id="'+r.user_id+'">Approve creator</button><button data-reject-creator="'+r.id+'">Decline</button></div></article>').join("");
     requests.querySelectorAll("[data-approve-creator]").forEach(b=>b.addEventListener("click",()=>reviewCreatorRequest(b.dataset.approveCreator,b.dataset.userId,"approved",b)));
     requests.querySelectorAll("[data-reject-creator]").forEach(b=>b.addEventListener("click",()=>reviewCreatorRequest(b.dataset.rejectCreator,null,"rejected",b)));
+   }
+   const safetyHost=$("readerSafetyReportsList");
+   if(safetyHost){
+    if(safetyRes.error){safetyHost.innerHTML='<p class="community-loading">Reader reports could not be loaded. Check staff permissions.</p>';console.warn(safetyRes.error);}
+    else if(!safetyRes.data?.length)safetyHost.innerHTML='<p class="community-loading">No reader account reports awaiting review.</p>';
+    else safetyHost.innerHTML=safetyRes.data.map(r=>'<article class="moderation-item"><strong>Reader safety report · '+escape(r.status)+'</strong><p>'+escape(r.reason)+'</p><small>Reported reader: '+escape(r.reported_user_id)+' · Reporter: '+escape(r.reporter_id)+' · '+dateText(r.created_at)+'</small><div class="moderation-item-actions"><button data-safety-review="'+r.id+'" data-safety-status="actioned">Action taken</button><button data-safety-review="'+r.id+'" data-safety-status="dismissed">Dismiss</button></div></article>').join("");
+    safetyHost.querySelectorAll("[data-safety-review]").forEach(b=>b.addEventListener("click",async()=>{const z=await client.from("reader_safety_reports").update({status:b.dataset.safetyStatus,reviewed_by:state.user.id}).eq("id",b.dataset.safetyReview);if(z.error){status("Could not update reader report. "+z.error.message,true);return;}status("Reader report updated.");await loadModeration();}));
    }
    if(reports){
     if(reportRes.error){console.warn("Reports moderation unavailable",reportRes.error);reports.innerHTML='<p class="community-loading">Reports could not be loaded. Check owner permissions.</p>';}
@@ -130,6 +139,7 @@
    try{
     const {data:posts,error}=await client.from("community_posts").select("id,community_id,author_id,title,body,created_at,communities!inner(id,name,visibility,status)").eq("status","published").eq("communities.status","active").eq("communities.visibility","public").order("created_at",{ascending:false}).limit(40);
     if(error){console.error("For You feed failed",error);host.innerHTML='<p class="community-loading">The feed could not load: '+escape(error.message)+' <button type="button" id="retryForYou">Try again</button></p>';$("retryForYou")?.addEventListener("click",loadForYou);return;}
+    if(state.blockedUsers?.length)posts.splice(0,posts.length,...posts.filter(p=>!state.blockedUsers.includes(p.author_id)));
     if(!posts?.length){host.innerHTML='<div class="chat-welcome"><span>✧</span><h3>Your public feed is getting ready</h3><p>When public community conversations are published, they will appear here.</p></div>';return;}
     const ids=posts.map(p=>p.id);
     const [reactRes,replyRes]=await Promise.all([client.from("community_reactions").select("post_id,user_id,reaction").in("post_id",ids),client.from("community_replies").select("id,post_id").in("post_id",ids).eq("status","published")]);
@@ -154,6 +164,7 @@
    if(!ids.length){host.innerHTML='<div class="chat-welcome"><h3>Build your reading network</h3><p>Open a reader profile from a post and choose Follow reader. Their public posts will appear here.</p></div>';return;}
    const q=await client.from("community_posts").select("id,community_id,author_id,title,body,created_at,communities!inner(id,name,visibility,status)").in("author_id",ids).eq("status","published").eq("communities.status","active").eq("communities.visibility","public").order("created_at",{ascending:false}).limit(40);
    if(q.error){host.textContent="Following feed could not load: "+q.error.message;return;}
+   if(state.blockedUsers?.length)q.data.splice(0,q.data.length,...q.data.filter(p=>!state.blockedUsers.includes(p.author_id)));
    if(!q.data?.length){host.innerHTML='<p class="community-loading">The readers you follow have not posted publicly yet.</p>';return;}
    const authors=await getAuthorMeta(q.data.map(p=>p.author_id));
    host.innerHTML=q.data.map(p=>{const a=authors.get(p.author_id)||{name:"Reader",owner:false},cm=Array.isArray(p.communities)?p.communities[0]:p.communities;return '<article class="social-feed-item"><div class="feed-community">'+escape(cm?.name||"Public community")+'</div><div class="feed-author"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+escape(a.name)+'</a>'+(a.owner?'<span class="vt-verified-badge">✓</span>':"")+'</div><div class="feed-meta">'+dateText(p.created_at)+'</div><h3>'+escape(p.title)+'</h3><p>'+escape(p.body)+'</p><button type="button" data-follow-open="'+p.community_id+'">Open conversation</button></article>';}).join("");
@@ -221,6 +232,7 @@
    if(which==="notifications")loadNotifications();
   }
   function showAdminNav(){const panel=$("ownerModerationPanel");if(panel){panel.hidden=false;}const btn=$("adminNavBtn");if(btn)btn.onclick=()=>showWorkspace("admin");}
+  async function loadBlockedUsers(){if(!state.user||!client){state.blockedUsers=[];return;}const {data,error}=await client.from("reader_blocks").select("blocked_id").eq("blocker_id",state.user.id);state.blockedUsers=error?[]:(data||[]).map(x=>x.blocked_id);}
   async function loadJoinedCommunities(){
    if(!state.user){state.joined=[];renderJoinedNav();return;}
    const {data,error}=await client.from("community_members").select("community_id,status,communities(id,name,slug,description,visibility,status)").eq("user_id",state.user.id).eq("status","active");
@@ -271,6 +283,7 @@
    try {
    const {data:posts,error}=await client.from("community_posts").select("id,community_id,author_id,title,body,is_pinned,created_at").eq("community_id",community.id).eq("status","published").order("is_pinned",{ascending:false}).order("created_at",{ascending:false}).limit(50);
    if(error){console.error("Conversation feed query failed",error);feed.innerHTML='<div class="chat-welcome"><span>!</span><h3>Conversations could not load</h3><p>'+escape(error.message||"Check your connection and community access, then retry.")+'</p><button type="button" class="button button-gold" id="retryConversationLoad">Try again</button></div>';$("retryConversationLoad")?.addEventListener("click",()=>loadPosts(community));return;}
+   if(state.blockedUsers?.length)posts.splice(0,posts.length,...posts.filter(p=>!state.blockedUsers.includes(p.author_id)));
    if(!posts?.length){feed.innerHTML='<div class="chat-welcome"><span>✧</span><h3>This room is just getting started</h3><p>Start a thoughtful conversation with the composer below.</p></div>';return;}
    const ids=posts.map(p=>p.id);
    const [reactRes,replyRes]=await Promise.all([
