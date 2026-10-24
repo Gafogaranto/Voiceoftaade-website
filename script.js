@@ -108,11 +108,22 @@ const dailyWisdomMessages = [
 "You cannot control every outcome, but you can take responsibility for your next choice."
 ];
 const today = new Date();
-const dayNumber = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
-const previousWisdom = sessionStorage.getItem("voiceoftaade-last-wisdom");
-let wisdomIndex = Math.floor(Math.random() * dailyWisdomMessages.length);
-if (dailyWisdomMessages.length > 1 && String(wisdomIndex) === previousWisdom) wisdomIndex = (wisdomIndex + 1) % dailyWisdomMessages.length;
-sessionStorage.setItem("voiceoftaade-last-wisdom", String(wisdomIndex));
+// Advance the reflection on each page visit and persist the last index across tabs and browser restarts.
+const wisdomVisitKey = "voiceoftaade-last-wisdom-index-v2";
+let previousWisdomIndex = -1;
+try {
+  const storedWisdomIndex = Number(localStorage.getItem(wisdomVisitKey));
+  if (Number.isInteger(storedWisdomIndex) && storedWisdomIndex >= 0 && storedWisdomIndex < dailyWisdomMessages.length) {
+    previousWisdomIndex = storedWisdomIndex;
+  }
+} catch (error) { console.warn("Daily wisdom rotation storage is unavailable.", error); }
+let wisdomIndex = previousWisdomIndex < 0
+  ? Math.floor(Math.random() * dailyWisdomMessages.length)
+  : (previousWisdomIndex + 1) % dailyWisdomMessages.length;
+try { localStorage.setItem(wisdomVisitKey, String(wisdomIndex)); } catch (error) {
+  console.warn("Daily wisdom rotation could not be saved.", error);
+  wisdomIndex = (Math.floor(Date.now() / 1000) % dailyWisdomMessages.length);
+}
 const wisdomQuote = dailyWisdomMessages[wisdomIndex];
 const wisdomQuoteElement = document.getElementById("dailyWisdomQuote");
 const wisdomDateElement = document.getElementById("dailyWisdomDate");
