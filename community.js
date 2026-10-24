@@ -28,8 +28,11 @@
    $("postForm")?.addEventListener("submit",createPost);
    $("backToDiscover")?.addEventListener("click",()=>showWorkspace("discover"));
    const mobileMenu=$("mobileMenuToggle"),backdrop=$("mobileMenuBackdrop");
-   const closeMobileMenu=()=>{document.body.classList.remove("community-mobile-menu-open");mobileMenu?.setAttribute("aria-expanded","false");};
-   mobileMenu?.addEventListener("click",()=>{const open=document.body.classList.toggle("community-mobile-menu-open");mobileMenu.setAttribute("aria-expanded",String(open));});
+   const chatMenu=$("chatMenuToggle");
+   const closeMobileMenu=()=>{document.body.classList.remove("community-mobile-menu-open");mobileMenu?.setAttribute("aria-expanded","false");chatMenu?.setAttribute("aria-expanded","false");if(backdrop)backdrop.hidden=true;};
+   const toggleMobileMenu=()=>{const open=document.body.classList.toggle("community-mobile-menu-open");mobileMenu?.setAttribute("aria-expanded",String(open));chatMenu?.setAttribute("aria-expanded",String(open));if(backdrop)backdrop.hidden=!open;};
+   mobileMenu?.addEventListener("click",toggleMobileMenu);
+   chatMenu?.addEventListener("click",toggleMobileMenu);
    backdrop?.addEventListener("click",closeMobileMenu);
    $("mobileMenuOverlayClose")?.addEventListener("click",closeMobileMenu);
    document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeMobileMenu();const info=$("communityInfoPanel");if(info)info.hidden=true;}});
@@ -41,7 +44,7 @@
    $("refreshFollowing")?.addEventListener("click",loadFollowing);
    $("refreshMentions")?.addEventListener("click",loadMentions);
    $("refreshNotifications")?.addEventListener("click",loadNotifications);
-   document.querySelectorAll("[data-workspace]").forEach(btn=>btn.addEventListener("click",()=>{showWorkspace(btn.dataset.workspace);document.body.classList.remove("community-mobile-menu-open");$("mobileMenuToggle")?.setAttribute("aria-expanded","false");}));
+   document.querySelectorAll("[data-workspace]").forEach(btn=>btn.addEventListener("click",()=>{showWorkspace(btn.dataset.workspace);document.body.classList.remove("community-mobile-menu-open");$("mobileMenuToggle")?.setAttribute("aria-expanded","false");$("chatMenuToggle")?.setAttribute("aria-expanded","false");if($("mobileMenuBackdrop"))$("mobileMenuBackdrop").hidden=true;}));
    const moderation=$("ownerModerationPanel"),mount=$("adminModerationMount");if(moderation&&mount)mount.appendChild(moderation);
    await loadCommunities();
    await loadForYou();
