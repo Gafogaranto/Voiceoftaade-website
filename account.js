@@ -5,8 +5,14 @@
   // Publishable/anon keys are intended for browser use; database access is protected by RLS.
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67";
   const ACCOUNT_URL = "https://gafogaranto.github.io/Voiceoftaade-website/account.html";
-  const rememberAtLoad = document.getElementById("rememberMe")?.checked !== false;
-  const authStorage = rememberAtLoad ? window.localStorage : window.sessionStorage;
+  const rememberBox = document.getElementById("rememberMe");
+  try { rememberBox.checked = localStorage.getItem("vt_remember_me") !== "false"; } catch (_) {}
+  const authStorage = {
+    getItem(key) { try { return (rememberBox?.checked ? localStorage : sessionStorage).getItem(key); } catch (_) { return null; } },
+    setItem(key, value) { try { const target = rememberBox?.checked ? localStorage : sessionStorage; const other = rememberBox?.checked ? sessionStorage : localStorage; target.setItem(key, value); other.removeItem(key); } catch (error) { console.warn("Session storage is unavailable", error); } },
+    removeItem(key) { try { localStorage.removeItem(key); sessionStorage.removeItem(key); } catch (_) {} }
+  };
+  rememberBox?.addEventListener("change", () => { try { localStorage.setItem("vt_remember_me", String(rememberBox.checked)); } catch (_) {} });
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storage: authStorage }
   });
