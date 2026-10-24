@@ -62,9 +62,10 @@
   }
   async function joinCommunity(community){
    if(!requireLogin())return;
-   if(community.visibility==="private"){status("Private community access requires an invitation or administrator approval.");return;}
-   const {error}=await client.from("community_members").insert({community_id:community.id,user_id:state.user.id,role:"member",status:"active"});
-   if(error&&error.code!=="23505"){status(error.message.includes("row-level security")?"This community is not open for self-joining. Please contact an administrator.":"Could not join this community. "+error.message,true);return;}
+   const isPrivate=community.visibility==="private";
+   const {error}=await client.from("community_members").insert({community_id:community.id,user_id:state.user.id,role:"member",status:isPrivate?"pending":"active"});
+   if(error&&error.code!=="23505"){status(error.message.includes("row-level security")?"This community is not open for self-joining. Please contact an administrator.":"Could not join/request access. "+error.message,true);return;}
+   if(isPrivate){status("Access request sent. An administrator must approve it before you can read or post.");$("joinCommunityBtn").disabled=true;$("joinCommunityBtn").textContent="Request sent";return;}
    status("You have joined "+community.name+".");await openCommunity(community.id);
   }
   async function loadPosts(community){
@@ -73,7 +74,7 @@
    if(error){console.error(error);feed.innerHTML='<p class="community-loading">Posts are not available. If this is a private community, you may need membership approval.</p>';return;}
    if(!posts?.length){feed.innerHTML='<div class="community-empty"><h3>Start a thoughtful conversation.</h3><p>There are no discussions here yet.</p></div>';return;}
    feed.innerHTML=posts.map(p=>'<article class="discussion-card">'+(p.is_pinned?'<span class="community-type">Pinned discussion</span>':'')+'<h3>'+escape(p.title)+'</h3><p class="discussion-meta">'+"Community member"+' · '+dateText(p.created_at)+'</p><p class="discussion-body">'+escape(p.body).replace(/\n/g,"<br>")+'</p><div class="discussion-actions"><button type="button" class="text-button" data-reply="'+p.id+'">Reply</button><button type="button" class="text-button" data-report="'+p.id+'">Report</button></div><div id="replies-'+p.id+'" class="reply-list"></div></article>').join("");
-   for(const p of posts){loadReplies(p);feed.querySelector('[data-reply="'+p.id+'"]')?.addEventListener("click",()=>replyTo(p));feed.querySelector('[data-report="'+p.id+'"]')?.addEventListener("click",()=>reportPost(p));}
+   for(const p of posts){loadReplies(p);feed.querySelector('[data-reply="'+p.id+'"]')?.addEventListener("click",()=>replyTo(p));feed.querySelector('[data-report="'+p.id+'"]')?.addEventListener("click",()=>reportPost(p));feed.querySelectorAll('[data-react="'+p.id+'"]').forEach(btn=>btn.addEventListener("click",()=>reactTo(p,btn.dataset.reaction)));}
   }
   async function loadReplies(post){
    const host=$("replies-"+post.id);const {data}=await client.from("community_replies").select("body,created_at,author_id").eq("post_id",post.id).eq("status","published").order("created_at",{ascending:true}).limit(30);
@@ -94,6 +95,12 @@
    const {error}=await client.from("community_replies").insert({post_id:post.id,author_id:state.user.id,body:body.trim()});
    if(error){status("Could not add reply. You may need to join the community first.",true);return;}
    status("Reply added.");await loadReplies(post);
+  }
+  async function reactTo(post,reaction){
+   if(!requireLogin())return;
+   const {error}=await client.from("community_reactions").insert({post_id:post.id,user_id:state.user.id,reaction});
+   if(error&&error.code==="23505"){const removed=await client.from("community_reactions").delete().eq("post_id",post.id).eq("user_id",state.user.id).eq("reaction",reaction);status(removed.error?"Could not update reaction.":"Reaction removed.",!!removed.error);return;}
+   status(error?"Could not add reaction. Join this community first.":"Reaction added.",!!error);
   }
   async function reportPost(post){
    if(!requireLogin())return;
