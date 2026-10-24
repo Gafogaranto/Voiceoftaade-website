@@ -94,8 +94,7 @@
     requests.querySelectorAll("[data-approve-creator]").forEach(b=>b.addEventListener("click",()=>reviewCreatorRequest(b.dataset.approveCreator,b.dataset.userId,"approved",b)));
     requests.querySelectorAll("[data-reject-creator]").forEach(b=>b.addEventListener("click",()=>reviewCreatorRequest(b.dataset.rejectCreator,null,"rejected",b)));
    }
-   const safetyHost=$("readerSafetyReportsList");
-   if(safetyHost){
+   const safetyHost=$("readerSafetyReportsList");\n   const safetyIds=[...new Set((safetyRes.data||[]).flatMap(x=>[x.reporter_id,x.reported_user_id]).filter(Boolean))];\n   const safetyProfileRes=safetyIds.length?await client.from("profiles").select("id,display_name").in("id",safetyIds):{data:[]};\n   const safetyNames=new Map((safetyProfileRes.data||[]).map(x=>[x.id,x.display_name||"Reader"]));\n   if(safetyHost){
     if(safetyRes.error){safetyHost.innerHTML='<p class="community-loading">Reader reports could not be loaded. Check staff permissions.</p>';console.warn(safetyRes.error);}
     else if(!safetyRes.data?.length)safetyHost.innerHTML='<p class="community-loading">No reader account reports awaiting review.</p>';
     else safetyHost.innerHTML=safetyRes.data.map(r=>'<article class="moderation-item"><strong>Reader safety report · '+escape(r.status)+'</strong><p>'+escape(r.reason)+'</p><small>Reported reader: '+escape(r.reported_user_id)+' · Reporter: '+escape(r.reporter_id)+' · '+dateText(r.created_at)+'</small><div class="moderation-item-actions"><button data-safety-review="'+r.id+'" data-safety-status="actioned">Action taken</button><button data-safety-review="'+r.id+'" data-safety-status="dismissed">Dismiss</button></div></article>').join("");
