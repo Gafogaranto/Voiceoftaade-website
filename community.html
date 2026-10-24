@@ -141,6 +141,13 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 }
 @media(min-width:761px){.mobile-community-nav{display:none!important}}
 
+
+.mobile-joined-rooms{display:contents}
+.mobile-joined-rooms button{max-width:190px;display:flex;align-items:center;gap:7px}
+.mobile-joined-rooms button .room-nav-icon{width:23px;height:23px;flex-basis:23px;border-radius:50%;font-size:.75rem}
+.mobile-joined-rooms:empty{display:none}
+@media(max-width:760px){.mobile-community-nav{align-items:center}.mobile-joined-rooms{display:contents}.mobile-joined-rooms button{max-width:170px}.mobile-joined-rooms .room-nav-name{max-width:120px}}
+
 </style>
 </head>
 <body>
@@ -149,7 +156,7 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <main class="community-platform">
 <section class="inner-hero community-intro"><p class="eyebrow">THE VOICEOFTAADE COMMUNITY</p><h1>Good words start conversations. <em>Wisdom grows together.</em></h1><p>Discover reader communities, discuss books and ideas, and learn alongside people who care about thoughtful living. Public spaces are open to explore; private spaces are reserved for approved members.</p><div class="hero-actions community-hub-actions"><a class="button button-gold" href="books.html">Explore the bookshelf ↗</a><a class="button button-dark" href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer">Follow Telegram ↗</a></div></section>
 <div id="communityAccountState" class="community-account" aria-live="polite">Checking reader account…</div>
-<nav class="mobile-community-nav" aria-label="Community navigation"><button type="button" data-workspace="forYou">For You</button><button type="button" data-workspace="following">Following</button><button type="button" data-workspace="discover">Discover</button><button type="button" data-workspace="mentions">Mentions</button><button type="button" data-workspace="notifications">Activity</button><button type="button" data-workspace="ai">AI companion</button><button type="button" data-workspace="admin" id="mobileAdminNav" hidden>Admin</button></nav><section class="community-workspace" aria-label="Community workspace">
+<nav class="mobile-community-nav" aria-label="Community navigation"><button type="button" data-workspace="forYou">For You</button><button type="button" data-workspace="following">Following</button><button type="button" data-workspace="discover">Discover</button><button type="button" data-workspace="mentions">Mentions</button><button type="button" data-workspace="notifications">Activity</button><button type="button" data-workspace="ai">AI companion</button><button type="button" data-workspace="admin" id="mobileAdminNav" hidden>Admin</button><nav id="mobileJoinedCommunityNav" class="mobile-joined-rooms" aria-label="Your community chats"></nav></nav><section class="community-workspace" aria-label="Community workspace">
  <aside class="community-sidebar">
   <div class="sidebar-brand"><span class="sidebar-brand-mark">V</span><div><strong>Reading Room</strong><small>Voiceoftaade community</small></div></div>
   <button class="workspace-nav active" data-workspace="forYou" type="button"><span>⌕</span> For You</button><button class="workspace-nav" data-workspace="following" type="button"><span>♧</span> Following</button><button class="workspace-nav" data-workspace="mentions" type="button"><span>@</span> Mentions <span id="mentionCount" class="nav-count" hidden>0</span></button><button class="workspace-nav" data-workspace="notifications" type="button"><span>♧</span> Notifications <span id="notificationCount" class="nav-count" hidden>0</span></button><button class="workspace-nav" data-workspace="discover" type="button"><span>＋</span> Discover</button>
@@ -191,5 +198,5 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <p class="community-footer-note">Community conversations should be respectful, constructive, and safe. Use the report option to flag content for review. The Voiceoftaade AI assistant is not connected yet and will appear once its secure AI service is configured. Follow <a href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer">Telegram</a> or join the <a href="https://chat.whatsapp.com/IR6dkKefPvXEmSbqfiatM9" target="_blank" rel="noopener noreferrer">WhatsApp community</a> for updates.</p>
 </main>
 <footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade. Words for a more thoughtful life.</p></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261024-mobilechat2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261024-mobilechat3"></script>
 </body></html>
