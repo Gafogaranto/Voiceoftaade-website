@@ -159,6 +159,54 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 
 
 .community-info-panel .info-community-mark{display:grid;place-items:center;width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#f5d787,#dba94f);color:#12243b;font-size:1.6rem;font-weight:800;margin:8px 0}.community-info-panel .info-community-name{margin:0 0 10px;font-size:1.2rem;color:#142238}
+
+/* Mobile-first, WhatsApp-inspired community workspace */
+.mobile-community-nav{display:none}
+.mobile-menu-backdrop{display:none}
+.chat-topbar{position:sticky;top:0;z-index:30;background:#0b1e32;border-bottom:1px solid #d7b36a33}
+.chat-room-mark img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.chat-room-mark{overflow:hidden}
+.community-info-cover{display:block;width:calc(100% + 36px);max-width:none;height:130px;object-fit:cover;margin:-18px -18px 16px;border-radius:17px 17px 0 0}
+.community-info-avatar{width:68px;height:68px;object-fit:cover;border-radius:18px;margin-bottom:12px}
+.community-info-panel{overscroll-behavior:contain}
+@media(max-width:760px){
+ .community-workspace{display:flex!important;flex-direction:column;margin:0!important;border-radius:0!important;width:100%;max-width:100%;min-height:calc(100dvh - 60px);height:auto;overflow:visible}
+ .mobile-community-nav{display:flex;align-items:center;gap:12px;min-height:52px;padding:7px 12px;background:#0b1e32;border-bottom:1px solid #263c55}
+ .mobile-community-nav button{width:40px;height:40px;border:1px solid #344b63;border-radius:12px;background:#132b43;color:#f3c969;font-size:1.2rem}
+ .mobile-community-nav strong{font-size:.95rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ #mobileMenuOverlayClose{display:none}
+ .community-sidebar{display:flex!important;position:fixed;z-index:120;left:0;top:0;bottom:0;width:min(84vw,320px);max-width:320px;overflow-y:auto;transform:translateX(-105%);transition:transform .22s ease;box-shadow:18px 0 45px #0008;padding:18px 14px calc(24px + env(safe-area-inset-bottom));}
+ body.community-mobile-menu-open .community-sidebar{transform:translateX(0)}
+ .mobile-menu-backdrop{position:fixed;z-index:110;inset:0;background:#020813b8;backdrop-filter:blur(2px)}
+ body.community-mobile-menu-open .mobile-menu-backdrop{display:block}
+ body.community-mobile-menu-open #mobileMenuToggle{position:relative;z-index:130}
+ .community-workspace-main{flex:1;min-height:0;width:100%;max-width:100%;padding:0!important}
+ .workspace-view{min-width:0}
+ .workspace-topbar{padding:16px 14px;gap:10px;align-items:flex-start}
+ .workspace-topbar h2{font-size:1.25rem}
+ .workspace-topbar p{max-width:100%;line-height:1.5}
+ .social-feed{padding:0 12px}
+ .social-feed-item{overflow-wrap:anywhere}
+ body.community-chat-open .community-hub-hero,body.community-chat-open .community-account{display:none!important}
+ body.community-chat-open .community-workspace{min-height:calc(100dvh - 58px - env(safe-area-inset-bottom));height:calc(100dvh - 58px - env(safe-area-inset-bottom));overflow:hidden}
+ body.community-chat-open .mobile-community-nav{display:none}
+ body.community-chat-open .community-workspace-main{height:100%;min-height:0;display:flex;flex-direction:column}
+ body.community-chat-open #workspaceChat{height:100%;min-height:0;display:flex;flex:1;flex-direction:column;overflow:hidden}
+ body.community-chat-open #workspaceChat[hidden]{display:none!important}
+ body.community-chat-open .chat-topbar{top:0;flex:0 0 auto;padding:9px 10px;gap:8px}
+ body.community-chat-open .chat-back{padding:7px 9px;white-space:nowrap;font-size:.82rem}
+ body.community-chat-open .chat-room-mark{width:39px;height:39px;flex:0 0 39px}
+ body.community-chat-open .chat-room-title h2{font-size:1rem;line-height:1.25}
+ body.community-chat-open .chat-room-title p{font-size:.72rem}
+ body.community-chat-open #chatMessageArea{flex:1;min-height:0;max-height:none;overflow-y:auto;padding:12px 13px 22px;overscroll-behavior:contain}
+ body.community-chat-open .chat-post{padding:15px 0}
+ body.community-chat-open .chat-post-actions button,body.community-chat-open .chat-comment-actions button{font-size:.76rem;padding:7px 9px;min-height:35px}
+ body.community-chat-open .chat-composer-wrap,body.community-chat-open .chat-join-prompt{position:sticky;bottom:0;z-index:25;flex:0 0 auto;background:#07172bf5;padding:9px 10px calc(9px + env(safe-area-inset-bottom));border-top:1px solid #d7b36a44}
+ body.community-chat-open .chat-composer textarea{min-height:62px;max-height:115px}
+ body.community-chat-open .community-info-panel{position:fixed;z-index:150;inset:0 0 0 auto;width:min(100%,440px);max-height:100dvh;height:100dvh;border-radius:0;border-width:0 0 0 1px;padding:18px 18px calc(24px + env(safe-area-inset-bottom))}
+ body.community-chat-open .community-info-cover{width:calc(100% + 36px)}
+}
+@media(prefers-reduced-motion:reduce){.community-sidebar{transition:none!important}}
 </style>
 <style id="community-responsive-upgrade">
 /* Mobile-first, chat-app style community navigation */
@@ -240,8 +288,8 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <main class="community-platform">
 <section class="inner-hero community-intro"><p class="eyebrow">THE VOICEOFTAADE COMMUNITY</p><h1>Good words start conversations. <em>Wisdom grows together.</em></h1><p>Discover reader communities, discuss books and ideas, and learn alongside people who care about thoughtful living. Public spaces are open to explore; private spaces are reserved for approved members.</p><div class="hero-actions community-hub-actions"><a class="button button-gold" href="books.html">Explore the bookshelf ↗</a><a class="button button-dark" href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer">Follow Telegram ↗</a></div></section>
 <div id="communityAccountState" class="community-account" aria-live="polite">Checking reader account…</div>
-<nav class="mobile-community-nav" aria-label="Community navigation"><button type="button" data-workspace="forYou">For You</button><button type="button" data-workspace="following">Following</button><button type="button" data-workspace="discover">Discover</button><button type="button" data-workspace="mentions">Mentions</button><button type="button" data-workspace="notifications">Activity</button><button type="button" data-workspace="ai">AI companion</button><button type="button" data-workspace="admin" id="mobileAdminNav" hidden>Admin</button><nav id="mobileJoinedCommunityNav" class="mobile-joined-rooms" aria-label="Your community chats"></nav></nav><section class="community-workspace" aria-label="Community workspace">
- <aside class="community-sidebar">
+<nav class="mobile-community-nav" aria-label="Community navigation"><button type="button" data-workspace="forYou">For You</button><button type="button" data-workspace="following">Following</button><button type="button" data-workspace="discover">Discover</button><button type="button" data-workspace="mentions">Mentions</button><button type="button" data-workspace="notifications">Activity</button><button type="button" data-workspace="ai">AI companion</button><button type="button" data-workspace="admin" id="mobileAdminNav" hidden>Admin</button><nav id="mobileJoinedCommunityNav" class="mobile-joined-rooms" aria-label="Your community chats"></nav></nav><section class="community-workspace" aria-label="Community workspace"><div class="mobile-community-nav"><button id="mobileMenuToggle" type="button" aria-expanded="false" aria-controls="communitySidebar">☰</button><strong id="mobileWorkspaceTitle">Voiceoftaade Community</strong><span id="mobileMenuOverlayClose" aria-hidden="true">×</span></div><div id="mobileMenuBackdrop" class="mobile-menu-backdrop" hidden></div>
+ <aside id="communitySidebar" class="community-sidebar">
   <div class="sidebar-brand"><span class="sidebar-brand-mark">V</span><div><strong>Reading Room</strong><small>Voiceoftaade community</small></div></div>
   <button class="workspace-nav active" data-workspace="forYou" type="button"><span>⌕</span> For You</button><button class="workspace-nav" data-workspace="following" type="button"><span>♧</span> Following</button><button class="workspace-nav" data-workspace="mentions" type="button"><span>@</span> Mentions <span id="mentionCount" class="nav-count" hidden>0</span></button><button class="workspace-nav" data-workspace="notifications" type="button"><span>♧</span> Notifications <span id="notificationCount" class="nav-count" hidden>0</span></button><button class="workspace-nav" data-workspace="discover" type="button"><span>＋</span> Discover</button>
   <p class="sidebar-label">YOUR COMMUNITIES</p>
