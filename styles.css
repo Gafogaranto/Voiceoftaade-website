@@ -624,3 +624,7 @@ body.inner-page > main { min-width: 0; }
   .bookshelf-intro, .bookshelf-display { padding-left: 12px; padding-right: 12px; }
   .shelf-footer-note { margin-left: 12px; margin-right: 12px; }
 }
+
+
+/* The brand reveal is for the first visit in a tab session, not every return to Home. */
+html.intro-seen-this-session .brand-intro { display: none !important; }
