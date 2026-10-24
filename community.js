@@ -58,10 +58,18 @@
    if(approvals)approvals.innerHTML='<p class="community-loading">Loading communities awaiting approval…</p>';
    if(requests)requests.innerHTML='<p class="community-loading">Loading creator requests…</p>';
    if(reports)reports.innerHTML='<p class="community-loading">Loading reports…</p>';
-   const [reqRes,reportRes]=await Promise.all([
+   const [communityRes,reqRes,reportRes]=await Promise.all([
+    client.from("communities").select("id,name,description,visibility,created_at").eq("status","pending").order("created_at",{ascending:true}).limit(50),
     client.from("community_creator_requests").select("id,user_id,message,status,created_at").eq("status","pending").order("created_at",{ascending:true}).limit(50),
     client.from("community_reports").select("id,community_id,reporter_id,post_id,reason,status,created_at").in("status",["open","reviewing"]).order("created_at",{ascending:false}).limit(50)
    ]);
+   if(approvals){
+    if(communityRes.error){console.warn("Community approval queue unavailable",communityRes.error);approvals.innerHTML='<p class="community-loading">Community approvals could not be loaded. Check owner permissions.</p>';}
+    else if(!communityRes.data?.length)approvals.innerHTML='<p class="community-loading">No communities awaiting approval. Newly created communities will appear here.</p>';
+    else approvals.innerHTML=communityRes.data.map(c=>'<article class="moderation-item"><strong>'+escape(c.name)+'</strong><p>'+escape(c.description)+'</p><small>'+(c.visibility==="private"?"Private":"Public")+' · Submitted '+dateText(c.created_at)+'</small><div class="moderation-item-actions"><button class="approve" data-approve-community="'+c.id+'">Approve & publish</button><button data-decline-community="'+c.id+'">Decline</button></div></article>').join("");
+    approvals.querySelectorAll("[data-approve-community]").forEach(b=>b.addEventListener("click",()=>reviewCommunity(b.dataset.approveCommunity,"active",b)));
+    approvals.querySelectorAll("[data-decline-community]").forEach(b=>b.addEventListener("click",()=>reviewCommunity(b.dataset.declineCommunity,"declined",b)));
+   }
    if(requests){
     if(reqRes.error){console.warn("Creator request moderation unavailable",reqRes.error);requests.innerHTML='<p class="community-loading">Creator requests could not be loaded. Check owner permissions.</p>';}
     else if(!reqRes.data?.length)requests.innerHTML='<p class="community-loading">No pending creator requests.</p>';
