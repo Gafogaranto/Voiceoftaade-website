@@ -22,7 +22,6 @@
    renderAccount();
    await refreshPermissions();
    renderAccount();
-   $("creatorRequestBtn")?.addEventListener("click",requestCreator);
    $("createCommunityBtn")?.addEventListener("click",createCommunity);
    $("communityCreateForm")?.addEventListener("submit",createCommunity);
    $("postForm")?.addEventListener("submit",createPost);
@@ -49,14 +48,14 @@
    if(el) el.innerHTML=state.user
     ? '<span class="signed-in-dot"></span> Signed in. You can join communities and participate.'
     : 'You are browsing as a visitor. <a href="account.html">Sign in or create a reader account</a> to join discussions.';
-   const req=$("creatorRequestBtn"); if(req) req.hidden=!state.user||state.creator||state.staff;
+   const req=$("creatorRequestBtn"); if(req) req.hidden=true;
    const ownerPanel=$("ownerModerationPanel"); if(ownerPanel) ownerPanel.hidden=!(state.user&&state.staff);
    const adminNav=$("adminNavBtn");if(adminNav)adminNav.hidden=!(state.user&&state.staff);
    if(state.user)loadJoinedCommunities();else{state.joined=[];renderJoinedNav();}
    if(state.user&&state.staff){loadModeration();showAdminNav();}
-   const create=$("createCommunityPanel"); if(create) create.hidden=!(state.user&&(state.creator||state.staff));
-   const createTitle=document.querySelector("#createCommunityPanel .eyebrow"); if(createTitle) createTitle.textContent=state.staff?"VOICEOFTAADE OWNER CONTROLS":"APPROVED CREATORS";
-   const request=$("creatorRequestPanel"); if(request) request.hidden=!state.user||state.creator||state.staff;
+   const create=$("createCommunityPanel"); if(create) create.hidden=!state.user;
+   const createTitle=document.querySelector("#createCommunityPanel .eyebrow"); if(createTitle) createTitle.textContent=state.staff?"VOICEOFTAADE OWNER CONTROLS":"SUBMIT A COMMUNITY";
+   const request=$("creatorRequestPanel"); if(request) request.hidden=true;
    const post=$("newPostPanel"); if(post) post.hidden=!state.user||!state.selected;
   }
   async function loadModeration(){
@@ -235,12 +234,12 @@
    status(error?(error.code==="23505"?"You already have a request with this status.":"Could not submit request. "+error.message):"Creator request submitted. The Voiceoftaade administrator will review it.",!!error);
   }
   async function createCommunity(event){
-   if(event?.preventDefault)event.preventDefault();if(!requireLogin()||!(state.creator||state.staff)){status("Community creation is limited to approved creators and the platform owner.",true);return;}
+   if(event?.preventDefault)event.preventDefault();if(!requireLogin())return;
    const form=$("communityCreateForm");const name=form.elements.name.value.trim(),description=form.elements.description.value.trim(),visibility=form.elements.visibility.value;
    const slug=name.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
    const {error}=await client.from("communities").insert({name,slug,description,visibility,created_by:state.user.id,status:"pending"});
    if(error){status("Could not create community. "+error.message,true);return;}
-   form.reset();status("Community submitted for owner approval. It will appear in Community approvals.");await loadModeration();await loadCommunities();
+   form.reset();status("Community submitted for owner approval. It will appear publicly only after approval.");if(state.staff)await loadModeration();await loadCommunities();
   }
   init().catch(error=>{console.error(error);status("Community services could not start. Please refresh the page.",true);});
  })();
