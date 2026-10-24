@@ -232,6 +232,7 @@
    document.querySelectorAll(".workspace-view").forEach(v=>v.hidden=true);
    const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="ai"?$("workspaceAI"):which==="forYou"?$("workspaceForYou"):which==="following"?$("workspaceFollowing"):which==="mentions"?$("workspaceMentions"):which==="notifications"?$("workspaceNotifications"):$("workspaceDiscover");
    if(target)target.hidden=false;
+   document.body.classList.toggle("community-chat-open",which==="chat");
    document.querySelectorAll("[data-workspace]").forEach(b=>b.classList.toggle("active",b.dataset.workspace===which));
    if(which==="admin"&&state.staff)loadModeration();
    const mobileAdmin=$("mobileAdminNav");if(mobileAdmin)mobileAdmin.hidden=!(state.user&&state.staff);
