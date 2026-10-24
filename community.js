@@ -45,10 +45,54 @@
     ? '<span class="signed-in-dot"></span> Signed in. You can join communities and participate.'
     : 'You are browsing as a visitor. <a href="account.html">Sign in or create a reader account</a> to join discussions.';
    const req=$("creatorRequestBtn"); if(req) req.hidden=!state.user||state.creator||state.staff;
+   const ownerPanel=$("ownerModerationPanel"); if(ownerPanel) ownerPanel.hidden=!(state.user&&state.staff);
+   if(state.user&&state.staff) loadModeration();
    const create=$("createCommunityPanel"); if(create) create.hidden=!(state.user&&(state.creator||state.staff));
    const createTitle=document.querySelector("#createCommunityPanel .eyebrow"); if(createTitle) createTitle.textContent=state.staff?"VOICEOFTAADE OWNER CONTROLS":"APPROVED CREATORS";
    const request=$("creatorRequestPanel"); if(request) request.hidden=!state.user||state.creator||state.staff;
    const post=$("newPostPanel"); if(post) post.hidden=!state.user||!state.selected;
+  }
+  async function loadModeration(){
+   const requests=$("creatorRequestsList"),reports=$("communityReportsList");
+   if(!state.staff||!state.user)return;
+   if(requests)requests.innerHTML='<p class="community-loading">Loading creator requests…</p>';
+   if(reports)reports.innerHTML='<p class="community-loading">Loading reports…</p>';
+   const [reqRes,reportRes]=await Promise.all([
+    client.from("community_creator_requests").select("id,user_id,message,status,created_at").eq("status","pending").order("created_at",{ascending:true}).limit(50),
+    client.from("community_reports").select("id,community_id,reporter_id,post_id,reason,status,created_at").order("created_at",{ascending:false}).limit(50)
+   ]);
+   if(requests){
+    if(reqRes.error){console.warn("Creator request moderation unavailable",reqRes.error);requests.innerHTML='<p class="community-loading">Creator requests could not be loaded. Check owner permissions.</p>';}
+    else if(!reqRes.data?.length)requests.innerHTML='<p class="community-loading">No pending creator requests.</p>';
+    else requests.innerHTML=reqRes.data.map(r=>'<article class="moderation-item"><strong>Creator application</strong><p>'+escape(r.message)+'</p><small>User ID: '+escape(r.user_id)+' · '+dateText(r.created_at)+'</small><div class="moderation-item-actions"><button class="approve" data-approve-creator="'+r.id+'" data-user-id="'+r.user_id+'">Approve creator</button><button data-reject-creator="'+r.id+'">Decline</button></div></article>').join("");
+    requests.querySelectorAll("[data-approve-creator]").forEach(b=>b.addEventListener("click",()=>reviewCreatorRequest(b.dataset.approveCreator,b.dataset.userId,"approved",b)));
+    requests.querySelectorAll("[data-reject-creator]").forEach(b=>b.addEventListener("click",()=>reviewCreatorRequest(b.dataset.rejectCreator,null,"rejected",b)));
+   }
+   if(reports){
+    if(reportRes.error){console.warn("Reports moderation unavailable",reportRes.error);reports.innerHTML='<p class="community-loading">Reports could not be loaded. Check owner permissions.</p>';}
+    else if(!reportRes.data?.length)reports.innerHTML='<p class="community-loading">No community reports yet.</p>';
+    else reports.innerHTML=reportRes.data.map(r=>'<article class="moderation-item"><strong>Content report · '+escape(r.status||"submitted")+'</strong><p>'+escape(r.reason)+'</p><small>Community: '+escape(r.community_id)+' · '+dateText(r.created_at)+'</small><div class="moderation-item-actions"><button data-dismiss-report="'+r.id+'">Mark reviewed</button></div></article>').join("");
+    reports.querySelectorAll("[data-dismiss-report]").forEach(b=>b.addEventListener("click",()=>dismissReport(b.dataset.dismissReport,b)));
+   }
+  }
+  async function reviewCreatorRequest(requestId,userId,decision,button){
+   if(!state.staff)return;button.disabled=true;
+   const reviewedAt=new Date().toISOString();
+   if(decision==="approved"){
+    const roleResult=await client.from("community_platform_roles").upsert({user_id:userId,role:"creator",granted_by:state.user.id},{onConflict:"user_id"});
+    if(roleResult.error){status("Could not grant creator role. "+roleResult.error.message,true);button.disabled=false;return;}
+   }
+   const {error}=await client.from("community_creator_requests").update({status:decision,reviewed_by:state.user.id,reviewed_at:reviewedAt}).eq("id",requestId).eq("status","pending");
+   if(error){status("Could not update creator request. "+error.message,true);button.disabled=false;return;}
+   const host=$("moderationStatus");if(host)host.textContent=decision==="approved"?"Creator approved. Their account can now create communities.":"Creator request declined.";
+   await loadModeration();
+  }
+  async function dismissReport(reportId,button){
+   if(!state.staff)return;button.disabled=true;
+   const {error}=await client.from("community_reports").update({status:"reviewed"}).eq("id",reportId);
+   if(error){const host=$("moderationStatus");if(host)host.textContent="Could not mark report reviewed: "+error.message;button.disabled=false;return;}
+   const host=$("moderationStatus");if(host)host.textContent="Report marked reviewed.";
+   await loadModeration();
   }
   async function loadCommunities(){
    const list=$("communityList");
