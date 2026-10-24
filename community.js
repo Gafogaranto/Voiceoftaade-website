@@ -178,9 +178,12 @@
    return result;
   }
   async function loadPosts(community){
-   const feed=$("chatMessageArea");feed.innerHTML='<p class="community-loading">Loading conversations…</p>';
+   const feed=$("chatMessageArea");
+   if(!feed||!client||!community?.id)return;
+   feed.innerHTML='<p class="community-loading">Loading conversations…</p>';
+   try {
    const {data:posts,error}=await client.from("community_posts").select("id,community_id,author_id,title,body,is_pinned,created_at").eq("community_id",community.id).eq("status","published").order("is_pinned",{ascending:false}).order("created_at",{ascending:false}).limit(50);
-   if(error){console.error(error);feed.innerHTML='<p class="community-loading">Messages are not available. Join or request access to this room.</p>';return;}
+   if(error){console.error("Conversation feed query failed",error);feed.innerHTML='<div class="chat-welcome"><span>!</span><h3>Conversations could not load</h3><p>'+escape(error.message||"Check your connection and community access, then retry.")+'</p><button type="button" class="button button-gold" id="retryConversationLoad">Try again</button></div>';$("retryConversationLoad")?.addEventListener("click",()=>loadPosts(community));return;}
    if(!posts?.length){feed.innerHTML='<div class="chat-welcome"><span>✧</span><h3>This room is just getting started</h3><p>Start a thoughtful conversation with the composer below.</p></div>';return;}
    const ids=posts.map(p=>p.id);
    const [reactRes,replyRes]=await Promise.all([
@@ -205,6 +208,11 @@
     feed.querySelector('[data-report="'+p.id+'"]')?.addEventListener("click",()=>reportPost(p));
     feed.querySelector('[data-comment-form="'+p.id+'"]')?.addEventListener("submit",e=>submitComment(e,p));
    });
+   } catch(error) {
+    console.error("Conversation feed crashed",error);
+    feed.innerHTML='<div class="chat-welcome"><span>!</span><h3>We could not open this conversation</h3><p>'+escape(error?.message||"Unexpected loading error.")+'</p><button type="button" class="button button-gold" id="retryConversationLoad">Try again</button></div>';
+    $("retryConversationLoad")?.addEventListener("click",()=>loadPosts(community));
+   }
   }
   async function submitComment(event,post){
    event.preventDefault();if(!requireLogin())return;
