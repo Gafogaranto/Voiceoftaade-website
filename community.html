@@ -148,6 +148,15 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 .mobile-joined-rooms:empty{display:none}
 @media(max-width:760px){.mobile-community-nav{align-items:center}.mobile-joined-rooms{display:contents}.mobile-joined-rooms button{max-width:170px}.mobile-joined-rooms .room-nav-name{max-width:120px}}
 
+
+@media(max-width:760px){
+ body:has(#workspaceChat:not([hidden])) .community-intro,
+ body:has(#workspaceChat:not([hidden])) #communityAccountState{display:none!important}
+ body:has(#workspaceChat:not([hidden])) .community-platform{padding-top:4px!important}
+ body:has(#workspaceChat:not([hidden])) .community-workspace{margin-top:0!important}
+ body:has(#workspaceChat:not([hidden])) .mobile-community-nav{border-radius:0 0 14px 14px;margin-bottom:6px}
+}
+
 </style>
 </head>
 <body>
@@ -198,5 +207,5 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <p class="community-footer-note">Community conversations should be respectful, constructive, and safe. Use the report option to flag content for review. The Voiceoftaade AI assistant is not connected yet and will appear once its secure AI service is configured. Follow <a href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer">Telegram</a> or join the <a href="https://chat.whatsapp.com/IR6dkKefPvXEmSbqfiatM9" target="_blank" rel="noopener noreferrer">WhatsApp community</a> for updates.</p>
 </main>
 <footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade. Words for a more thoughtful life.</p></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261024-mobilechat3"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261024-mobilechat4"></script>
 </body></html>
