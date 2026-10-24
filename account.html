@@ -54,6 +54,28 @@
     @media(max-width:760px){.account-layout{grid-template-columns:1fr;filter:drop-shadow(0 18px 30px rgba(7,23,43,.12))}.account-story{min-height:auto;border-radius:16px 16px 0 0;padding:28px 25px 25px}.story-mark{width:43px;height:43px;font-size:1.55rem}.story-kicker{margin-top:24px}.account-story h1{font-size:clamp(2.5rem,11vw,3.5rem);max-width:480px}.story-copy{margin-top:15px;font-size:.88rem}.story-quote{margin-top:22px;padding-top:15px}.story-quote p{font-size:1.08rem}.account-panel{border-left:1px solid #e7dfd0;border-radius:0 0 16px 16px;padding:28px 24px 30px}.auth-heading h2{font-size:2rem}.account-page{padding-top:22px}}
     @media(max-width:380px){.account-panel{padding:24px 17px}.account-tabs button{font-size:.77rem}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+    /* Authentication controls and reliable page-footer placement */
+    html,body{min-height:100%}
+    body{min-height:100vh;display:flex;flex-direction:column}
+    .account-page{flex:1 0 auto;width:100%}
+    .site-footer{position:relative;flex:0 0 auto;width:100%;margin-top:auto;clear:both}
+    .auth-password-wrap{position:relative;display:flex;align-items:center}
+    .auth-password-wrap input{padding-right:54px!important}
+    .password-visibility{position:absolute;right:7px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:40px;height:38px;border:0;border-radius:7px;background:transparent;color:#53677b;cursor:pointer}
+    .password-visibility:hover{background:#edf1f5;color:#07172b}
+    .password-visibility:focus-visible{outline:2px solid #b58a43;outline-offset:1px}
+    .password-visibility svg{width:20px;height:20px}
+    .auth-form-options{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0}
+    .remember-option{display:flex!important;grid-template-columns:none!important;align-items:center;gap:9px!important;color:#536174!important;font-size:.8rem!important;font-weight:600!important;letter-spacing:0!important;cursor:pointer}
+    .remember-option input{width:17px!important;height:17px;margin:0;accent-color:#12314e}
+    .account-form .text-link{font-weight:700}
+    .account-dashboard .social-profile{border-color:#d8dfe8;box-shadow:0 18px 48px rgba(7,23,43,.1)}
+    .profile-content{background:#eef2f6}
+    .profile-tabs-bottom{border-top:1px solid #e0e4e9;border-bottom:1px solid #e0e4e9;overflow-x:auto;scrollbar-width:thin}
+    .profile-collections{background:#eef2f6}
+    .profile-collections h3{overflow-wrap:anywhere}
+    @media(max-width:520px){.auth-form-options{align-items:flex-start;flex-direction:column;gap:14px}.password-visibility{width:42px}.site-footer{padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
+
 
     /* Shared site-wide navigation and footer on the reader account page */
     .site-header{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:20px}
@@ -261,9 +283,9 @@
             <form class="account-form" id="authForm">
               <label id="nameField" hidden>Display name<input id="displayName" name="displayName" type="text" maxlength="80" autocomplete="name" placeholder="How should we address you?"></label>
               <label>Email address<input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
-              <label>Password<input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="Enter your password"></label>
+              <label for="password">Password<div class="auth-password-wrap"><input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="Enter your password"><button class="password-visibility" id="togglePassword" type="button" aria-label="Show password" aria-pressed="false" title="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></label>
+              <div class="auth-form-options"><label class="remember-option"><input id="rememberMe" name="rememberMe" type="checkbox" checked> Remember me on this device</label><button type="button" class="text-link" id="forgotPassword" style="border:0;background:none;padding:0;cursor:pointer">Forgot your password?</button></div>
               <button class="button button-dark" id="submitAuth" type="submit">Sign in <span>→</span></button>
-              <button type="button" class="text-link" id="forgotPassword" style="justify-self:start;border:0;background:none;padding:0;cursor:pointer">Forgot your password?</button>
               <p class="account-note" id="formNote">Your account is for reader features. Public articles remain available without signing in.</p>
             </form>
             <p class="account-status" id="authStatus" role="status" aria-live="polite"></p>
@@ -391,6 +413,6 @@
     tabs.forEach(item => item.button.addEventListener("click", () => showCollection(item)));
   })();
   </script>
-  <script src="account.js"></script>
+  <script src="account.js?v=20261024-auth-polish1"></script>
 </body>
 </html>
