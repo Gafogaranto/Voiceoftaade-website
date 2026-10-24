@@ -211,6 +211,28 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
  .mobile-community-nav{box-shadow:0 3px 14px #0002}
 }
 @media(min-width:761px){.mobile-community-nav{display:none}}
+</style>
+<style>
+.community-info-avatar{display:block;width:88px;height:88px;border-radius:24px;object-fit:cover;margin:6px auto 14px;border:2px solid #d7b36a;box-shadow:0 8px 22px #07172b22}
+.chat-room-mark img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.community-info-panel{max-height:min(72vh,680px);overflow:auto;overscroll-behavior:contain}
+.community-info-panel .community-form{display:grid;gap:12px;margin:16px 0}
+.community-info-panel .community-form label{display:grid;gap:6px;font-size:.9rem}
+.community-info-panel .community-form input,.community-info-panel .community-form textarea{width:100%;border:1px solid #d8dce2;border-radius:10px;padding:11px;font:inherit}
+.community-info-panel .community-form textarea{min-height:80px}
+@media(max-width:680px){
+ body.community-chat-open{overflow:hidden}
+ body.community-chat-open .community-workspace{height:calc(100dvh - 110px);min-height:0;margin-bottom:0}
+ body.community-chat-open #workspaceChat{height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden;border-radius:0}
+ body.community-chat-open #workspaceChat[hidden]{display:none}
+ body.community-chat-open .chat-topbar{flex:0 0 auto;gap:9px;padding:10px}
+ body.community-chat-open .chat-room-mark{width:42px;height:42px;flex:0 0 42px}
+ body.community-chat-open .chat-room-title h2{font-size:1rem}
+ body.community-chat-open .chat-room-title p{font-size:.75rem}
+ body.community-chat-open .chat-message-area{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+ body.community-chat-open .chat-composer-wrap,body.community-chat-open .chat-join-prompt{flex:0 0 auto;position:relative;bottom:auto}
+ .community-info-panel{position:absolute;z-index:40;left:8px;right:8px;top:70px;max-height:calc(100dvh - 155px);box-shadow:0 18px 50px #07172b35;border-radius:16px}
+}
 </style></head>
 <body>
 <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
@@ -249,7 +271,7 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <div class="community-actions"><button id="creatorRequestBtn" class="community-small-btn" type="button" hidden>Request creator approval</button></div>
 <div id="legacyCommunityList" class="community-list" aria-live="polite"><p class="community-loading">Finding communities…</p></div>
 </section>
-<section id="ownerModerationPanel" class="community-panel owner-moderation-panel" hidden><p class="eyebrow">PLATFORM OWNER</p><h2>Community moderation</h2><p class="owner-panel-intro">Review creator applications and community reports from one place.</p><div class="moderation-columns"><section class="moderation-wide"><h3>Community approvals <span class="moderation-hint">New spaces wait here until approved</span></h3><div id="communityApprovalsList" class="moderation-list"><p class="community-loading">Loading communities awaiting approval…</p></div></section><section><h3>Creator requests</h3><div id="creatorRequestsList" class="moderation-list"><p class="community-loading">Loading requests…</p></div></section><section><h3>Content reports</h3><div id="communityReportsList" class="moderation-list"><p class="community-loading">Loading reports…</p></div></section><section class="moderation-wide"><h3>Reader account reports</h3><div id="readerSafetyReportsList" class="moderation-list"><p class="community-loading">Loading reader reports…</p></div></section></div><p id="moderationStatus" class="community-status" role="status" aria-live="polite"></p></section>
+<section id="ownerModerationPanel" class="community-panel owner-moderation-panel" hidden><p class="eyebrow">PLATFORM OWNER</p><h2>Community moderation</h2><p class="owner-panel-intro">Review creator applications and community reports from one place.</p><div class="moderation-columns"><section class="moderation-wide"><h3>Community approvals <span class="moderation-hint">New spaces wait here until approved</span></h3><div id="communityApprovalsList" class="moderation-list"><p class="community-loading">Loading communities awaiting approval…</p></div></section><section><h3>Creator requests</h3><div id="creatorRequestsList" class="moderation-list"><p class="community-loading">Loading requests…</p></div></section><section><h3>Content reports</h3><div id="communityReportsList" class="moderation-list"><p class="community-loading">Loading reports…</p></div></section><section class="moderation-wide"><h3>Community/group reports</h3><div id="communityGroupReportsList" class="moderation-list"><p class="community-loading">Loading group reports…</p></div></section><section class="moderation-wide"><h3>Reader account reports</h3><div id="readerSafetyReportsList" class="moderation-list"><p class="community-loading">Loading reader reports…</p></div></section></div><p id="moderationStatus" class="community-status" role="status" aria-live="polite"></p></section>
 <section id="createCommunityPanel" class="community-panel community-create-panel" hidden><p class="eyebrow">APPROVED CREATORS</p><h2>Create a community</h2><form id="communityCreateForm" class="community-form"><label>Community name<input name="name" required minlength="3" maxlength="80" placeholder="e.g. Life Hacks Book Club"></label><label>Description<textarea name="description" required minlength="10" maxlength="1000" placeholder="What will members discuss here?"></textarea></label><label>Access<select name="visibility"><option value="public">Public: discoverable by everyone</option><option value="private">Private: members only</option></select></label><button class="button button-gold" type="submit">Create community</button></form></section>
 <section id="creatorRequestPanel" class="community-panel community-request-panel" hidden><p class="eyebrow">BUILD WITH US</p><h2>Want to lead a community?</h2><p>Send a short request describing the space you would like to create. The Voiceoftaade administrator reviews every request.</p></section>
 <section id="discussionPanel" class="community-panel discussion-panel" hidden><div class="community-panel-head"><div><p class="eyebrow">COMMUNITY DISCUSSION</p><h2 id="discussionHeading">Community name</h2><p id="discussionDescription"></p></div><button id="joinCommunityBtn" class="button button-gold" type="button">Join community</button></div>
@@ -260,5 +282,5 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <p class="community-footer-note">Community conversations should be respectful, constructive, and safe. Use the report option to flag content for review. The Voiceoftaade AI assistant is not connected yet and will appear once its secure AI service is configured. Follow <a href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer">Telegram</a> or join the <a href="https://chat.whatsapp.com/IR6dkKefPvXEmSbqfiatM9" target="_blank" rel="noopener noreferrer">WhatsApp community</a> for updates.</p>
 </main>
 <footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade. Words for a more thoughtful life.</p></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261024-mobilechat7"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261024-communitysettings1"></script>
 </body></html>
