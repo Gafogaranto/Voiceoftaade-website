@@ -70,7 +70,7 @@ document.querySelectorAll("[data-filter]").forEach(button => {
     filterArticles();
   });
 });
-searchInput.addEventListener("input", filterArticles);
+if (searchInput) searchInput.addEventListener("input", filterArticles);
 
 
 
