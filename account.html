@@ -121,6 +121,18 @@
     .profile-collections .saved-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .profile-collections .saved-card{padding:18px;background:#fff;border:1px solid #dfe3e8;border-radius:9px}
     .profile-collections .saved-card h3{font-size:1.08rem}
+    .progress-card{display:flex;flex-direction:column;gap:13px;background:linear-gradient(145deg,#fffdf8,#f5f0e5)!important;border-color:#e2d4b5!important;box-shadow:0 8px 24px rgba(7,23,43,.06)}
+    .progress-card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .progress-card-heading h3{margin:0!important;color:#07172b;font-family:var(--serif);line-height:1.35}
+    .progress-percent{flex:none;border-radius:999px;background:#f0e2bf;color:#71531d;font-size:.78rem;font-weight:800;padding:6px 10px}
+    .reading-progress-track{height:8px;width:100%;overflow:hidden;border-radius:999px;background:#e3e5e8}
+    .reading-progress-fill{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#173453,#d9ad4f);transition:width .35s ease}
+    .progress-last-read{margin:0;color:#697486;font-size:.78rem}
+    .continue-reading-button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:48px;padding:12px 15px;border:1px solid #d9ad4f;border-radius:9px;background:linear-gradient(110deg,#07172b,#173453);color:#fff8e8;font-weight:700;font-size:.88rem;cursor:pointer;box-shadow:0 5px 13px rgba(7,23,43,.14);transition:transform .18s ease,box-shadow .18s ease}
+    .continue-reading-button:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(7,23,43,.2)}
+    .continue-reading-icon{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#d9ad4f;color:#07172b;font-size:.68rem}
+    .continue-reading-arrow{margin-left:auto;color:#e5c77e;font-size:1.05rem}
+    @media(prefers-reduced-motion:reduce){.reading-progress-fill,.continue-reading-button{transition:none}}
     .profile-collections .saved-actions{display:flex;gap:12px;flex-wrap:wrap}
     .profile-collections .saved-actions button{border:0;background:none;padding:0;color:#244b68;font-weight:750;cursor:pointer}
     .profile-collections .saved-empty{grid-column:1/-1;color:#687486;padding:20px;background:#fff;border:1px dashed #c9ced5}
