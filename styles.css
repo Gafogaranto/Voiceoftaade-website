@@ -606,3 +606,21 @@ body.inner-page > .site-footer { margin-top: auto; width: 100%; flex-shrink: 0; 
   .bookshelf-intro, .bookshelf-display { padding-left: 14px; padding-right: 14px; }
   .shelf-footer-note { margin-left: 14px; margin-right: 14px; }
 }
+
+
+/* Final full-bleed bookshelf and short-page footer layout correction */
+body.inner-page { padding: 0; width: 100%; }
+body.inner-page > main { min-width: 0; }
+.bookshelf-wrap { padding-top: 64px; padding-bottom: 64px; }
+.bookshelf-intro { padding-left: clamp(18px, 4vw, 56px); padding-right: clamp(18px, 4vw, 56px); }
+.bookshelf-display { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.shelf-footer-note { margin-left: clamp(18px, 4vw, 56px); margin-right: clamp(18px, 4vw, 56px); }
+.inner-page .site-footer { margin-top: auto; }
+@media (max-width: 800px) {
+  .bookshelf-display { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .bookshelf-wrap { padding: 42px 0 48px; }
+  .bookshelf-intro, .bookshelf-display { padding-left: 12px; padding-right: 12px; }
+  .shelf-footer-note { margin-left: 12px; margin-right: 12px; }
+}
