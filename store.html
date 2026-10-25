@@ -35,28 +35,10 @@
     .donation-details>summary{background:#d9ad4f;color:#07172b;box-shadow:none;transition:background .2s}
     .donation-details>summary:hover{background:#e8c66f}
     .donation-form{box-shadow:none;border:1px solid #e7dfcf}
-    .store-theme-toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid #c9a75f;border-radius:999px;padding:9px 14px;background:#fffaf0;color:#07172b;font-size:.8rem;font-weight:700;cursor:pointer}
-    .store-theme-toggle:focus-visible{outline:3px solid #d9ad4f;outline-offset:3px}
-    .store-theme-toggle .theme-icon{font-size:1rem}
     body{background:var(--store-page,#f7f4ec);color:var(--store-ink,#07172b);transition:background-color .2s,color .2s}
     .store-wrap{color:var(--store-ink,#07172b)}
     .store-status,.store-note{color:var(--store-muted,#5e6877)}
-    @media(prefers-color-scheme:dark){
-      body:not([data-store-theme="light"]){--store-page:#101923;--store-ink:#f5f0e5;--store-muted:#c2cbd4;--store-card:#172330;--store-line:#334252;--store-cover:#253443}
-      body:not([data-store-theme="light"]) .store-heading h2,
-      body:not([data-store-theme="light"]) .store-card h3,
-      body:not([data-store-theme="light"]) .store-empty h3{color:#f5f0e5}
-      body:not([data-store-theme="light"]) .store-card p,
-      body:not([data-store-theme="light"]) .store-empty p{color:#c2cbd4}
-      body:not([data-store-theme="light"]) .store-theme-toggle{background:#172330;color:#f5f0e5}
-      body:not([data-store-theme="light"]) .store-empty{border-color:#536274}
-    }
-    body[data-store-theme="dark"]{--store-page:#101923;--store-ink:#f5f0e5;--store-muted:#c2cbd4;--store-card:#172330;--store-line:#334252;--store-cover:#253443}
-    body[data-store-theme="dark"] .store-heading h2,body[data-store-theme="dark"] .store-card h3,body[data-store-theme="dark"] .store-empty h3{color:#f5f0e5}
-    body[data-store-theme="dark"] .store-card p,body[data-store-theme="dark"] .store-empty p{color:#c2cbd4}
-    body[data-store-theme="dark"] .store-theme-toggle{background:#172330;color:#f5f0e5}
-    body[data-store-theme="dark"] .store-empty{border-color:#536274}
-    body[data-store-theme="light"]{--store-page:#f7f4ec;--store-ink:#07172b;--store-muted:#5e6877;--store-card:#fffdf8;--store-line:#e4dccb;--store-cover:#eee7d9}
+    body{--store-page:#f7f4ec;--store-ink:#07172b;--store-muted:#5e6877;--store-card:#fffdf8;--store-line:#e4dccb;--store-cover:#eee7d9;background:var(--store-page);color:var(--store-ink)}
     @media(max-width:700px){.store-support.donation-panel{grid-template-columns:1fr;padding:20px;gap:16px}.store-hero{padding:42px 20px}.store-wrap{padding-top:28px}.store-heading{display:flex;align-items:flex-start;flex-direction:column;gap:14px}.store-theme-toggle{align-self:flex-start}}
 
   </style>
@@ -79,7 +61,7 @@
     </section>
     <section class="store-wrap" aria-labelledby="catalogTitle">
       <div class="store-heading">
-        <div><p class="eyebrow">THE BOOKSHELF</p><h2 id="catalogTitle">The Voiceoftaade Store</h2><p>Thoughtful reads, beautifully presented. Browse the collection and support what comes next.</p></div><button type="button" id="storeThemeToggle" class="store-theme-toggle" aria-pressed="false"><span class="theme-icon" aria-hidden="true">◐</span><span id="storeThemeLabel">Use dark mode</span></button>
+        <div><p class="eyebrow">THE BOOKSHELF</p><h2 id="catalogTitle">The Voiceoftaade Store</h2><p>Thoughtful reads, beautifully presented. Browse the collection and support what comes next.</p></div>
       </div>
       <div id="storeGrid" class="store-grid" aria-live="polite">
         <div class="store-empty"><h3>Preparing the shelves</h3><p>We’re connecting the catalogue to the secure store. Please check back soon.</p></div>
@@ -117,31 +99,7 @@
       menuToggle.textContent = '☰';
     }));
 
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Follow the device's light/dark appearance by default; allow a manual override.
-    const themeToggle = document.getElementById('storeThemeToggle');
-    const themeLabel = document.getElementById('storeThemeLabel');
-    const savedTheme = (() => { try { return localStorage.getItem('voiceoftaade-store-theme'); } catch (_) { return null; } })();
-    if (savedTheme === 'light' || savedTheme === 'dark') document.body.dataset.storeTheme = savedTheme;
-    function syncStoreThemeButton() {
-      const dark = document.body.dataset.storeTheme
-        ? document.body.dataset.storeTheme === 'dark'
-        : window.matchMedia('(prefers-color-scheme: dark)').matches;
-      themeLabel.textContent = dark ? 'Use light mode' : 'Use dark mode';
-      themeToggle.setAttribute('aria-pressed', String(dark));
-      themeToggle.querySelector('.theme-icon').textContent = dark ? '☼' : '◐';
-      document.querySelector('meta[name="theme-color"]').content = dark ? '#101923' : '#f7f4ec';
-    }
-    themeToggle.addEventListener('click', () => {
-      const isDark = document.body.dataset.storeTheme
-        ? document.body.dataset.storeTheme === 'dark'
-        : window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const nextTheme = isDark ? 'light' : 'dark';
-      document.body.dataset.storeTheme = nextTheme;
-      try { localStorage.setItem('voiceoftaade-store-theme', nextTheme); } catch (_) {}
-      syncStoreThemeButton();
-    });
+    document.getElementById('year').textContent = new Date().getFullYear();    });
     const colorSchemePreference = window.matchMedia('(prefers-color-scheme: dark)');
     if (colorSchemePreference.addEventListener) colorSchemePreference.addEventListener('change', () => {
       if (!document.body.dataset.storeTheme) syncStoreThemeButton();
