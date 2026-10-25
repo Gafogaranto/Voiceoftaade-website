@@ -215,6 +215,40 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
  body.community-chat-open .chat-back{font-size:.75rem;padding:7px 8px}
 }
 @media(min-width:761px){#chatMenuToggle{display:none}}
+
+/* Mobile chat workspace: WhatsApp-inspired full-height room and bottom-sheet group info. */
+@media(max-width:760px){
+ body.community-chat-open{overflow:hidden}
+ body.community-chat-open .community-platform{padding:0!important;margin:0!important;width:100%;max-width:100%}
+ body.community-chat-open .community-workspace{position:relative!important;display:flex!important;flex-direction:column!important;width:100%!important;height:calc(100dvh - 70px - env(safe-area-inset-bottom))!important;min-height:0!important;margin:0!important;border:0!important;border-radius:0!important;overflow:hidden!important}
+ body.community-chat-open .community-workspace-main{width:100%!important;min-height:0!important;height:100%!important;display:flex!important;flex-direction:column!important;padding:0!important}
+ body.community-chat-open #workspaceChat{display:flex!important;flex:1 1 auto!important;min-height:0!important;height:100%!important;flex-direction:column!important;overflow:hidden!important}
+ body.community-chat-open #workspaceChat[hidden]{display:none!important}
+ body.community-chat-open .chat-topbar{position:relative!important;top:auto!important;flex:0 0 auto!important;gap:7px!important;padding:8px 9px!important}
+ body.community-chat-open .chat-menu-button{display:grid!important;place-items:center!important;flex:0 0 38px!important;width:38px!important;height:38px!important}
+ body.community-chat-open .chat-back{display:none!important}
+ body.community-chat-open .chat-room-mark{flex:0 0 38px!important;width:38px!important;height:38px!important}
+ body.community-chat-open .chat-room-title{min-width:0!important}
+ body.community-chat-open .chat-room-title h2{font-size:.96rem!important}
+ body.community-chat-open .chat-room-title p{font-size:.7rem!important}
+ body.community-chat-open .chat-info-button{flex:0 0 38px!important;width:38px!important;height:38px!important}
+ body.community-chat-open #chatMessageArea{flex:1 1 auto!important;min-height:0!important;height:auto!important;max-height:none!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding:14px 13px calc(18px + env(safe-area-inset-bottom))!important}
+ body.community-chat-open .chat-composer-wrap{position:relative!important;bottom:auto!important;flex:0 0 auto!important;padding:9px 10px calc(10px + env(safe-area-inset-bottom))!important}
+ body.community-chat-open .chat-composer textarea{min-height:54px!important;max-height:120px!important}
+ body.community-chat-open .composer-bottom{align-items:center!important}
+ body.community-chat-open .composer-bottom span{display:none!important}
+ body.community-chat-open .chat-post-actions button,body.community-chat-open .chat-comment-actions button{min-height:40px!important;padding:9px 10px!important}
+ body.community-chat-open .community-info-panel{position:fixed!important;z-index:240!important;inset:auto 0 0!important;width:100%!important;max-width:none!important;max-height:82dvh!important;border-radius:22px 22px 0 0!important;padding:20px 18px calc(24px + env(safe-area-inset-bottom))!important;overflow:auto!important;box-sizing:border-box!important}
+ body.community-chat-open .community-sidebar{z-index:220!important}
+ body.community-chat-open .mobile-menu-backdrop{z-index:210!important}
+ body.community-chat-open .community-workspace-main .workspace-view:not(#workspaceChat){display:none!important}
+}
+@media(max-width:420px){
+ body.community-chat-open .chat-post{padding:15px 0}
+ body.community-chat-open .chat-post-actions{gap:5px}
+ body.community-chat-open .chat-post-actions button{font-size:.75rem!important}
+ body.community-chat-open .chat-composer input,body.community-chat-open .chat-composer textarea{font-size:16px!important}
+}
 </style>
 <style id="community-responsive-upgrade">
 /* Mobile-first, chat-app style community navigation */
@@ -304,7 +338,7 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
   <nav id="joinedCommunityNav" class="joined-community-nav" aria-label="Your community chats"><p class="sidebar-empty">Join a community to see its chat here.</p></nav>
   <button id="adminNavBtn" class="workspace-nav admin-nav" data-workspace="admin" type="button" hidden><span>⚙</span> Admin requests <span id="adminRequestCount" class="nav-count">0</span></button>
   <button class="workspace-nav" data-workspace="discover" type="button"><span>＋</span> Find communities</button><button class="workspace-nav ai-nav" data-workspace="ai" type="button"><span>✧</span> AI reading companion <span class="ai-beta-tag">Preview</span></button>
-  <div class="sidebar-foot">A thoughtful space for readers.<br><span>Read · Reflect · Connect</span></div>
+  <div class="sidebar-foot"><strong>Featured Voiceoftaade book</strong><br><a href="https://payhip.com/b/stSQH" target="_blank" rel="noopener noreferrer">Series of Life Hacks to Live By ↗</a><br><span>Read · Reflect · Connect</span></div>
  </aside>
  <div class="community-workspace-main">
   <section id="workspaceForYou" class="workspace-view"><div class="workspace-topbar"><div><p class="eyebrow">VOICEOFTAADE SOCIAL</p><h2>For You</h2><p>Recent conversations from public Voiceoftaade communities.</p></div><button class="button button-gold" id="refreshForYou" type="button">Refresh feed ↻</button></div><div id="forYouFeed" class="social-feed" aria-live="polite"><p class="community-loading">Loading your feed…</p></div></section>
@@ -338,5 +372,5 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <p class="community-footer-note">Community conversations should be respectful, constructive, and safe. Use the report option to flag content for review. The Voiceoftaade AI assistant is not connected yet and will appear once its secure AI service is configured. Follow <a href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer">Telegram</a> or join the <a href="https://chat.whatsapp.com/IR6dkKefPvXEmSbqfiatM9" target="_blank" rel="noopener noreferrer">WhatsApp community</a> for updates.</p>
 </main>
 <footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade. Words for a more thoughtful life.</p></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261025-booksource1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261025-mobile-socialfix1"></script>
 </body></html>
