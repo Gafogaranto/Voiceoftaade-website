@@ -84,11 +84,26 @@
     const paymentReturnMessage = 'Paystack has returned you to Voiceoftaade. Your payment is being verified by the server; ebook access is granted only after confirmation.';
     const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
     const money = (amountMinor, currency) => new Intl.NumberFormat('en-NG', {style:'currency',currency,maximumFractionDigits:2}).format(Number(amountMinor)/100);
+    // Keep displayed launch pricing aligned with the server-side seven-day launch rule.
+    // The server remains authoritative for the actual amount charged.
+    const STORE_LAUNCH_AT_MS = Date.parse('2026-10-25T17:30:09.550774Z');
+    function displayNgnPrice(product) {
+      const slug = String(product.slug || '').trim().toLowerCase();
+      const title = String(product.title || '').trim().toLowerCase();
+      const launchEbook = title === 'series of life hacks to live by' ||
+        slug === 'series-of-life-hacks-to-live-by' || slug === 'series-of-life-hacks-to-live-by-full-pack';
+      if (!launchEbook) return money(product.price_ngn_kobo, 'NGN');
+      const introEndsAt = STORE_LAUNCH_AT_MS + 7 * 24 * 60 * 60 * 1000;
+      if (Date.now() < introEndsAt) {
+        return money(50000, 'NGN') + '<small>Introductory price · regular price ' + money(250000, 'NGN') + '</small>';
+      }
+      return money(250000, 'NGN');
+    }
     function productCard(product) {
       const cover = typeof product.cover_image_url === 'string' && /^https:\/\//i.test(product.cover_image_url)
         ? '<img src="' + escapeHtml(product.cover_image_url) + '" alt="Cover of ' + escapeHtml(product.title) + '" loading="lazy">'
         : '<div class="cover-placeholder">' + escapeHtml(product.title) + '</div>';
-      const priceNgn = money(product.price_ngn_kobo, 'NGN');
+      const priceNgn = displayNgnPrice(product);
       const priceUsd = product.price_usd_cents == null ? '' : '<small>' + money(product.price_usd_cents, 'USD') + ' for USD checkout, when enabled</small>';
       return '<article class="store-card"><div class="store-cover">' + cover + '</div><div class="store-card-body"><h3>' + escapeHtml(product.title) + '</h3>' +
         (product.subtitle ? '<p><strong>' + escapeHtml(product.subtitle) + '</strong></p>' : '') +
