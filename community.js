@@ -378,7 +378,7 @@
    if(error&&error.code==="23505"){const removed=await client.from("community_reactions").delete().eq("post_id",post.id).eq("user_id",state.user.id).eq("reaction",reaction);if(removed.error){status("Could not update reaction.",true);return;}status("Like removed.");await loadPosts(state.selected);return;}
    if(error){status("Could not add reaction. Join this community first.",true);return;}status("Like updated.");await loadPosts(state.selected);
   }
-  async function reportReader(userId,communityId=null,postId=null,replyId=null){
+  async async function reportReader(userId,communityId=null,postId=null,replyId=null){
    if(!requireLogin()||userId===state.user.id)return;
    const reason=window.prompt("Report this reader. Describe the concern (at least 5 characters):");if(!reason?.trim()||reason.trim().length<5)return;
    const {error}=await client.from("reader_safety_reports").insert({reporter_id:state.user.id,reported_user_id:userId,community_id:communityId,post_id:postId,reply_id:replyId,reason:reason.trim()});
