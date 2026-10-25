@@ -39,7 +39,7 @@
     .store-wrap{color:var(--store-ink,#07172b)}
     .store-status,.store-note{color:var(--store-muted,#5e6877)}
     body{--store-page:#f7f4ec;--store-ink:#07172b;--store-muted:#5e6877;--store-card:#fffdf8;--store-line:#e4dccb;--store-cover:#eee7d9;background:var(--store-page);color:var(--store-ink)}
-    @media(max-width:700px){.store-support.donation-panel{grid-template-columns:1fr;padding:20px;gap:16px}.store-hero{padding:42px 20px}.store-wrap{padding-top:28px}.store-heading{display:flex;align-items:flex-start;flex-direction:column;gap:14px}.store-theme-toggle{align-self:flex-start}}
+    @media(max-width:700px){.store-support.donation-panel{grid-template-columns:1fr;padding:20px;gap:16px}.store-hero{padding:42px 20px}.store-wrap{padding-top:28px}.store-heading{display:flex;align-items:flex-start;flex-direction:column;gap:14px}}
 
   </style>
   <script src="theme.js"></script>
@@ -99,12 +99,7 @@
       menuToggle.textContent = '☰';
     }));
 
-    document.getElementById('year').textContent = new Date().getFullYear();    });
-    const colorSchemePreference = window.matchMedia('(prefers-color-scheme: dark)');
-    if (colorSchemePreference.addEventListener) colorSchemePreference.addEventListener('change', () => {
-      if (!document.body.dataset.storeTheme) syncStoreThemeButton();
-    });
-    syncStoreThemeButton();
+    document.getElementById('year').textContent = new Date().getFullYear();
 
     const SUPABASE_URL = 'https://qnnmbngxunmjerpeoxrr.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67';
