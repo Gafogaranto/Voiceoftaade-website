@@ -107,6 +107,7 @@
     }
     await migrateDeviceCollections(user);
     await renderCloudProgress();
+    await renderPurchasedBooks();
   }
 
   function populateProfileEditor(profile) {
@@ -321,6 +322,89 @@
     if(rows.length){const {error}=await supabase.from("reader_journal_collections").upsert(rows,{onConflict:"user_id,journal_id,collection_type",ignoreDuplicates:true});if(error){console.error(error);status("profileStatus","Some saved items remain on this device because syncing failed. They have not been removed.","error");}else Object.values(LEGACY_KEYS).forEach(key=>{try{localStorage.removeItem(key);}catch(_){}});}
     await renderCloudCollections();
   }
+  async function renderPurchasedBooks() {
+    const target = $("purchasedBooksList");
+    if (!target || !currentUser) return;
+    target.replaceChildren();
+    status("purchaseStatus", "Checking your verified purchases…");
+    const now = new Date();
+    const { data, error } = await supabase
+      .from("store_entitlements")
+      .select("product_id,starts_at,expires_at,status,product:store_products(id,title,description,slug,status)")
+      .eq("user_id", currentUser.id)
+      .eq("status", "active")
+      .lte("starts_at", now.toISOString());
+    if (error) {
+      status("purchaseStatus", "Your library could not be loaded. Please refresh and try again.", "error");
+      const p = document.createElement("p");
+      p.className = "saved-empty";
+      p.textContent = "Purchased books are temporarily unavailable.";
+      target.append(p);
+      return;
+    }
+    const unique = new Map();
+    (data || []).forEach(row => {
+      if (row.expires_at && new Date(row.expires_at) <= now) return;
+      const product = Array.isArray(row.product) ? row.product[0] : row.product;
+      if (!product || product.status !== "published" || !product.id || !product.title) return;
+      unique.set(product.id, product);
+    });
+    if (!unique.size) {
+      const p = document.createElement("p");
+      p.className = "saved-empty";
+      p.textContent = "No purchased ebooks are linked to this account yet. After a verified purchase, your book will appear here.";
+      target.append(p);
+      status("purchaseStatus", "");
+      return;
+    }
+    unique.forEach(product => {
+      const card = document.createElement("article");
+      card.className = "saved-card";
+      const heading = document.createElement("h3");
+      heading.textContent = product.title;
+      const description = document.createElement("p");
+      description.textContent = product.description || "A Voiceoftaade publication.";
+      const download = document.createElement("button");
+      download.type = "button";
+      download.className = "continue-reading-button";
+      download.textContent = "Download ebook →";
+      download.addEventListener("click", async () => {
+        download.disabled = true;
+        download.textContent = "Checking access…";
+        status("purchaseStatus", "Verifying your entitlement and preparing a short-lived download link…");
+        try {
+          const { data: result, error: downloadError } = await supabase.functions.invoke("store-ebook-download", {
+            body: { product_id: product.id, asset_type: "ebook_pdf" }
+          });
+          if (downloadError) {
+            let message = downloadError.message || "Download could not be prepared.";
+            try {
+              if (downloadError.context && typeof downloadError.context.json === "function") {
+                const payload = await downloadError.context.json();
+                if (payload && payload.error) message = payload.error;
+              }
+            } catch (_) {}
+            throw new Error(message);
+          }
+          if (!result || typeof result.signed_url !== "string") throw new Error("The protected file service did not return a download link.");
+          const url = new URL(result.signed_url);
+          if (url.origin !== new URL(SUPABASE_URL).origin || !url.pathname.startsWith("/storage/v1/object/sign/")) {
+            throw new Error("The returned download link did not pass the security check.");
+          }
+          status("purchaseStatus", "Your temporary download link is ready. It expires after a few minutes.", "success");
+          location.assign(url.href);
+        } catch (downloadError) {
+          status("purchaseStatus", downloadError.message || "Download failed. Please try again.", "error");
+          download.disabled = false;
+          download.textContent = "Try download again →";
+        }
+      });
+      card.append(heading, description, download);
+      target.append(card);
+    });
+    status("purchaseStatus", "");
+  }
+
   async function renderCloudProgress(){
     if(!currentUser)return;const target=$("readingProgressList");if(!target)return;
     const {data,error}=await supabase.from("reader_reading_progress").select("journal_id,progress_percent,last_read_at").eq("user_id",currentUser.id).order("updated_at",{ascending:false}).limit(50);
