@@ -49,6 +49,7 @@
     </section>
   </main>
   <footer class="store-foot">© <span id="year"></span> Voiceoftaade Publications · <a href="books.html">Explore the bookshelf</a> · <a href="contact.html">Contact</a></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
@@ -67,6 +68,16 @@
 
     const SUPABASE_URL = 'https://qnnmbngxunmjerpeoxrr.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67';
+    // Keep false until test checkout, webhook, and protected ebook delivery pass end-to-end checks.
+    const STORE_CHECKOUT_UI_ENABLED = false;
+    const authStorage = {
+      getItem(key) { try { return localStorage.getItem(key) ?? sessionStorage.getItem(key); } catch (_) { return null; } },
+      setItem(key, value) { try { const sessionOnly = sessionStorage.getItem(key) !== null && localStorage.getItem(key) === null; (sessionOnly ? sessionStorage : localStorage).setItem(key, value); } catch (_) {} },
+      removeItem(key) { try { localStorage.removeItem(key); sessionStorage.removeItem(key); } catch (_) {} }
+    };
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storage: authStorage }
+    });
     const grid = document.getElementById('storeGrid');
     const statusLine = document.getElementById('storeStatus');
     const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -80,8 +91,49 @@
       return '<article class="store-card"><div class="store-cover">' + cover + '</div><div class="store-card-body"><h3>' + escapeHtml(product.title) + '</h3>' +
         (product.subtitle ? '<p><strong>' + escapeHtml(product.subtitle) + '</strong></p>' : '') +
         '<p>' + escapeHtml(product.description || 'A Voiceoftaade publication.') + '</p>' +
-        '<div class="store-price">' + priceNgn + priceUsd + '</div><button class="store-button" type="button" disabled aria-disabled="true">Checkout opening soon</button></div></article>';
+        '<div class="store-price">' + priceNgn + priceUsd + '</div><button class="store-button" type="button" data-product-id="' + escapeHtml(product.id) + '"' + (STORE_CHECKOUT_UI_ENABLED ? '' : ' disabled aria-disabled="true"') + '>' + (STORE_CHECKOUT_UI_ENABLED ? 'Continue to secure checkout' : 'Checkout opening soon') + '</button></div></article>';
     }
+    async function beginCheckout(productId, button) {
+      if (!STORE_CHECKOUT_UI_ENABLED) return;
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Preparing secure checkout…';
+      statusLine.textContent = 'Checking your reader session and preparing a Paystack test checkout.';
+      try {
+        const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!sessionData.session) {
+          statusLine.textContent = 'Please sign in or create a reader account before checkout.';
+          button.disabled = false;
+          button.textContent = originalText;
+          location.href = 'account.html?next=' + encodeURIComponent('store.html');
+          return;
+        }
+        const { data, error } = await supabaseClient.functions.invoke('store-checkout-init', {
+          body: { product_id: productId }
+        });
+        if (error) {
+          let detail = error.message || 'Checkout could not be started.';
+          try {
+            const context = error.context;
+            if (context && typeof context.json === 'function') {
+              const payload = await context.json();
+              if (payload && payload.error) detail = payload.error;
+            }
+          } catch (_) {}
+          throw new Error(detail);
+        }
+        if (!data || !data.checkout_url || !/^https:\/\/checkout\.paystack\.com\//i.test(data.checkout_url)) {
+          throw new Error('The payment provider did not return a valid checkout link.');
+        }
+        location.assign(data.checkout_url);
+      } catch (error) {
+        statusLine.textContent = (error && error.message ? error.message : 'Secure checkout is unavailable.') + ' No purchase is confirmed until Paystack verifies payment.';
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    }
+
     async function loadCatalog() {
       try {
         const response = await fetch(SUPABASE_URL + '/rest/v1/store_products?select=id,slug,title,subtitle,description,cover_image_url,price_ngn_kobo,price_usd_cents,status,published_at&status=eq.published&order=published_at.desc', {
@@ -95,11 +147,20 @@
           return;
         }
         grid.innerHTML = products.map(productCard).join('');
-        statusLine.textContent = 'Catalogue loaded. Checkout will be enabled after provider approval and end-to-end payment testing.';
+        grid.querySelectorAll('[data-product-id]').forEach(button => {
+          button.addEventListener('click', () => beginCheckout(button.dataset.productId, button));
+        });
+        statusLine.textContent = STORE_CHECKOUT_UI_ENABLED
+          ? 'Catalogue loaded. Secure checkout is available for testing; access is granted only after server-side payment verification.'
+          : 'Catalogue loaded. Checkout remains disabled while test payments and protected ebook delivery are verified.';
       } catch (error) {
         grid.innerHTML = '<div class="store-empty"><h3>Our catalogue is temporarily unavailable</h3><p>Please try again later or visit the online reading room while we finish the store setup.</p><p><a class="text-link" href="reader.html">Open the reading room →</a></p></div>';
         statusLine.textContent = 'The store catalogue could not be loaded. No payment has been attempted.';
       }
+    }
+    const query = new URLSearchParams(location.search);
+    if (query.get('payment') === 'return') {
+      statusLine.textContent = 'Paystack has returned you to Voiceoftaade. Your payment is being verified by the server; ebook access is granted only after confirmation.';
     }
     loadCatalog();
   </script>
