@@ -653,8 +653,9 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
    Default appearance remains the existing navy, ivory and gold brand.
    Dark appearance follows the visitor's device/browser preference automatically. */
 :root { color-scheme: light; }
-@media (prefers-color-scheme: dark) {
-  :root {
+:root[data-theme="dark"] { color-scheme: dark; }
+
+:root[data-theme="dark"] {
     color-scheme: dark;
     --ink: #f5f0e5;
     --muted: #c0c8d2;
@@ -665,88 +666,89 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
     --line: #2c3b4e;
     --olive: #203b57;
   }
-  html, body, body.inner-page {
+
+html[data-theme="dark"], html[data-theme="dark"] body, html[data-theme="dark"] body.inner-page {
     background: #081626 !important;
     color: #f5f0e5;
   }
-  body :is(main, section, article, aside, .section, .inner-hero, .bookshelf-wrap,
+  html[data-theme="dark"] body :is(main, section, article, aside, .section, .inner-hero, .bookshelf-wrap,
     .about-page-grid, .contact-section, .community-section, .journal-section,
     .reader-section, .profile-section, .account-section) {
     color: #f5f0e5;
   }
-  body :is(.hero, .section, .home-library-section, .about-page-cta, .book-feature,
+  html[data-theme="dark"] body :is(.hero, .section, .home-library-section, .about-page-cta, .book-feature,
     .founder-panel, .bookshelf-wrap, .bookshelf-intro, .about-page-grid,
     .contact-section, .community-section, .journal-section, .reader-section,
     .profile-section, .account-section, .shelf-footer-note) {
     background-color: #0b1b2e;
     background-image: none;
   }
-  body :is(.hero-intro, .section-heading > p, .book-details > p:not(.book-byline),
+  html[data-theme="dark"] body :is(.hero-intro, .section-heading > p, .book-details > p:not(.book-byline),
     .book-points, .coming-soon p, .about-page-copy p, .about-principles p,
     .founder-panel p:not(.eyebrow), .bookshelf-intro > p, .shelf-card-content p,
     .home-library-panel p, .shelf-footer-note p, .contact-section p,
     .community-copy p, .inner-hero > p:not(.eyebrow), .fine-print) {
     color: #c0cbd8 !important;
   }
-  body :is(.book-feature, .shelf-card, .about-principles article, .home-library-panel,
+  html[data-theme="dark"] body :is(.book-feature, .shelf-card, .about-principles article, .home-library-panel,
     .home-library-panel, .contact-card, .community-card, .journal-card,
     .profile-card, .account-card, .form-card, .shelf-placeholder) {
     background-color: #102238;
     color: #f5f0e5;
     border-color: #34475c;
   }
-  body :is(.founder-panel, .shelf-footer-note, .coming-soon) {
+  html[data-theme="dark"] body :is(.founder-panel, .shelf-footer-note, .coming-soon) {
     border-color: #34475c;
   }
-  body :is(input, textarea, select) {
+  html[data-theme="dark"] body :is(input, textarea, select) {
     background-color: #102238;
     color: #f5f0e5;
     border-color: #52647a;
   }
-  body :is(input, textarea, select)::placeholder { color: #a9b5c4; }
-  body :is(.pill, .availability-label, .future-label) {
+  html[data-theme="dark"] body :is(input, textarea, select)::placeholder { color: #a9b5c4; }
+  html[data-theme="dark"] body :is(.pill, .availability-label, .future-label) {
     color: #f0d38b;
     background-color: #26354a;
     border-color: #78643d;
   }
-  body :is(.button-outline, .nav-cta) {
+  html[data-theme="dark"] body :is(.button-outline, .nav-cta) {
     color: #f5f0e5;
     border-color: #d9ad4f;
   }
-  body :is(.text-link, .coming-label, .coming-icon, .library-art-caption) {
+  html[data-theme="dark"] body :is(.text-link, .coming-label, .coming-icon, .library-art-caption) {
     color: #e2bd68;
   }
-  body .site-header {
+  html[data-theme="dark"] body .site-header {
     background: rgba(5, 15, 27, .97);
     color: #f5f0e5;
   }
-  body .site-header nav.nav-open {
+  html[data-theme="dark"] body .site-header nav.nav-open {
     background: #07172b;
     color: #f5f0e5;
   }
-  body .brand small { color: #c0c8d2; }
-  body .site-footer {
+  html[data-theme="dark"] body .brand small { color: #c0c8d2; }
+  html[data-theme="dark"] body .site-footer {
     background: #050f1c;
     color: #f5f0e5;
     border-color: #26384c;
   }
-  body .site-footer :is(p, span, a) { color: #c0c8d2; }
-  body .site-footer a:hover { color: #e2bd68; }
-  body :is(.hero h1 em, .section h2 em, .section-heading h2 em,
+  html[data-theme="dark"] body .site-footer :is(p, span, a) { color: #c0c8d2; }
+  html[data-theme="dark"] body .site-footer a:hover { color: #e2bd68; }
+  html[data-theme="dark"] body :is(.hero h1 em, .section h2 em, .section-heading h2 em,
     .about-copy h2 em, .community-copy h2 em, .contact-section h2 em,
     .about-page-copy h2 em, .founder-panel h2 em) { color: #e2bd68; }
-  body :is(.book-poster, .shelf-cover, .placeholder-art, .home-library-symbol,
+  html[data-theme="dark"] body :is(.book-poster, .shelf-cover, .placeholder-art, .home-library-symbol,
     .library-shelf, .about-monogram) {
     color: #f0d38b;
   }
-  body .menu-toggle { color: #e2bd68; }
-  body a:focus-visible, body button:focus-visible,
-  body input:focus-visible, body textarea:focus-visible, body select:focus-visible {
+  html[data-theme="dark"] body .menu-toggle { color: #e2bd68; }
+  html[data-theme="dark"] body a:focus-visible, body button:focus-visible,
+  html[data-theme="dark"] body input:focus-visible, body textarea:focus-visible, body select:focus-visible {
     outline: 2px solid #e2bd68;
     outline-offset: 3px;
   }
-  body .announcement, body .ticker {
+  html[data-theme="dark"] body .announcement, body .ticker {
     background: #050f1c;
     color: #f0d38b;
   }
-}
+
