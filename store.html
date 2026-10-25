@@ -80,6 +80,8 @@
     });
     const grid = document.getElementById('storeGrid');
     const statusLine = document.getElementById('storeStatus');
+    const paymentReturned = new URLSearchParams(location.search).get('payment') === 'return';
+    const paymentReturnMessage = 'Paystack has returned you to Voiceoftaade. Your payment is being verified by the server; ebook access is granted only after confirmation.';
     const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
     const money = (amountMinor, currency) => new Intl.NumberFormat('en-NG', {style:'currency',currency,maximumFractionDigits:2}).format(Number(amountMinor)/100);
     function productCard(product) {
@@ -143,24 +145,20 @@
         const products = await response.json();
         if (!Array.isArray(products) || products.length === 0) {
           grid.innerHTML = '<div class="store-empty"><h3>New titles are on the way</h3><p>The first product listing will appear here once its price and publication details are confirmed.</p><p><a class="text-link" href="reader.html">Read the current featured book online →</a></p></div>';
-          statusLine.textContent = 'Catalogue connection is working. Secure checkout is still being configured.';
+          statusLine.textContent = paymentReturned ? paymentReturnMessage : 'Catalogue connection is working. Secure checkout is still being configured.';
           return;
         }
         grid.innerHTML = products.map(productCard).join('');
         grid.querySelectorAll('[data-product-id]').forEach(button => {
           button.addEventListener('click', () => beginCheckout(button.dataset.productId, button));
         });
-        statusLine.textContent = STORE_CHECKOUT_UI_ENABLED
+        statusLine.textContent = paymentReturned ? paymentReturnMessage : (STORE_CHECKOUT_UI_ENABLED
           ? 'Catalogue loaded. Secure checkout is available for testing; access is granted only after server-side payment verification.'
-          : 'Catalogue loaded. Checkout remains disabled while test payments and protected ebook delivery are verified.';
+          : 'Catalogue loaded. Checkout remains disabled while test payments and protected ebook delivery are verified.');
       } catch (error) {
         grid.innerHTML = '<div class="store-empty"><h3>Our catalogue is temporarily unavailable</h3><p>Please try again later or visit the online reading room while we finish the store setup.</p><p><a class="text-link" href="reader.html">Open the reading room →</a></p></div>';
-        statusLine.textContent = 'The store catalogue could not be loaded. No payment has been attempted.';
+        statusLine.textContent = paymentReturned ? paymentReturnMessage : 'The store catalogue could not be loaded. No payment has been attempted.';
       }
-    }
-    const query = new URLSearchParams(location.search);
-    if (query.get('payment') === 'return') {
-      statusLine.textContent = 'Paystack has returned you to Voiceoftaade. Your payment is being verified by the server; ebook access is granted only after confirmation.';
     }
     loadCatalog();
   </script>
