@@ -853,3 +853,64 @@ html[data-theme="dark"] body :is(button,input,textarea,select,a):focus-visible {
   outline: 2px solid #f0d38b;
   outline-offset: 3px;
 }
+
+
+/* Light mode is the only supported site appearance. Override legacy dark-mode rules. */
+:root, :root[data-theme="dark"], :root[data-theme="light"] {
+  color-scheme: light !important;
+  --ink: #07172b;
+  --muted: #5e6877;
+  --paper: #f5f6f8;
+  --white: #ffffff;
+  --gold: #d9ad4f;
+  --gold-dark: #9b7424;
+  --line: #d7dce3;
+  --olive: #173453;
+}
+html, html[data-theme="dark"], html[data-theme="light"],
+html[data-theme="dark"] body, html[data-theme="light"] body {
+  color-scheme: light !important;
+  background: #f5f6f8 !important;
+  color: #07172b !important;
+}
+html[data-theme="dark"] body :is(.hero,.section,.journal-section,.about-section,.community-section,
+  .contact-section,.quote-section,.saved-section,.favourites-section,.reader-section,.profile-section,
+  .account-section,.bookshelf-wrap,.books-page-hero,.inner-hero,.home-library-section,
+  .social-hub-section,.community-feed-section) {
+  background-color: initial;
+  background-image: initial;
+  color: #07172b;
+}
+html[data-theme="dark"] body :is(.book-feature,.article-card,.about-principles article,.home-library-panel,
+  .contact-card,.community-card,.journal-card,.profile-card,.account-card,.account-panel,.form-card,
+  .feed-card,.shelf-card,.saved-card,.contact-form-panel,.contact-side-panel,.social-link,
+  .wisdom-art-card,.shelf-footer-note,.store-card) {
+  background: #ffffff !important;
+  color: #07172b !important;
+  border-color: #d7dce3 !important;
+  box-shadow: 0 8px 28px rgba(7,23,43,.06);
+}
+html[data-theme="dark"] body :is(h1,h2,h3,h4,h5,h6,strong,label,legend,p,li,small,figcaption,
+  .hero-intro,.section-heading>p,.book-details>p,.book-points,.fine-print,.article-meta,
+  .feed-card-meta,.shelf-card-content p,.about-page-copy p,.about-principles p,.founder-panel p,
+  .community-copy p,.contact-section p,.inner-hero>p,.store-card p,.store-heading p,.form-intro,
+  .contact-response-note,.saved-empty,.daily-wisdom-date,.wisdom-caption,.shelf-note,.shelf-footer-note p) {
+  color: inherit;
+}
+html[data-theme="dark"] body :is(input,textarea,select,.search-box,.filter,.account-form input,
+  .account-form textarea,.contact-form input,.contact-form textarea) {
+  background: #ffffff !important;
+  color: #07172b !important;
+  border-color: #cbd3dc !important;
+}
+html[data-theme="dark"] body .site-footer {
+  background: #07172b !important;
+  color: #f5f0e5;
+}
+html[data-theme="dark"] body .site-footer :is(p,span,a) { color: #d8e0e9; }
+html[data-theme="dark"] body .donation-form {
+  background: #ffffff !important;
+  color: #07172b !important;
+  border-color: #d7dce3 !important;
+}
+html[data-theme="dark"] body .donation-form :is(label,legend,.donation-ack) { color: #344253 !important; }
