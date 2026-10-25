@@ -277,6 +277,7 @@
    const mobile=$("mobileJoinedCommunityNav");if(mobile){mobile.innerHTML=state.joined.map(room=>'<button type="button" class="'+(state.selected?.id===room.id?'active':'')+'" data-room="'+room.id+'"><span class="room-nav-icon">'+escape(room.name.slice(0,1).toUpperCase())+'</span><span class="room-nav-name">'+escape(room.name)+'</span></button>').join("");mobile.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.room)));}
   }
   async function openCommunity(id){
+   document.body.classList.remove("community-mobile-menu-open");const menu=$("mobileMenuToggle"),chatMenu=$("chatMenuToggle"),backdrop=$("mobileMenuBackdrop");menu?.setAttribute("aria-expanded","false");chatMenu?.setAttribute("aria-expanded","false");if(backdrop)backdrop.hidden=true;
    const community=state.communities.find(c=>c.id===id)||state.joined.find(c=>c.id===id);if(!community)return;
    state.selected=community;renderAccount();renderJoinedNav();showWorkspace("chat");const roomMark=$("workspaceChat")?.querySelector(".chat-room-mark");if(roomMark)roomMark.innerHTML=community.avatar_url?'<img src="'+escape(community.avatar_url)+'" alt="">':escape((community.name||"✦").trim().slice(0,1).toUpperCase());
    $("chatHeading").textContent=community.name;$("chatDescription").textContent=community.visibility==="private"?"Private reading room":"Community conversation";
