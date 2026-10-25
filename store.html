@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07172b">
+  <meta name="description" content="Discover ebooks and premium reading experiences from Voiceoftaade Publications.">
+  <title>Voiceoftaade Store | Books, Membership & Support</title>
+  <link rel="icon" href="assets/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .store-hero{background:radial-gradient(ellipse at 80% 20%,#263f5b 0,transparent 48%),#07172b;color:#f8f4eb;padding:clamp(52px,8vw,100px) max(6vw,22px);text-align:center}
+    .store-hero .eyebrow{color:#e6bf66}.store-hero h1{font:600 clamp(2.5rem,6vw,5rem)/1.08 var(--serif);letter-spacing:-.045em;max-width:900px;margin:0 auto 20px}.store-hero p{max-width:690px;margin:0 auto;color:#d8e0e9;font-size:1.05rem}
+    .store-wrap{width:min(1120px,90vw);margin:0 auto;padding:58px 0 80px}.store-heading{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:26px}.store-heading h2{font:600 clamp(1.8rem,3vw,2.8rem)/1.15 var(--serif);margin:0}.store-heading p{color:var(--muted);max-width:520px;margin:8px 0 0}.store-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:22px}.store-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:100%}.store-cover{aspect-ratio:4/3;background:linear-gradient(135deg,#e9edf2,#d7e0e9);display:grid;place-items:center;padding:24px;color:#07172b}.store-cover img{width:100%;height:100%;object-fit:contain}.store-cover .cover-placeholder{font:600 1.6rem/1.2 var(--serif);text-align:center;max-width:230px}.store-card-body{padding:22px;display:flex;flex-direction:column;gap:12px;flex:1}.store-card h3{font:600 1.45rem/1.2 var(--serif);margin:0}.store-card p{margin:0;color:var(--muted);font-size:.94rem}.store-price{font-size:1.15rem;font-weight:700;color:#07172b;margin-top:auto}.store-price small{display:block;color:var(--muted);font-size:.78rem;font-weight:400}.store-button{display:inline-flex;justify-content:center;align-items:center;min-height:46px;border:0;border-radius:6px;background:#07172b;color:#fff;padding:12px 18px;font-weight:700;opacity:.65;cursor:not-allowed}.store-empty{border:1px dashed #aeb8c4;border-radius:14px;padding:32px;text-align:center;color:var(--muted);grid-column:1/-1}.store-empty h3{font:600 1.5rem var(--serif);color:#07172b;margin:0 0 8px}.store-status{font-size:.85rem;color:var(--muted);margin-top:16px}.store-support{background:#edf1f5;border-radius:18px;padding:clamp(24px,5vw,48px);display:grid;grid-template-columns:1.3fr .7fr;gap:28px;align-items:center;margin-top:62px}.store-support h2{font:600 clamp(1.8rem,3vw,2.6rem)/1.15 var(--serif);margin:0 0 12px}.store-support p{color:var(--muted);margin:0}.store-support .support-actions{display:grid;gap:10px}.store-note{font-size:.86rem;color:var(--muted);margin-top:18px}.store-foot{background:#07172b;color:#d8e0e9;padding:28px max(5vw,22px);text-align:center;font-size:.85rem}.store-foot a{color:#e6bf66}
+    @media(max-width:700px){.store-heading{display:block}.store-support{grid-template-columns:1fr}.store-wrap{padding-top:38px}.store-hero p{font-size:.98rem}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav id="mainNav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="books.html">Books</a><a href="store.html" aria-current="page">Store</a><a href="journals.html">Journal</a><a href="about.html">About Us</a><a href="community.html">Community</a><a class="nav-cta" href="contact.html">Contact</a>
+      <a class="account-avatar-link" href="account.html" aria-label="Open your reader profile" title="Reader profile"><span class="account-avatar" aria-hidden="true">♙</span></a>
+    </nav>
+  </header>
+  <main>
+    <section class="store-hero">
+      <p class="eyebrow">VOICEOFTAADE PUBLICATIONS</p>
+      <h1>Words worth keeping.<br><em>Wisdom worth living.</em></h1>
+      <p>Explore books, discover deeper reading experiences, and support the next chapter of Voiceoftaade. The shop is being prepared for secure checkout.</p>
+    </section>
+    <section class="store-wrap" aria-labelledby="catalogTitle">
+      <div class="store-heading">
+        <div><p class="eyebrow">THE BOOKSHELF</p><h2 id="catalogTitle">The Voiceoftaade Store</h2><p>Published titles will appear here with clear pricing. Prices are stored separately for naira and US dollars when each currency is enabled.</p></div>
+      </div>
+      <div id="storeGrid" class="store-grid" aria-live="polite">
+        <div class="store-empty"><h3>Preparing the shelves</h3><p>We’re connecting the catalogue to the secure store. Please check back soon.</p></div>
+      </div>
+      <p id="storeStatus" class="store-status">Secure checkout is not enabled yet. No purchases can be made on this page at this time.</p>
+      <section class="store-support" aria-labelledby="supportTitle">
+        <div><p class="eyebrow">HELP THE WORK GROW</p><h2 id="supportTitle">Support independent writing.</h2><p>Your support helps Voiceoftaade create thoughtful books, useful resources, and new reading experiences. A secure donation option will be added after payment verification is ready.</p></div>
+        <div class="support-actions">
+          <button class="store-button" type="button" disabled>Donations opening soon</button>
+          <button class="store-button" type="button" disabled>Premium membership opening soon</button>
+        </div>
+      </section>
+      <p class="store-note">Payment details are handled by approved payment providers. Voiceoftaade will not collect or store your card number or security code on this website.</p>
+    </section>
+  </main>
+  <footer class="store-foot">© <span id="year"></span> Voiceoftaade Publications · <a href="books.html">Explore the bookshelf</a> · <a href="contact.html">Contact</a></footer>
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+    menuToggle.addEventListener('click', () => {
+      const open = mainNav.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+      menuToggle.textContent = open ? '×' : '☰';
+    });
+    mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      mainNav.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.textContent = '☰';
+    }));
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const SUPABASE_URL = 'https://qnnmbngxunmjerpeoxrr.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67';
+    const grid = document.getElementById('storeGrid');
+    const statusLine = document.getElementById('storeStatus');
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    const money = (amountMinor, currency) => new Intl.NumberFormat('en-NG', {style:'currency',currency,maximumFractionDigits:2}).format(Number(amountMinor)/100);
+    function productCard(product) {
+      const cover = typeof product.cover_image_url === 'string' && /^https:\/\//i.test(product.cover_image_url)
+        ? '<img src="' + escapeHtml(product.cover_image_url) + '" alt="Cover of ' + escapeHtml(product.title) + '" loading="lazy">'
+        : '<div class="cover-placeholder">' + escapeHtml(product.title) + '</div>';
+      const priceNgn = money(product.price_ngn_kobo, 'NGN');
+      const priceUsd = product.price_usd_cents == null ? '' : '<small>' + money(product.price_usd_cents, 'USD') + ' for USD checkout, when enabled</small>';
+      return '<article class="store-card"><div class="store-cover">' + cover + '</div><div class="store-card-body"><h3>' + escapeHtml(product.title) + '</h3>' +
+        (product.subtitle ? '<p><strong>' + escapeHtml(product.subtitle) + '</strong></p>' : '') +
+        '<p>' + escapeHtml(product.description || 'A Voiceoftaade publication.') + '</p>' +
+        '<div class="store-price">' + priceNgn + priceUsd + '</div><button class="store-button" type="button" disabled aria-disabled="true">Checkout opening soon</button></div></article>';
+    }
+    async function loadCatalog() {
+      try {
+        const response = await fetch(SUPABASE_URL + '/rest/v1/store_products?select=id,slug,title,subtitle,description,cover_image_url,price_ngn_kobo,price_usd_cents,status,published_at&status=eq.published&order=published_at.desc', {
+          headers: {'apikey': SUPABASE_PUBLISHABLE_KEY, 'Authorization': 'Bearer ' + SUPABASE_PUBLISHABLE_KEY}
+        });
+        if (!response.ok) throw new Error('catalog request failed');
+        const products = await response.json();
+        if (!Array.isArray(products) || products.length === 0) {
+          grid.innerHTML = '<div class="store-empty"><h3>New titles are on the way</h3><p>The first product listing will appear here once its price and publication details are confirmed.</p><p><a class="text-link" href="reader.html">Read the current featured book online →</a></p></div>';
+          statusLine.textContent = 'Catalogue connection is working. Secure checkout is still being configured.';
+          return;
+        }
+        grid.innerHTML = products.map(productCard).join('');
+        statusLine.textContent = 'Catalogue loaded. Checkout will be enabled after provider approval and end-to-end payment testing.';
+      } catch (error) {
+        grid.innerHTML = '<div class="store-empty"><h3>Our catalogue is temporarily unavailable</h3><p>Please try again later or visit the online reading room while we finish the store setup.</p><p><a class="text-link" href="reader.html">Open the reading room →</a></p></div>';
+        statusLine.textContent = 'The store catalogue could not be loaded. No payment has been attempted.';
+      }
+    }
+    loadCatalog();
+  </script>
+</body>
+</html>
