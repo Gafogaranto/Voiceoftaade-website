@@ -202,6 +202,22 @@
     $("authPanel").style.display = "block";
   }
 
+  $("googleSignIn").addEventListener("click", async () => {
+    const button = $("googleSignIn");
+    button.disabled = true;
+    status("authStatus", "Connecting to Google…");
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: ACCOUNT_URL }
+      });
+      if (error) throw error;
+    } catch (error) {
+      status("authStatus", error.message || "Google sign-in could not be started. Please try again.", "error");
+      button.disabled = false;
+    }
+  });
+
   $("authForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const email = $("email").value.trim();
