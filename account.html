@@ -44,6 +44,13 @@
     .text-link{font-size:.82rem;color:#8b692f;text-decoration:underline;text-underline-offset:3px}
     .account-note{font-size:.76rem;line-height:1.7;color:var(--vt-muted);margin:2px 0 0}
     .account-status{min-height:1.4em;margin:14px 0 0;font-size:.84rem;line-height:1.55;overflow-wrap:anywhere}.account-status.error{color:#a22b2b}.account-status.success{color:#244b68}
+    .social-auth-divider{display:flex;align-items:center;gap:12px;margin:18px 0 13px;color:#8a929e;font-size:.68rem;font-weight:800;letter-spacing:.12em}
+    .social-auth-divider:before,.social-auth-divider:after{content:"";height:1px;flex:1;background:#e5e0d6}
+    .social-auth-button{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:49px;padding:10px 14px;border:1px solid #d9dfe7;border-radius:8px;background:#fff;color:#26384b;font:700 .9rem/1.2 inherit;cursor:pointer;transition:background .2s,border-color .2s}
+    .social-auth-button:hover{background:#f7f9fb;border-color:#b9c5d2}
+    .social-auth-button:focus-visible{outline:3px solid rgba(181,138,67,.3);outline-offset:2px}
+    .social-auth-button:disabled{opacity:.65;cursor:wait}
+    .social-auth-button svg{width:20px;height:20px;flex:0 0 20px}
     .account-dashboard{display:none}.account-dashboard h2{font:500 clamp(2rem,4vw,2.8rem)/1.1 var(--serif);color:var(--vt-ink);margin:0 0 12px;letter-spacing:-.03em}
     .account-email{display:inline-block;padding:8px 12px;border-radius:100px;background:#f0ede4;color:#657167;font-size:.78rem;overflow-wrap:anywhere;margin:0 0 24px}
     .account-dashboard .account-form{padding:20px;background:#f0f3f7;border:1px solid #dfe5ec;border-radius:11px}
@@ -331,6 +338,11 @@
               <button class="button button-dark" id="submitAuth" type="submit">Sign in <span>→</span></button>
               <p class="account-note" id="formNote">Your account is for reader features. Public articles remain available without signing in.</p>
             </form>
+            <div class="social-auth-divider" aria-hidden="true"><span>OR</span></div>
+            <button class="social-auth-button" id="googleSignIn" type="button">
+              <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.74 7.18l7.68 5.96c4.48-4.14 7.1-10.24 7.1-17.61Z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.52 2.56 10.78l7.97-6.19Z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.84l-7.68-5.96c-2.13 1.43-4.85 2.28-8.22 2.28-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg>
+              <span>Continue with Google</span>
+            </button>
             <p class="account-status" id="authStatus" role="status" aria-live="polite"></p>
           </div>
           <div class="account-dashboard" id="dashboard">
