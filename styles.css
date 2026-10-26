@@ -1038,3 +1038,49 @@ body table {
     padding-right: 16px;
   }
 }
+
+
+/* Tablet, laptop, and wide-desktop layout refinements. */
+@media (min-width: 761px) and (max-width: 1024px) {
+  :root { --page-gutter: clamp(20px, 4vw, 40px); }
+  .hero, .about-section, .contact-section, .book-feature,
+  .community-feed-section, .social-hub-section, .contact-page-grid {
+    gap: clamp(24px, 4vw, 44px);
+  }
+  .hero, .section, .section-inner, .about-section, .contact-section,
+  .community-section, .social-hub-section {
+    padding-left: var(--page-gutter);
+    padding-right: var(--page-gutter);
+  }
+  .about-page-grid {
+    padding-left: clamp(24px, 5vw, 52px);
+    padding-right: clamp(24px, 5vw, 52px);
+    gap: clamp(28px, 5vw, 56px);
+  }
+  .about-principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bookshelf-display { gap: 18px; }
+  .shelf-card-content { padding: 22px; }
+  .site-header { padding-left: clamp(18px, 3vw, 32px); padding-right: clamp(18px, 3vw, 32px); }
+  .site-header nav { gap: clamp(12px, 1.8vw, 22px); }
+  .site-header nav a { white-space: nowrap; }
+  .footer-bottom { flex-wrap: wrap; gap: 12px 22px; }
+}
+@media (min-width: 1025px) {
+  .hero, .section-inner, .contact-page-grid, .community-feed-section,
+  .social-hub-section {
+    min-width: 0;
+  }
+  .site-header nav { min-width: 0; }
+  .site-header nav a { white-space: nowrap; }
+  .article-grid, .bookshelf-display {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1440px) {
+  .hero, .section-inner, .contact-page-grid, .community-feed-section,
+  .social-hub-section, .bookshelf-display, .bookshelf-intro {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
