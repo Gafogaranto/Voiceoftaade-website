@@ -914,3 +914,127 @@ html[data-theme="dark"] body .donation-form {
   border-color: #d7dce3 !important;
 }
 html[data-theme="dark"] body .donation-form :is(label,legend,.donation-ack) { color: #344253 !important; }
+
+
+/* Mobile compatibility hardening: iOS Safari, Android Chrome, and narrow viewports. */
+html {
+  width: 100%;
+  max-width: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+body img, body video, body iframe, body canvas, body svg {
+  max-width: 100%;
+}
+body img, body video {
+  height: auto;
+}
+body main, body section, body article, body aside, body header, body footer,
+body nav, body form, body fieldset, body figure {
+  min-width: 0;
+}
+body input, body select, body textarea, body button {
+  max-width: 100%;
+}
+body input, body select, body textarea {
+  font-size: max(16px, 1em);
+}
+body table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 760px) {
+  .hero,
+  .about-section,
+  .contact-section,
+  .book-feature,
+  .home-library-panel,
+  .about-page-grid,
+  .contact-page-grid,
+  .community-feed-section,
+  .social-hub-section,
+  .donation-panel,
+  .store-layout,
+  .store-feature,
+  .reader-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .hero {
+    gap: 28px;
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+  }
+  .hero-copy, .hero-art, .book-details, .about-copy,
+  .community-copy, .contact-section > *, .book-feature > *,
+  .donation-panel > *, .store-layout > *, .store-feature > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .hero-art {
+    margin: 0 auto;
+    transform: none;
+    width: 100%;
+  }
+  .hero-art .orb { max-width: 86vw; max-height: 86vw; }
+  .hero-art .book-cover { max-width: 68vw; }
+  .section, .section-inner, .about-section, .contact-section,
+  .community-section, .founder-panel, .about-page-grid,
+  .inner-hero, .bookshelf-wrap {
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+  }
+  .section-heading, .journal-tools, .bookshelf-intro {
+    min-width: 0;
+  }
+  .article-grid, .bookshelf-display, .about-principles {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .article-card, .shelf-card, .book-feature, .home-library-panel,
+  .donation-form, .store-card, .profile-card, .account-panel {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .hero-actions, .book-actions, .community-actions {
+    gap: 12px;
+  }
+  .button, .hero-actions .button, .book-actions .button {
+    min-height: 44px;
+    max-width: 100%;
+    white-space: normal;
+  }
+  .site-header nav {
+    max-width: calc(100vw - 28px);
+    max-height: calc(100dvh - 84px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .footer-bottom {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 420px) {
+  .hero h1, .inner-hero h1 {
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+  .section-heading h2, .about-page-copy h2, .bookshelf-intro h2,
+  .about-page-cta h2, .contact-section h2, .community-copy h2 {
+    overflow-wrap: break-word;
+  }
+  .donation-details-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .donation-form, .store-card-content, .shelf-card-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
