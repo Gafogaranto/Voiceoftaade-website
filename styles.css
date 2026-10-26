@@ -1084,3 +1084,33 @@ body table {
     margin-right: auto;
   }
 }
+
+
+/* Purchased ebook library actions: first-party reading plus direct file download. */
+.purchased-book-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+.purchased-book-actions .continue-reading-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  width: auto;
+  max-width: 100%;
+  padding: 12px 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.purchased-book-actions .download-ebook-button {
+  border: 1px solid #07172b;
+}
+@media (max-width: 520px) {
+  .purchased-book-actions { align-items: stretch; flex-direction: column; }
+  .purchased-book-actions .continue-reading-button { width: 100%; }
+}
