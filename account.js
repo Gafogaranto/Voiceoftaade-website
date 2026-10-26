@@ -380,10 +380,21 @@
       heading.textContent = product.title;
       const description = document.createElement("p");
       description.textContent = product.description || "A Voiceoftaade publication.";
+      const actions = document.createElement("div");
+      actions.className = "purchased-book-actions";
+      // The current published ebook has a dedicated first-party reading room.
+      if (product.slug === "series-of-life-hacks-to-live-by") {
+        const readOnline = document.createElement("a");
+        readOnline.className = "continue-reading-button";
+        readOnline.href = "reader.html";
+        readOnline.textContent = "Read on Voiceoftaade →";
+        readOnline.setAttribute("aria-label", "Read Series of Life Hacks to Live By in the Voiceoftaade reading room");
+        actions.append(readOnline);
+      }
       const download = document.createElement("button");
       download.type = "button";
-      download.className = "continue-reading-button";
-      download.textContent = "Download ebook →";
+      download.className = "continue-reading-button download-ebook-button";
+      download.textContent = "Download ebook ↓";
       download.addEventListener("click", async () => {
         download.disabled = true;
         download.textContent = "Checking access…";
@@ -415,7 +426,8 @@
           download.textContent = "Try download again →";
         }
       });
-      card.append(heading, description, download);
+      actions.append(download);
+      card.append(heading, description, actions);
       target.append(card);
     });
     status("purchaseStatus", "");
