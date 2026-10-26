@@ -1114,3 +1114,11 @@ body table {
   .purchased-book-actions { align-items: stretch; flex-direction: column; }
   .purchased-book-actions .continue-reading-button { width: 100%; }
 }
+
+/* Consistent social platform icons */
+.platform-icon{display:block;width:19px;height:19px;object-fit:contain;flex:0 0 auto;filter:brightness(0) saturate(100%) invert(10%) sepia(24%) saturate(1890%) hue-rotate(176deg) brightness(93%) contrast(98%)}
+.contact-icon .platform-icon{width:20px;height:20px}
+.action-symbol .platform-icon{width:18px;height:18px}
+.community-actions .button .platform-icon{width:17px;height:17px}
+.community-actions .social-link{display:inline-flex;align-items:center;gap:8px}
+.contact-icon,.action-symbol{flex-shrink:0}
