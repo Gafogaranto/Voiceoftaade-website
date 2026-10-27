@@ -452,5 +452,21 @@
     });
   }
 
+  const refreshLibraryButton = $("refreshPurchasedBooks");
+  refreshLibraryButton?.addEventListener("click", async () => {
+    if (!currentUser) {
+      status("purchaseStatus", "Please sign in to refresh your purchased-book library.", "error");
+      return;
+    }
+    refreshLibraryButton.disabled = true;
+    refreshLibraryButton.textContent = "Refreshing…";
+    try {
+      await renderPurchasedBooks();
+    } finally {
+      refreshLibraryButton.disabled = false;
+      refreshLibraryButton.textContent = "↻ Refresh library";
+    }
+  });
+
   setMode("signin");
 })();
