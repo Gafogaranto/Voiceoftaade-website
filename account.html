@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#07172b">
   <meta name="description" content="Create your Voiceoftaade reader account and manage your profile.">
   <title>Reader Account | Voiceoftaade Publications</title>
-  <link rel="stylesheet" href="styles.css?v=20261026-mobile1">
+  <link rel="stylesheet" href="styles.css?v=20261027-library2">
   <style>
     :root{--vt-forest:#12314e;--vt-deep:#07172b;--vt-gold:#d7b36a;--vt-cream:#f5f0e5;--vt-ink:#172334;--vt-muted:#687486}
     *{box-sizing:border-box}body{background:var(--vt-cream);min-height:100vh;display:flex;flex-direction:column}.account-page{flex:1 0 auto;width:100%}.site-footer{margin-top:auto;flex-shrink:0;width:100%;position:relative;clear:both}
@@ -399,7 +399,8 @@
 <section class="profile-card" id="purchasedBooksCard">
   <p class="eyebrow">YOUR LIBRARY</p>
   <h3>Purchased ebooks</h3>
-  <p>Books linked to verified purchases appear here. Temporary download links are created only after your account's access is checked.</p>
+  <p>Books linked to verified purchases appear here. You can open supported titles in the online reading room or download an authorized PDF for your preferred reading app.</p>
+  <div class="library-toolbar"><span class="library-help">Your library is linked to the account you used for the purchase.</span><button type="button" class="library-refresh-button" id="refreshPurchasedBooks">↻ Refresh library</button></div>
   <div id="purchasedBooksList" aria-live="polite"><p class="saved-empty">Sign in to view your purchased ebooks.</p></div>
   <p class="account-status" id="purchaseStatus" role="status" aria-live="polite"></p>
 </section>
@@ -479,7 +480,7 @@
     tabs.forEach(item => item.button.addEventListener("click", () => showCollection(item)));
   })();
   </script>
-  <script src="account.js?v=20261026-libraryread1"></script>
+  <script src="account.js?v=20261027-library2"></script>
   <script src="profile-activity.js?v=20261024-activity2"></script>
 </body>
 </html>
