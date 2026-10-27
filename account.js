@@ -394,7 +394,7 @@
       const download = document.createElement("button");
       download.type = "button";
       download.className = "continue-reading-button download-ebook-button";
-      download.textContent = "Download ebook ↓";
+      download.textContent = "Download PDF ↓";
       download.addEventListener("click", async () => {
         download.disabled = true;
         download.textContent = "Checking access…";
