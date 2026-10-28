@@ -28,4 +28,5 @@ const last=saved();const found=sections.findIndex(s=>s.id===last);if(found>=0){c
 })();
 </script><script>
 (()=>{const button=document.getElementById("readerMenuToggle"),nav=document.getElementById("readerMainNav");if(!button||!nav)return;button.addEventListener("click",()=>{const open=nav.classList.toggle("nav-open");button.setAttribute("aria-expanded",String(open));button.setAttribute("aria-label",open?"Close navigation":"Open navigation");button.textContent=open?"×":"☰"});nav.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{nav.classList.remove("nav-open");button.setAttribute("aria-expanded","false");button.setAttribute("aria-label","Open navigation");button.textContent="☰"}));})();
-</script></body></html>
+</script>  <script src="premium-ux.js" defer></script>
+</body></html>
