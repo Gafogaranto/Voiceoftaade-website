@@ -1371,3 +1371,38 @@ input::placeholder,textarea::placeholder{color:#596761;opacity:1}
   .site-header{background:rgba(255,250,244,.99)}
   .site-header nav{background:#fffaf4;border:1px solid #d9e3dc;box-shadow:0 16px 30px rgba(37,49,47,.14)}
 }
+
+
+/* Signature intro: animate the authentic logo image without recolouring it */
+.brand-intro{
+  background:
+    radial-gradient(ellipse at 18% 22%,rgba(255,104,89,.30),transparent 34%),
+    radial-gradient(ellipse at 82% 72%,rgba(76,219,190,.24),transparent 36%),
+    radial-gradient(ellipse at 55% 10%,rgba(151,110,255,.20),transparent 42%),
+    #17172f;
+}
+.intro-logo-wrap{
+  width:min(84vw,540px);
+  padding:clamp(14px,3vw,28px);
+  border-radius:32px;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 28px 90px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.45);
+  opacity:0;
+  transform:translateY(18px) scale(.96);
+  animation:authentic-logo-arrive 1.05s cubic-bezier(.2,.75,.25,1) .2s forwards;
+}
+.intro-logo{
+  display:block;width:100%;height:auto;max-height:48vh;object-fit:contain;
+  clip-path:none!important;animation:none!important;
+}
+.intro-sheen{display:none!important}
+.intro-tagline{color:#ffffff;letter-spacing:.24em}
+.intro-stars i{background:#6be3c1;box-shadow:0 0 14px 3px rgba(107,227,193,.35)}
+@keyframes authentic-logo-arrive{
+  0%{opacity:0;transform:translateY(18px) scale(.96)}
+  70%{opacity:1;transform:translateY(-3px) scale(1.01)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+@media(prefers-reduced-motion:reduce){
+  .intro-logo-wrap{animation:none!important;opacity:1;transform:none}
+}
