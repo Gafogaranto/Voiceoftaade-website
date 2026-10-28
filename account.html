@@ -293,6 +293,51 @@
 @media(max-width:720px){.account-dashboard>h2{font-size:2.15rem}.account-dashboard .profile-collections{padding:14px}.account-dashboard .profile-tabs{scroll-snap-type:x proximity}.account-dashboard .profile-tabs a,.account-dashboard .profile-tabs-bottom .profile-collection-tab{scroll-snap-align:start}.account-dashboard .profile-card{padding:17px}}
 </style>
   <script src="theme.js"></script>
+  <style id="account-vibrant-refresh">
+    /* Brighter, high-contrast login experience; the supplied logo image is never filtered or tinted. */
+    .account-page{
+      background:
+        radial-gradient(ellipse at 5% 8%,rgba(255,114,94,.22),transparent 35%),
+        radial-gradient(ellipse at 95% 90%,rgba(82,213,177,.25),transparent 38%),
+        linear-gradient(135deg,#fff8f1 0%,#f3f0ff 48%,#e9fbf4 100%)!important;
+    }
+    .account-story{
+      background:
+        radial-gradient(circle at 88% 12%,rgba(255,190,109,.22),transparent 32%),
+        linear-gradient(145deg,#30245f 0%,#315f52 58%,#1e293b 100%)!important;
+      color:#ffffff!important;
+    }
+    .account-story h1,.account-story .story-copy,.account-story .story-quote p,
+    .account-story .story-quote span,.account-story .story-kicker{color:#ffffff!important}
+    .account-story h1 em{color:#ffd166!important}
+    .story-mark{
+      background:linear-gradient(135deg,#ff725e,#ff9a63)!important;
+      color:#ffffff!important;border-radius:50%!important;
+      box-shadow:0 10px 30px rgba(255,114,94,.28);
+    }
+    .account-panel{background:#ffffff!important;color:#25312f!important}
+    .auth-heading h2{color:#25312f!important}
+    .auth-heading p:not(.eyebrow){color:#515e5a!important}
+    .account-tabs button.active{background:#315f52!important;color:#ffffff!important}
+    .account-form label,.account-form label span{color:#25312f!important}
+    .account-form input,.account-form select,.account-form textarea{
+      color:#25312f!important;background:#ffffff!important;border-color:#a9bbb1!important;
+    }
+    .account-form input::placeholder{color:#596761!important;opacity:1}
+    .account-form button[type="submit"],#submitAuth{
+      background:#b83f35!important;color:#ffffff!important;border-color:#b83f35!important;
+    }
+    .account-form button[type="submit"]:hover,#submitAuth:hover{background:#922f29!important}
+    .site-header .brand-logo{
+      animation:account-logo-arrive .8s cubic-bezier(.2,.75,.25,1) .12s both;
+      filter:none!important;
+    }
+    @keyframes account-logo-arrive{
+      from{opacity:0;transform:translateY(7px) scale(.96)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+    @media(prefers-reduced-motion:reduce){.site-header .brand-logo{animation:none!important;opacity:1;transform:none}}
+  </style>
 </head>
 <body>
   <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
