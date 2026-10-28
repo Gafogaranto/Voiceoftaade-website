@@ -78,3 +78,13 @@ body.modal-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.free-board{scroll-behavior:auto}}
 
 body.reading-modal-open{overflow:hidden}
+
+/* Larger, easier-to-read book spines while preserving swipe-only horizontal browsing. */
+.free-board .library-book{flex:0 0 clamp(76px,7.5vw,104px);width:clamp(76px,7.5vw,104px);height:clamp(230px,27vw,292px);padding:18px 7px 15px;}
+.premium-board .library-book{flex:0 0 clamp(112px,12vw,154px);width:clamp(112px,12vw,154px);height:clamp(250px,29vw,320px);padding:20px 8px 16px;}
+.book-spine-title{font-size:clamp(.82rem,1.05vw,1rem);line-height:1.18;max-height:74%;}
+.book-spine-author{font-size:.58rem;line-height:1.2;}
+.book-spine-publisher{font-size:.57rem;letter-spacing:.1em;}
+.book-spine-mark{font-size:1rem;}
+@media(max-width:760px){.free-board .library-book{flex-basis:clamp(68px,17vw,82px);width:clamp(68px,17vw,82px);height:218px;padding:16px 6px 13px}.premium-board .library-book{flex-basis:clamp(100px,28vw,126px);width:clamp(100px,28vw,126px);height:242px}.book-spine-title{font-size:.82rem}.book-spine-author{font-size:.55rem}}
+@media(max-width:390px){.free-board .library-book{flex-basis:68px;width:68px;height:202px}.premium-board .library-book{flex-basis:98px;width:98px;height:224px}}
