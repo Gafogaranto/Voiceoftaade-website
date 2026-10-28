@@ -119,3 +119,13 @@ body.reading-modal-open{overflow:hidden}
 .library-book.book-opening{transform:perspective(700px) rotateY(-62deg) scale(1.055);filter:brightness(1.14);box-shadow:15px 10px 22px #0007;transition:transform .42s cubic-bezier(.2,.75,.25,1),filter .32s ease,box-shadow .32s ease;}
 .library-book.book-opening::after{content:"";position:absolute;top:4px;bottom:4px;right:-7px;width:7px;border-radius:0 3px 3px 0;background:repeating-linear-gradient(to bottom,#fffdf5 0 3px,#ded4c0 3px 4px);box-shadow:2px 0 3px #0003;transform:translateZ(-2px);pointer-events:none;}
 @media(prefers-reduced-motion:reduce){.library-book.book-opening{transition:none!important;transform:none!important;}}
+
+
+/* Refinement: narrower premium spines and a more visible cover-opening motion. */
+.premium-board .library-book{flex-basis:clamp(86px,9vw,120px);width:clamp(86px,9vw,120px);}
+@media(max-width:760px){.premium-board .library-book{flex-basis:clamp(78px,22vw,98px);width:clamp(78px,22vw,98px);}}
+@media(max-width:390px){.premium-board .library-book{flex-basis:76px;width:76px;}}
+.library-book{transform-origin:left center;backface-visibility:visible;}
+.library-book.book-opening{transform:perspective(700px) rotateY(-62deg) scale(1.055);filter:brightness(1.14);box-shadow:15px 10px 22px #0007;transition:transform .42s cubic-bezier(.2,.75,.25,1),filter .32s ease,box-shadow .32s ease;}
+.library-book.book-opening::after{content:"";position:absolute;top:4px;bottom:4px;right:-7px;width:7px;border-radius:0 3px 3px 0;background:repeating-linear-gradient(to bottom,#fffdf5 0 3px,#ded4c0 3px 4px);box-shadow:2px 0 3px #0003;transform:translateZ(-2px);pointer-events:none;}
+@media(prefers-reduced-motion:reduce){.library-book.book-opening{transition:none!important;transform:none!important;}}
