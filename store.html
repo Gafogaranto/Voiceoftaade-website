@@ -143,7 +143,9 @@
       return '<article class="store-card" data-product-slug="' + escapeHtml(product.slug) + '"><div class="store-cover">' + cover + '</div><div class="store-card-body"><h3>' + escapeHtml(product.title) + '</h3>' +
         (product.subtitle ? '<p><strong>' + escapeHtml(product.subtitle) + '</strong></p>' : '') +
         '<p>' + escapeHtml(product.description || 'A Voiceoftaade publication.') + '</p>' +
-        '<div class="store-price">' + priceNgn + priceUsd + '</div><button class="store-button" type="button" data-product-id="' + escapeHtml(product.id) + '"' + (STORE_CHECKOUT_UI_ENABLED ? '' : ' disabled aria-disabled="true"') + '>' + (STORE_CHECKOUT_UI_ENABLED ? 'Continue to secure checkout' : 'Checkout opening soon') + '</button></div></article>';
+        '<div class="store-price">' + priceNgn + priceUsd + '</div>' +
+        (product.slug === 'life-as-a-case-study' ? '<a class="store-button" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin:0 0 10px" href="life-a-case-study.html">Open Reading Room preview</a>' : '') +
+        '<button class="store-button" type="button" data-product-id="' + escapeHtml(product.id) + '"' + (STORE_CHECKOUT_UI_ENABLED ? '' : ' disabled aria-disabled="true"') + '>' + (STORE_CHECKOUT_UI_ENABLED ? 'Continue to secure checkout' : 'Checkout opening soon') + '</button></div></article>';
     }
     async function beginCheckout(productId, button) {
       if (!STORE_CHECKOUT_UI_ENABLED) return;
