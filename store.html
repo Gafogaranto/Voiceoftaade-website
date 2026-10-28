@@ -66,7 +66,7 @@
       <div id="storeGrid" class="store-grid" aria-live="polite">
         <div class="store-empty"><h3>Preparing the shelves</h3><p>We’re connecting the catalogue to the secure store. Please check back soon.</p></div>
       </div>
-      <p id="storeStatus" class="store-status">Secure checkout is not enabled yet. No purchases can be made on this page at this time.</p>
+      <p id="storeStatus" class="store-status">Voiceoftaade Store catalogue is live; checkout remains closed until payment verification and protected reading access are tested.</p>
       <section class="store-support donation-panel" aria-labelledby="supportTitle">
         <div class="donation-copy"><p class="eyebrow">HELP THE WORK GROW</p><h2 id="supportTitle">Fuel the next chapter.</h2><p>Your one-time contribution supports thoughtful books, useful resources, and new reading experiences from Voiceoftaade. Every contribution is optional and appreciated.</p><p class="donation-safe-note">Book purchases and donations are recorded separately, even though both use Paystack.</p></div>
         <details class="donation-details"><summary>Make a one-time donation <span aria-hidden="true">＋</span></summary>
@@ -104,7 +104,7 @@
     const SUPABASE_URL = 'https://qnnmbngxunmjerpeoxrr.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67';
     // Keep false until test checkout, webhook, and protected ebook delivery pass end-to-end checks.
-    const STORE_CHECKOUT_UI_ENABLED = false;
+    const STORE_CHECKOUT_UI_ENABLED = false; // Keep disabled until the live payment webhook and protected ebook delivery are verified.
     const authStorage = {
       getItem(key) { try { return localStorage.getItem(key) ?? sessionStorage.getItem(key); } catch (_) { return null; } },
       setItem(key, value) { try { const sessionOnly = sessionStorage.getItem(key) !== null && localStorage.getItem(key) === null; (sessionOnly ? sessionStorage : localStorage).setItem(key, value); } catch (_) {} },
@@ -119,29 +119,28 @@
     const paymentReturnMessage = 'Paystack has returned you to Voiceoftaade. Your payment is being verified by the server; ebook access is granted only after confirmation.';
     const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
     const money = (amountMinor, currency) => new Intl.NumberFormat('en-NG', {style:'currency',currency,maximumFractionDigits:2}).format(Number(amountMinor)/100);
-    // Keep displayed launch pricing aligned with the server-side seven-day launch rule.
-    // The server remains authoritative for the actual amount charged.
-    const STORE_LAUNCH_AT_MS = Date.parse('2026-10-25T17:30:09.550774Z');
     function displayNgnPrice(product) {
-      const slug = String(product.slug || '').trim().toLowerCase();
-      const title = String(product.title || '').trim().toLowerCase();
-      const launchEbook = title === 'series of life hacks to live by' ||
-        slug === 'series-of-life-hacks-to-live-by' || slug === 'series-of-life-hacks-to-live-by-full-pack';
-      if (!launchEbook) return money(product.price_ngn_kobo, 'NGN');
-      const introEndsAt = STORE_LAUNCH_AT_MS + 7 * 24 * 60 * 60 * 1000;
-      if (Date.now() < introEndsAt) {
-        return money(50000, 'NGN') + '<small>Introductory price · regular price ' + money(250000, 'NGN') + '</small>';
+      const regular = Number(product.regular_price_ngn_kobo ?? product.price_ngn_kobo);
+      const early = Number(product.early_bird_price_ngn_kobo);
+      const startsAt = Date.parse(product.early_bird_starts_at || '');
+      const duration = Math.max(1, Number(product.early_bird_duration_days || 21));
+      const earlyActive = product.early_bird_enabled === true && Number.isFinite(startsAt) &&
+        Date.now() >= startsAt && Date.now() < startsAt + duration * 24 * 60 * 60 * 1000 &&
+        Number.isFinite(early) && early > 0 && regular > 0;
+      if (earlyActive) {
+        const discount = Math.round((1 - early / regular) * 100);
+        return money(early, 'NGN') + '<small><del>Original price ' + money(regular, 'NGN') + '</del> · ' + discount + '% off early-bird offer</small>';
       }
-      return money(250000, 'NGN');
+      return money(regular, 'NGN');
     }
     function productCard(product) {
-      const fallbackCoverSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 560"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#234965"/><stop offset="1" stop-color="#25312f"/></linearGradient><radialGradient id="glow"><stop offset="0" stop-color="#e6bf66" stop-opacity=".26"/><stop offset="1" stop-color="#e6bf66" stop-opacity="0"/></radialGradient></defs><rect width="400" height="560" fill="url(#bg)"/><circle cx="315" cy="75" r="170" fill="url(#glow)"/><rect x="15" y="15" width="370" height="530" rx="2" fill="none" stroke="#d6b35f" stroke-width="2"/><text x="200" y="70" fill="#e6bf66" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2" text-anchor="middle">VOICEOFTAADE</text><text x="200" y="100" fill="#d9e1eb" font-family="Arial,sans-serif" font-size="10" letter-spacing="3" text-anchor="middle">PUBLICATIONS</text><path d="M200 150 L218 181 L253 186 L228 211 L234 246 L200 229 L166 246 L172 211 L147 186 L182 181 Z" fill="none" stroke="#e6bf66" stroke-width="2"/><text x="200" y="310" fill="#f8f1df" font-family="Georgia,serif" font-size="30" font-weight="bold" text-anchor="middle">SERIES OF</text><text x="200" y="354" fill="#fff8e8" font-family="Georgia,serif" font-size="39" font-weight="bold" text-anchor="middle">LIFE HACKS</text><text x="200" y="390" fill="#f8f1df" font-family="Georgia,serif" font-size="27" text-anchor="middle">TO LIVE BY</text><line x1="105" y1="422" x2="295" y2="422" stroke="#d6b35f" stroke-width="1.5"/><text x="200" y="452" fill="#e6bf66" font-family="Arial,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">WISDOM FOR THE</text><text x="200" y="472" fill="#e6bf66" font-family="Arial,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">ROAD AHEAD</text><text x="200" y="515" fill="#d9e1eb" font-family="Arial,sans-serif" font-size="12" text-anchor="middle">TAIWO ABDULGAFAR ADEKUNLE</text></svg>';
+      const fallbackCoverSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 560"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#234965"/><stop offset="1" stop-color="#25312f"/></linearGradient><radialGradient id="glow"><stop offset="0" stop-color="#e6bf66" stop-opacity=".26"/><stop offset="1" stop-color="#e6bf66" stop-opacity="0"/></radialGradient></defs><rect width="400" height="560" fill="url(#bg)"/><circle cx="315" cy="75" r="170" fill="url(#glow)"/><rect x="15" y="15" width="370" height="530" rx="2" fill="none" stroke="#d6b35f" stroke-width="2"/><text x="200" y="70" fill="#e6bf66" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2" text-anchor="middle">VOICEOFTAADE</text><text x="200" y="100" fill="#d9e1eb" font-family="Arial,sans-serif" font-size="10" letter-spacing="3" text-anchor="middle">PUBLICATIONS</text><path d="M200 150 L218 181 L253 186 L228 211 L234 246 L200 229 L166 246 L172 211 L147 186 L182 181 Z" fill="none" stroke="#e6bf66" stroke-width="2"/><text x="200" y="310" fill="#f8f1df" font-family="Georgia,serif" font-size="30" font-weight="bold" text-anchor="middle">LIFE:</text><text x="200" y="354" fill="#fff8e8" font-family="Georgia,serif" font-size="39" font-weight="bold" text-anchor="middle">A CASE</text><text x="200" y="390" fill="#f8f1df" font-family="Georgia,serif" font-size="27" text-anchor="middle">STUDY</text><line x1="105" y1="422" x2="295" y2="422" stroke="#d6b35f" stroke-width="1.5"/><text x="200" y="452" fill="#e6bf66" font-family="Arial,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">UNDERSTANDING LIFE</text><text x="200" y="472" fill="#e6bf66" font-family="Arial,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">CHOICES · CONSEQUENCES</text><text x="200" y="515" fill="#d9e1eb" font-family="Arial,sans-serif" font-size="12" text-anchor="middle">TAIWO ABDULGAFAR ADEKUNLE</text></svg>';
       const cover = typeof product.cover_image_url === 'string' && /^https:\/\//i.test(product.cover_image_url)
         ? '<img src="' + escapeHtml(product.cover_image_url) + '" alt="Cover of ' + escapeHtml(product.title) + '" loading="lazy">'
         : '<img src="data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(fallbackCoverSvg) + '" alt="Cover of ' + escapeHtml(product.title) + '" loading="lazy">';
       const priceNgn = displayNgnPrice(product);
       const priceUsd = product.price_usd_cents == null ? '' : '<small>' + money(product.price_usd_cents, 'USD') + ' for USD checkout, when enabled</small>';
-      return '<article class="store-card"><div class="store-cover">' + cover + '</div><div class="store-card-body"><h3>' + escapeHtml(product.title) + '</h3>' +
+      return '<article class="store-card" data-product-slug="' + escapeHtml(product.slug) + '"><div class="store-cover">' + cover + '</div><div class="store-card-body"><h3>' + escapeHtml(product.title) + '</h3>' +
         (product.subtitle ? '<p><strong>' + escapeHtml(product.subtitle) + '</strong></p>' : '') +
         '<p>' + escapeHtml(product.description || 'A Voiceoftaade publication.') + '</p>' +
         '<div class="store-price">' + priceNgn + priceUsd + '</div><button class="store-button" type="button" data-product-id="' + escapeHtml(product.id) + '"' + (STORE_CHECKOUT_UI_ENABLED ? '' : ' disabled aria-disabled="true"') + '>' + (STORE_CHECKOUT_UI_ENABLED ? 'Continue to secure checkout' : 'Checkout opening soon') + '</button></div></article>';
@@ -229,13 +228,13 @@
 
     async function loadCatalog() {
       try {
-        const response = await fetch(SUPABASE_URL + '/rest/v1/store_products?select=id,slug,title,subtitle,description,cover_image_url,price_ngn_kobo,price_usd_cents,status,published_at&status=eq.published&order=published_at.desc', {
+        const response = await fetch(SUPABASE_URL + '/rest/v1/store_products?select=id,slug,title,subtitle,description,cover_image_url,price_ngn_kobo,regular_price_ngn_kobo,early_bird_price_ngn_kobo,early_bird_duration_days,early_bird_enabled,early_bird_starts_at,price_usd_cents,status,published_at&status=eq.published&price_ngn_kobo=gt.0&order=published_at.desc', {
           headers: {'apikey': SUPABASE_PUBLISHABLE_KEY, 'Authorization': 'Bearer ' + SUPABASE_PUBLISHABLE_KEY}
         });
         if (!response.ok) throw new Error('catalog request failed');
         const products = await response.json();
         if (!Array.isArray(products) || products.length === 0) {
-          grid.innerHTML = '<div class="store-empty"><h3>New titles are on the way</h3><p>The first product listing will appear here once its price and publication details are confirmed.</p><p><a class="text-link" href="reader.html">Read the current featured book online →</a></p></div>';
+          grid.innerHTML = '<div class="store-empty"><h3>New titles are on the way</h3><p>The Voiceoftaade Store is preparing its first paid title. Check back soon for secure checkout.</p><p><a class="text-link" href="books.html">Explore the Voiceoftaade Library →</a></p></div>';
           statusLine.textContent = paymentReturned ? paymentReturnMessage : 'Catalogue connection is working. Secure checkout is still being configured.';
           return;
         }
@@ -243,6 +242,8 @@
         grid.querySelectorAll('[data-product-id]').forEach(button => {
           button.addEventListener('click', () => beginCheckout(button.dataset.productId, button));
         });
+        const requestedSlug = new URLSearchParams(location.search).get("product");
+        if (requestedSlug) { const requestedCard = [...grid.querySelectorAll("[data-product-slug]")].find(card => card.dataset.productSlug === requestedSlug); if (requestedCard) { requestedCard.scrollIntoView({behavior:"smooth",block:"center"}); requestedCard.querySelector("[data-product-id]")?.focus({preventScroll:true}); } }
         statusLine.textContent = paymentReturned ? paymentReturnMessage : (STORE_CHECKOUT_UI_ENABLED
           ? 'Catalogue loaded. Checkout remains disabled while test payments and protected ebook delivery are verified.'
           : 'Catalogue loaded. Checkout remains disabled while test payments and protected ebook delivery are verified.');
