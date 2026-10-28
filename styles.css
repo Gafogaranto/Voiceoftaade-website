@@ -1551,3 +1551,41 @@ textarea{min-height:120px;resize:vertical}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
 }
+
+
+/* Premium polish pass: consistent inner-page rhythm, navigation, cards and accessible motion */
+:root{--vt-space-1:clamp(14px,2vw,22px);--vt-space-2:clamp(22px,3.5vw,38px);--vt-space-3:clamp(34px,5vw,58px);--vt-radius:22px;--vt-shadow:0 18px 48px rgba(37,49,47,.075)}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{overflow-wrap:anywhere}
+img,svg,video,canvas{max-width:100%}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+a:not(.button):not(.nav-cta){text-underline-offset:3px}
+.site-header{position:sticky;top:0;z-index:100;backdrop-filter:saturate(145%) blur(14px);-webkit-backdrop-filter:saturate(145%) blur(14px)}
+.site-header nav a[aria-current="page"]{color:#b83f35;font-weight:700}
+.site-header nav a:not(.nav-cta):not(.account-avatar-link){position:relative}
+.site-header nav a:not(.nav-cta):not(.account-avatar-link)::after{content:"";position:absolute;left:0;right:100%;bottom:-5px;height:2px;background:#b83f35;transition:right .2s ease}
+.site-header nav a:not(.nav-cta):not(.account-avatar-link):hover::after,.site-header nav a[aria-current="page"]::after{right:0}
+.menu-toggle{border-radius:13px;min-width:44px;min-height:44px;border:1px solid #d9e3dc;background:#fff;color:#25312f;box-shadow:0 4px 12px rgba(37,49,47,.04)}
+.inner-page main{min-height:55vh}
+.inner-page main>section,.inner-page main>.section{scroll-margin-top:100px}
+.inner-page h1,.inner-page h2,.inner-page h3{letter-spacing:-.025em;text-wrap:balance}
+.inner-page p{line-height:1.78}
+.inner-page .site-footer a{color:#fffaf4}
+.inner-page .site-footer a:hover{color:#ffd0c6}
+.article-card,.book-card,.journal-card,.feature-card,.community-card,.store-card,.product-card,.contact-links>a{border:1px solid #e2e8e2;box-shadow:0 8px 24px rgba(37,49,47,.035)}
+.article-card:hover,.book-card:hover,.journal-card:hover,.feature-card:hover,.community-card:hover,.store-card:hover,.product-card:hover{box-shadow:0 18px 42px rgba(37,49,47,.09)}
+input,select,textarea{border-radius:12px;min-height:46px}
+textarea{min-height:130px;resize:vertical}
+button:disabled,.button[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+:target{scroll-margin-top:110px}
+@media(min-width:1000px){.site-header nav{gap:clamp(18px,2vw,34px)}.inner-page main{width:100%}}
+@media(max-width:760px){
+ html{scroll-padding-top:82px}.site-header{position:sticky;top:0;height:76px}
+ .site-header nav{max-height:calc(100dvh - 90px);overflow-y:auto;overscroll-behavior:contain;padding:14px}
+ .site-header nav a{min-height:42px;display:flex;align-items:center}.site-header nav .nav-cta{justify-content:center}
+ .inner-page h1{font-size:clamp(2.1rem,9vw,3.25rem)}.inner-page h2{font-size:clamp(1.7rem,7vw,2.5rem)}
+ .inner-page .section,.inner-page main>section{padding-inline:20px}.inner-page .site-footer{padding-inline:22px}
+ .contact-links>a{min-width:0;gap:12px}.contact-links strong{overflow-wrap:anywhere}
+}
+@media(hover:none){.article-card:hover,.book-card:hover,.journal-card:hover,.feature-card:hover,.community-card:hover,.store-card:hover,.product-card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
