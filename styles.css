@@ -1188,3 +1188,99 @@ img { color: var(--muted); }
   .brand-logo { width: 135px; }
   .hero-actions .button, .community-actions .button { width: 100%; }
 }
+
+
+/* Voiceoftaade visual refresh — vibrant, welcoming, and readable */
+:root{
+  --ink:#202044;
+  --muted:#62647a;
+  --paper:#fffaf4;
+  --white:#ffffff;
+  --gold:#ff725e;
+  --gold-dark:#d94f58;
+  --line:#eee0dc;
+  --olive:#403b75;
+  --serif:"Playfair Display",Georgia,serif;
+  --sans:"DM Sans",Arial,sans-serif;
+}
+body{background:var(--paper);color:var(--ink)}
+.announcement{background:#403b75;color:#fff3bd}
+.site-header{background:rgba(255,250,244,.96);color:#202044;border-bottom:1px solid #f2d8d0;box-shadow:0 8px 28px rgba(64,59,117,.07)}
+.brand small{color:#76728b}
+.brand-mark{background:#ff725e;color:#fff}
+.site-header nav a:not(.nav-cta):hover,.text-link:hover{color:#d94f58}
+.nav-cta{border:1px solid #ff725e;border-radius:999px;color:#403b75}
+.nav-cta:hover{background:#ff725e;color:white}
+.menu-toggle{border-color:#ff725e;color:#403b75}
+.hero{background:radial-gradient(ellipse at 76% 40%,#d8f3eb 0,transparent 35%),radial-gradient(ellipse at 13% 80%,#ffe0d6 0,transparent 38%),var(--paper)}
+.eyebrow{color:#d94f58}
+.eyebrow span{background:#d94f58}
+.hero h1 em,.section h2 em,.section-heading h2 em,.about-copy h2 em,.community-copy h2 em,.contact-section h2 em{color:#e45c68}
+.hero-intro{color:#62647a}
+.button-gold{background:#ff725e;color:#fff}
+.button-gold:hover{background:#e85d61}
+.button-dark{background:#403b75;color:white}
+.button-dark:hover{background:#302b61}
+.note-line{background:#ff725e}
+.hero-art .orb{border-color:rgba(64,59,117,.23)}
+.book-cover{background:linear-gradient(145deg,#ff8b70,#d94f68 55%,#403b75);color:#fff9ed;box-shadow:14px 18px 0 #bce9dc,18px 23px 35px #403b7530;border-left-color:#403b75}
+.cover-rule{background:#fff1bb}
+.cover-title i,.cover-symbol{color:#fff1bb}
+.cover-subtitle{color:#ffe7df}
+.ticker{background:#403b75;color:#fff3dc}
+.ticker b{color:#ff9b80}
+.section{background:var(--paper)}
+.book-feature{background:linear-gradient(120deg,#ffe6dc,#f4eafa 55%,#e0f5ec);border-radius:24px}
+.book-poster{background:linear-gradient(155deg,#ff8b70,#d94f68 58%,#403b75);color:#fff7e9;box-shadow:12px 15px 0 #bce9dc;border-radius:5px}
+.poster-main em{color:#fff1bb}
+.poster-rule{background:#fff1bb}
+.pill{background:#ffe1d8;color:#a63c4a;border-radius:999px}
+.coming-soon{border-color:#eee0dc}
+.coming-icon,.coming-label{color:#d94f58}
+.journal-section{background:#f3f0ff}
+.search-box{border-color:#e5def6;border-radius:14px}
+.search-box span{color:#d94f58}
+.filter{border-color:#ddd5f1;border-radius:999px}
+.filter.active,.filter:hover{background:#403b75;color:white;border-color:#403b75}
+.article-card{border:1px solid #eee7f2;border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(64,59,117,.06);transition:transform .2s,box-shadow .2s}
+.article-card:hover{transform:translateY(-5px);box-shadow:0 18px 35px rgba(64,59,117,.12)}
+.art-olive{background:linear-gradient(135deg,#7bc8b2,#3f8e89);color:#fff}
+.art-clay{background:linear-gradient(135deg,#ffad86,#e66a76);color:#fff}
+.art-blue{background:linear-gradient(135deg,#8e9de8,#5b65ad);color:#fff}
+.article-meta{color:#d94f58}
+.read-more span{color:#d94f58}
+.quote-section{background:linear-gradient(125deg,#403b75,#5a4a91 58%,#8e5f9f);color:#fffaf4}
+.quote-mark,.quote-section p{color:#ffd0a8}
+.about-stamp{border-color:#ff725e;color:#d94f58;outline-color:#ffb6a766}
+.community-section{background:linear-gradient(115deg,#dff5ed,#fff0e9 55%,#f0eaff);border-radius:0}
+.community-copy>p:not(.eyebrow){color:#62647a}
+.community-mark{border-color:#ffb39e;background:#403b75;border-radius:18px}
+.community-mark small{color:#fff1bb}
+.community-mark span{color:#ffb39e}
+.contact-links>a{border-color:#eee0dc}
+.contact-icon{border-color:#f0cfc7;border-radius:14px;background:#fff0e9;color:#d94f58}
+.contact-links small{color:#d94f58}
+.contact-links a>span:last-child{color:#d94f58}
+.site-footer{background:#26234e;color:#fff7ec}
+.footer-brand .brand-mark{background:#ff725e;color:white}
+.site-footer>p{color:#e0d8ff}
+.footer-bottom{border-color:#ffffff2e}
+.brand-intro{background:radial-gradient(ellipse at 50% 35%,#514a8a,#26234e 70%)}
+.intro-emblem .emblem-globe,.intro-emblem .emblem-feather,.intro-emblem .emblem-pen{stroke:#ff9a83;fill:#ff9a83}
+.intro-emblem .emblem-wordmark,.intro-emblem .emblem-publications{fill:#fff0d8}
+.daily-wisdom{background:linear-gradient(135deg,#fff0e8,#e9f8f2 55%,#f0eaff)}
+.wisdom-art-card{background:linear-gradient(145deg,#403b75,#6d5597 62%,#d94f68);color:#fffaf4;border-radius:24px;box-shadow:0 24px 55px rgba(64,59,117,.18)}
+.wisdom-art-card .eyebrow,.wisdom-art-rule{color:#ffd0a8;background-color:#ffd0a8}
+.wisdom-brand-star{color:#ffb39e}
+.wisdom-art-footer,.wisdom-art-book{color:#ffe7d8}
+.account-avatar{background:#ffe4dc;border-color:#ffb8a7;color:#403b75}
+@media(max-width:760px){
+  .site-header{background:rgba(255,250,244,.98)}
+  .site-header nav{background:#fffaf4;border:1px solid #f2d8d0;box-shadow:0 16px 30px rgba(64,59,117,.12);border-radius:18px}
+  .book-feature{padding:25px 20px;border-radius:18px}
+  .section{padding-left:22px;padding-right:22px}
+  .community-section{padding-left:22px;padding-right:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  .article-card,.button{transition:none}
+}
