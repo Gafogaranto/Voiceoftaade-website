@@ -5,12 +5,12 @@
   "short_name": "Voiceoftaade",
   "description": "Books, daily wisdom, reflections and purposeful living.",
   "lang": "en",
-  "start_url": "./",
+  "start_url": "./account.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f5f6f8",
-  "theme_color": "#07172b",
+  "background_color": "#fffaf4",
+  "theme_color": "#25312f",
   "icons": [
     {
       "src": "assets/icon-192.png",
