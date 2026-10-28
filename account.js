@@ -12,7 +12,27 @@
     setItem(key, value) { try { const target = rememberBox?.checked ? localStorage : sessionStorage; const other = rememberBox?.checked ? sessionStorage : localStorage; target.setItem(key, value); other.removeItem(key); } catch (error) { console.warn("Session storage is unavailable", error); } },
     removeItem(key) { try { localStorage.removeItem(key); sessionStorage.removeItem(key); } catch (_) {} }
   };
-  rememberBox?.addEventListener("change", () => { try { localStorage.setItem("vt_remember_me", String(rememberBox.checked)); } catch (_) {} });
+  rememberBox?.addEventListener("change", () => {
+    try {
+      localStorage.setItem("vt_remember_me", String(rememberBox.checked));
+      // Move existing Supabase auth state when the reader changes this preference.
+      // Otherwise the adapter would look in the new store and appear to lose the session.
+      const target = rememberBox.checked ? localStorage : sessionStorage;
+      const source = rememberBox.checked ? sessionStorage : localStorage;
+      const keys = [];
+      for (let i = 0; i < source.length; i++) {
+        const key = source.key(i);
+        if (key && key.startsWith("sb-")) keys.push(key);
+      }
+      keys.forEach(key => {
+        const value = source.getItem(key);
+        if (value !== null) target.setItem(key, value);
+        source.removeItem(key);
+      });
+    } catch (error) {
+      console.warn("Could not update the session storage preference", error);
+    }
+  });
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storage: authStorage }
   });
