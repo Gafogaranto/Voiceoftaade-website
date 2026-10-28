@@ -21,7 +21,7 @@ The browser-facing Supabase publishable key is expected to be public. Database s
 ## Current functionality
 
 - Responsive public publishing homepage and shared navigation.
-- Book promotion and external Payhip checkout.
+- First-party Voiceoftaade Store catalogue with Paystack checkout integration (kept closed until payment and protected delivery checks pass).
 - Daily journals with search, category filtering, article pop-ups, and saved/favourite collections.
 - Reader account registration, email/password sign-in, password-reset flow, and profile details.
 - Profile avatar and cover-photo upload support through Supabase Storage.
@@ -36,7 +36,7 @@ The browser-facing Supabase publishable key is expected to be public. Database s
 - The latest successful GitHub Pages deployment does not by itself prove every live feature works. Test account flows, uploads, notifications, mobile navigation, saved journals, and offline behaviour in a real browser.
 - Supabase security advisor reports leaked-password protection is disabled on the current plan. This setting has not been enabled; enabling it requires a plan that supports the feature.
 - This static site does not provide a private editorial CMS. Public journal content is currently maintained in the repository.
-- Book purchases are handled by the external Payhip checkout; this website should not collect payment-card details.
+- Book purchases are intended to be handled by the first-party Voiceoftaade Store through Paystack; this website must not collect payment-card details directly.
 
 ## Development and release workflow
 
