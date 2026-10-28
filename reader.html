@@ -7,14 +7,32 @@
 const $=id=>document.getElementById(id),content=$('readerContent'),status=$('readerStatus'),tocPanel=$('tocPanel'),toc=$('readerTocLinks'),controls=$('readerControls'),pageNav=$('pageNav');$('year').textContent=new Date().getFullYear();
 function gate(message){status.textContent=message;content.replaceChildren();const a=document.createElement('a');a.className='reader-access-button';a.href='account.html#purchasedBooksCard';a.textContent='Open reader profile';content.appendChild(a);controls.hidden=true;tocPanel.hidden=true;pageNav.hidden=true;}
 try{
-let session=null;const key='sb-qnnmbngxunmjerpeoxrr-auth-token';
-for(const store of [localStorage,sessionStorage]){try{const raw=store.getItem(key);if(raw){const parsed=JSON.parse(raw);if(parsed.access_token){session=parsed;break;}}}catch(e){}}
-if(!session?.access_token){gate('Please sign in to your Voiceoftaade reader account to open this free premium title.');return;}
-const response=await fetch('https://qnnmbngxunmjerpeoxrr.supabase.co/functions/v1/store-ebook-reader',{method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67','Authorization':'Bearer '+session.access_token},body:'{}'});
-const result=await response.json().catch(()=>({}));
-if(!response.ok){gate(result.error||'Your purchase access could not be verified. Please sign in again or contact support.');return;}
-if(typeof result.manuscript_html!=='string'||!result.manuscript_html){gate('The protected manuscript is temporarily unavailable. Please try again later.');return;}
-const parsed=new DOMParser().parseFromString(result.manuscript_html,'text/html');content.replaceChildren(...Array.from(parsed.body.childNodes));status.textContent='Access verified · Your reading position is saved on this device.';controls.hidden=false;tocPanel.hidden=false;
+let result={};let freeBook=null;
+try{freeBook=JSON.parse(sessionStorage.getItem('voiceoftaade-reading-room-book')||'null')}catch(e){}
+if(freeBook&&Array.isArray(freeBook.chapters)&&new URLSearchParams(location.search).get('mode')==='free'){
+  sessionStorage.removeItem('voiceoftaade-reading-room-book');
+  const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const parts=[];
+  parts.push('<h2 id="book-opening">'+safe(freeBook.title)+'</h2><p><em>By '+safe(freeBook.author||'Voiceoftaade Publications')+'</em></p><p>'+safe(freeBook.description||'')+'</p>');
+  freeBook.chapters.forEach((c,i)=>{const title=Array.isArray(c)?c[0]:'Chapter '+(i+1);const fields=Array.isArray(c)?c.slice(1):[];parts.push('<h2 id="chapter-'+(i+1)+'">Chapter '+(i+1)+' · '+safe(title)+'</h2>');if(fields[0])parts.push('<h3>Story and real-life scenario</h3><p>'+safe(fields[0]).replace(/\n\n/g,'</p><p>')+'</p>');if(fields[1])parts.push('<h3>The central idea</h3><p>'+safe(fields[1]).replace(/\n\n/g,'</p><p>')+'</p>');if(fields[2])parts.push('<h3>Practical lesson</h3><p>'+safe(fields[2]).replace(/\n\n/g,'</p><p>')+'</p>');parts.push('<h3>Questions to sit with</h3><p>What feels familiar? What challenges an assumption? What detail helps you see the issue differently? Consider a real situation and what other response may be available.</p><p><strong>Pause and reflect:</strong> What honest question has this chapter helped you ask?</p>');parts.push('<h3>Put the idea into practice</h3><p>Turn the idea into one modest action that fits ordinary circumstances. Decide when it happens and how you will adjust if the first attempt does not work.</p><p><strong>My next step is…</strong></p>')});
+  parts.push('<h2 id="final-reminder">Final reminder</h2><p>'+safe(freeBook.finalReminder||'Carry one useful lesson into your next ordinary decision. Choose a realistic action and allow experience to deepen your judgment.')+'</p>');
+  result={manuscript_html:parts.join('')};
+  document.querySelector('.reader-top h1').textContent=freeBook.title;
+  document.querySelector('.reader-top>p:nth-of-type(2)').textContent='By '+(freeBook.author||'Voiceoftaade Publications')+' · Free original edition · Reading Room';
+  document.querySelector('.reader-top>p:nth-of-type(3)').innerHTML='<a href="books.html" style="color:#f2d58e">← Return to bookshelf</a>';
+  document.title=freeBook.title+' | Voiceoftaade Reading Room';
+  status.textContent='Free reading edition · Your reading position is saved on this device.';
+}else{
+  let session=null;const key='sb-qnnmbngxunmjerpeoxrr-auth-token';
+  for(const store of [localStorage,sessionStorage]){try{const raw=store.getItem(key);if(raw){const parsed=JSON.parse(raw);if(parsed.access_token){session=parsed;break;}}}catch(e){}}
+  if(!session?.access_token){gate('Please sign in to your Voiceoftaade reader account to open this premium title.');return;}
+  const response=await fetch('https://qnnmbngxunmjerpeoxrr.supabase.co/functions/v1/store-ebook-reader',{method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67','Authorization':'Bearer '+session.access_token},body:'{}'});
+  result=await response.json().catch(()=>({}));
+  if(!response.ok){gate(result.error||'Your purchase access could not be verified. Please sign in again or contact support.');return;}
+  if(typeof result.manuscript_html!=='string'||!result.manuscript_html){gate('The protected manuscript is temporarily unavailable. Please try again later.');return;}
+  status.textContent='Access verified · Your reading position is saved on this device.';
+}
+const parsed=new DOMParser().parseFromString(result.manuscript_html,'text/html');content.replaceChildren(...Array.from(parsed.body.childNodes));controls.hidden=false;tocPanel.hidden=false;
 let sections=[],current=0,mode='scroll',font=18;const nodes=Array.from(content.children);let section=null;
 for(const node of nodes){if(node.tagName==='H2'){section=document.createElement('section');section.className='reader-section';section.id=node.id||'section-'+(sections.length+1);section.dataset.title=node.textContent.trim();section.appendChild(node);sections.push(section)}else{if(!section){section=document.createElement('section');section.className='reader-section';section.id='book-opening';section.dataset.title='Book opening';sections.push(section)}section.appendChild(node)}}
 content.replaceChildren(...sections);
