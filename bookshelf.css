@@ -48,3 +48,9 @@ body.modal-open{overflow:hidden}
 .book-detail-panel:not([hidden]){position:fixed!important;inset:50% auto auto 50%!important;transform:translate(-50%,-50%)!important;box-sizing:border-box!important;z-index:9999!important;width:min(760px,calc(100vw - 24px))!important;max-width:760px!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important;margin:0!important;}
 .book-detail-panel:not([hidden]) .book-detail-close{position:sticky;top:0;}
 @media(max-width:760px){.physical-library{margin:14px 10px 36px;padding:8px;border-width:5px;border-radius:15px;}.premium-cabinet{padding:16px 10px 20px}.free-cabinet{padding:18px 10px}.free-reading-category{padding:20px 10px}.integrated-reading-articles{grid-template-columns:1fr}.book-detail-panel:not([hidden]){inset:50% auto auto 50%!important;transform:translate(-50%,-50%)!important;width:calc(100vw - 20px)!important;max-height:calc(100dvh - 20px)!important;padding:14px!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important}.book-detail-panel:not([hidden]) .detail-book-art{min-height:150px;max-width:160px}.book-detail-panel:not([hidden]) .book-detail-close{grid-column:1;grid-row:1;margin:-3px -3px -36px auto;z-index:5}.book-detail-panel:not([hidden]) .detail-book-copy h2{font-size:1.5rem;margin-right:30px}.book-detail-panel:not([hidden]) .detail-chapters{columns:1}}
+
+/* Keep all free titles on one continuous shelf; allow horizontal browsing on narrow screens. */
+.free-board{flex-wrap:nowrap!important;justify-content:flex-start!important;overflow-x:auto;overflow-y:visible;scrollbar-color:#a17b49 #e8ddc9;scrollbar-width:thin;}
+.free-board .library-book{flex:0 0 clamp(48px,7vw,88px);}
+.free-end-card{grid-column:1/-1;padding:20px;border:1px solid #d7c9ad;border-radius:12px;background:#fffdf7;}
+@media(max-width:700px){.free-board .library-book{flex:0 0 clamp(47px,12vw,67px);}}
