@@ -1085,7 +1085,7 @@ const free=[
     "kind": "free",
     "finalReminder": "Starting over does not require erasing the past or recreating the old plan. Keep the lessons that remain useful, identify the resources you still have, ask for help where it can improve your judgment, and make the next experiment small enough to learn from. An ending can be painful and informative at the same time. Let the next chapter be shaped by what you now understand, not only by what you once hoped."
   }
-];;
+];
 const $=id=>document.getElementById(id),premiumShelf=$("premiumShelf"),freeShelf=$("freeShelf"),details=$("bookDetails"),reader=$("bookReader"),backdrop=$("bookModalBackdrop");
 function closeDetails(){details.hidden=true;if(backdrop)backdrop.hidden=true;document.body.classList.remove("modal-open")}
 function openDetails(){details.hidden=false;if(backdrop)backdrop.hidden=false;document.body.classList.add("modal-open");setTimeout(()=> $("closeDetails").focus(),0)}
