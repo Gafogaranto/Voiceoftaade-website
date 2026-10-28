@@ -12,7 +12,7 @@
 /* Book details are a true modal overlay, not content below the shelf */
 .book-modal-backdrop[hidden],.book-detail-panel[hidden]{display:none!important}
 .book-modal-backdrop{position:fixed;inset:0;z-index:1000;background:rgba(6,15,25,.72);backdrop-filter:blur(5px)}
-.book-detail-panel:not([hidden]){position:fixed;z-index:1001;top:50%;left:50%;transform:translate(-50%,-50%);width:min(980px,calc(100vw - 28px));max-height:min(88dvh,850px);overflow:auto;margin:0;display:grid;grid-template-columns:minmax(180px,.72fr) minmax(0,1.5fr);gap:clamp(18px,3vw,32px);padding:clamp(20px,3vw,34px);border:1px solid #d4bd86;border-radius:18px;background:#fbf8f0;box-shadow:0 28px 90px #0007;scroll-margin:0}
+.book-detail-panel:not([hidden]){position:fixed;z-index:1001;top:50%;left:50%;transform:translate(-50%,-50%);width:min(760px,calc(100vw - 28px));max-height:min(84dvh,760px);overflow:auto;margin:0;display:grid;grid-template-columns:minmax(180px,.72fr) minmax(0,1.5fr);gap:clamp(18px,3vw,32px);padding:clamp(20px,3vw,34px);border:1px solid #d4bd86;border-radius:18px;background:#fbf8f0;box-shadow:0 28px 90px #0007;scroll-margin:0}
 .book-detail-close{position:sticky;top:0;justify-self:end;grid-column:1/-1;grid-row:1;z-index:3;margin:-8px -8px -42px auto;width:38px;height:38px;border-radius:50%;border:1px solid #d7c9ac;background:#fffdf7;color:#182a3e;font-size:1.7rem;line-height:1;cursor:pointer}
 .detail-book-art{align-self:start;min-height:310px;position:sticky;top:0}
 .detail-book-copy{min-width:0;padding-right:4px}
