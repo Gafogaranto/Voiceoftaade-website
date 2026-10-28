@@ -25,12 +25,13 @@ if(freeBook&&Array.isArray(freeBook.chapters)&&new URLSearchParams(location.sear
 }else{
   let session=null;const key='sb-qnnmbngxunmjerpeoxrr-auth-token';
   for(const store of [localStorage,sessionStorage]){try{const raw=store.getItem(key);if(raw){const parsed=JSON.parse(raw);if(parsed.access_token){session=parsed;break;}}}catch(e){}}
-  if(!session?.access_token){gate('Please sign in to your Voiceoftaade reader account to open this premium title.');return;}
-  const response=await fetch('https://qnnmbngxunmjerpeoxrr.supabase.co/functions/v1/store-ebook-reader',{method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67','Authorization':'Bearer '+session.access_token},body:'{}'});
+  const headers={'Content-Type':'application/json','apikey':'sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67'};
+  if(session?.access_token)headers.Authorization='Bearer '+session.access_token;
+  const response=await fetch('https://qnnmbngxunmjerpeoxrr.supabase.co/functions/v1/store-ebook-reader',{method:'POST',headers,body:'{}'});
   result=await response.json().catch(()=>({}));
-  if(!response.ok){gate(result.error||'Your purchase access could not be verified. Please sign in again or contact support.');return;}
-  if(typeof result.manuscript_html!=='string'||!result.manuscript_html){gate('The protected manuscript is temporarily unavailable. Please try again later.');return;}
-  status.textContent='Access verified · Your reading position is saved on this device.';
+  if(!response.ok){gate(result.error||'The Reading Room could not load this title. Please refresh and try again.');return;}
+  if(typeof result.manuscript_html!=='string'||!result.manuscript_html){gate('The manuscript is temporarily unavailable. Please try again later.');return;}
+  status.textContent=result.access_type==='free'?'Free publication · Your reading position is saved on this device.':'Access verified · Your reading position is saved on this device.';
 }
 const parsed=new DOMParser().parseFromString(result.manuscript_html,'text/html');content.replaceChildren(...Array.from(parsed.body.childNodes));controls.hidden=false;tocPanel.hidden=false;
 let sections=[],current=0,mode='scroll',font=18;const nodes=Array.from(content.children);let section=null;
