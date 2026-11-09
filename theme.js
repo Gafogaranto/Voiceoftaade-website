@@ -4,7 +4,7 @@
   root.setAttribute('data-theme', 'light');
   root.style.colorScheme = 'light';
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', '#fffaf4');
+  if (meta) meta.setAttribute('content', '#07172b');
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.nav-dropdown-trigger').forEach(trigger => {
       trigger.addEventListener('click', event => {
