@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#315f52">
+  <meta name="theme-color" content="#07172b">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preload" as="image" href="assets/voiceoftaade-logo.jpg" fetchpriority="high">
   <link rel="icon" href="assets/icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <meta name="mobile-web-app-capable" content="yes">
@@ -69,7 +70,7 @@
   <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Voiceoftaade home">
-      <img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo">
+      <img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo" fetchpriority="high" decoding="sync">
     </a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav id="mainNav" aria-label="Main navigation">
