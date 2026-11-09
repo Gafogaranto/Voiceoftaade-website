@@ -1,7 +1,7 @@
 // Voiceoftaade PWA service worker.
 // Cache only the public app shell and static assets; never cache account pages,
 // signed ebook URLs, PDFs, EPUBs, or other private/personal content.
-const CACHE_NAME = "voiceoftaade-app-shell-v2";
+const CACHE_NAME = "voiceoftaade-app-shell-v3";
 const APP_ROOT = new URL("./", self.location.href);
 const SHELL_FILES = [
   new URL("./", self.location.href).href,
@@ -9,6 +9,7 @@ const SHELL_FILES = [
   new URL("manifest.webmanifest", APP_ROOT).href,
   new URL("assets/icon-192.png", APP_ROOT).href,
   new URL("assets/icon-512.png", APP_ROOT).href,
+  new URL("assets/voiceoftaade-app-icon.svg", APP_ROOT).href,
   new URL("assets/voiceoftaade-logo.jpg", APP_ROOT).href
 ];
 
