@@ -1,16 +1,19 @@
-
 {
   "id": "./",
   "name": "Voiceoftaade Publications",
   "short_name": "Voiceoftaade",
-  "description": "Books, daily wisdom, reflections and purposeful living.",
+  "description": "The Voiceoftaade digital publishing and reading app.",
   "lang": "en",
-  "start_url": "./account.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "portrait",
-  "background_color": "#fffaf4",
-  "theme_color": "#25312f",
+  "background_color": "#07172b",
+  "theme_color": "#07172b",
   "icons": [
     {
       "src": "assets/icon-192.png",
