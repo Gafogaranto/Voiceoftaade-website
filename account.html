@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#315f52">
+  <meta name="theme-color" content="#07172b">
   <meta name="description" content="Create your Voiceoftaade reader account and manage your profile.">
-  <title>Reader Account | Voiceoftaade Publications</title>
+  <title>Sign In | Voiceoftaade Publications</title>
   <link rel="stylesheet" href="styles.css?v=20261028-premium3">
   <style>
     :root{--vt-forest:#315f52;--vt-deep:#25312f;--vt-gold:#ff725e;--vt-cream:#fffaf4;--vt-ink:#172334;--vt-muted:#687486}
@@ -338,9 +338,10 @@
     }
     @media(prefers-reduced-motion:reduce){.site-header .brand-logo{animation:none!important;opacity:1;transform:none}}
   </style>
+  <link rel="stylesheet" href="account-brand-refresh.css?v=20261109">
 </head>
 <body>
-  <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
+  <div class="announcement">VOICEOFTAADE PUBLICATIONS · WORDS FOR WISDOM. IDEAS FOR LIFE.</div>
   <header class="site-header">
     <a class="brand" href="./?skipIntro=1#home" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
     <button class="menu-toggle" id="accountMenuToggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
@@ -360,18 +361,18 @@
         <aside class="account-story" aria-label="About Voiceoftaade">
           <div>
             <div class="story-mark" aria-hidden="true">V</div>
-            <p class="story-kicker">A reader's space · Voiceoftaade</p>
-            <h1>Words that stay with <em>you.</em></h1>
-            <p class="story-copy">A thoughtful corner for curious minds, meaningful ideas, and a life lived with purpose. Sign in to make this reading journey your own.</p>
+            <p class="story-kicker">YOUR READING JOURNEY STARTS HERE</p>
+            <h1>Discover words that <em>stay with you.</em></h1>
+            <p class="story-copy">Your home for books, journals, fresh perspectives and ideas worth carrying into everyday life. Sign in to continue reading, save what inspires you and make your library your own.</p>
           </div>
           <div class="story-quote">
-            <p>“Wisdom begins when we make room to listen.”</p>
+            <p>“Read with curiosity. Reflect with purpose. Live with wisdom.”</p>
             <span>Voiceoftaade Publications</span>
           </div>
         </aside>
         <section class="account-panel" aria-label="Reader account">
           <div id="authPanel">
-            <div class="auth-heading"><p class="eyebrow">WELCOME BACK</p><h2>Your space awaits.</h2><p>Sign in to your reader account, or create one to get started.</p></div>
+            <div class="auth-heading"><p class="eyebrow">WELCOME TO VOICEOFTAADE</p><h2>Welcome back, reader.</h2><p>Sign in to your Voiceoftaade account to access your reading library, saved journals and community activity.</p></div>
             <div class="account-tabs" role="tablist" aria-label="Account options">
               <button type="button" class="active" id="signInTab" aria-selected="true">Sign in</button>
               <button type="button" id="signUpTab" aria-selected="false">Create account</button>
@@ -382,7 +383,7 @@
               <label for="password">Password<div class="auth-password-wrap"><input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="Enter your password"><button class="password-visibility" id="togglePassword" type="button" aria-label="Show password" aria-pressed="false" title="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></label>
               <div class="auth-form-options"><label class="remember-option"><input id="rememberMe" name="rememberMe" type="checkbox" checked> Remember me on this device</label><button type="button" class="text-link" id="forgotPassword" style="border:0;background:none;padding:0;cursor:pointer">Forgot your password?</button></div>
               <button class="button button-dark" id="submitAuth" type="submit">Sign in <span>→</span></button>
-              <p class="account-note" id="formNote">Your account is for reader features. Public articles remain available without signing in.</p>
+              <p class="account-note" id="formNote">Your account keeps your reading activity, saved journals and library together. Your details stay private.</p>
             </form>
             <div class="social-auth-divider" aria-hidden="true"><span>OR</span></div>
             <button class="social-auth-button" id="googleSignIn" type="button">
