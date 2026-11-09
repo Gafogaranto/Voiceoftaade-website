@@ -1,0 +1,81 @@
+/* Voiceoftaade reader profile: editorial library dashboard */
+.account-dashboard{max-width:1080px!important;margin:0 auto!important;color:#14263b!important}
+.account-dashboard .social-profile{overflow:hidden!important;border:1px solid #dce3eb!important;border-radius:22px!important;background:#fff!important;box-shadow:0 22px 55px rgba(7,23,43,.11)!important}
+.account-dashboard .profile-cover{
+ height:clamp(210px,31vw,330px)!important;min-height:210px!important;
+ background:
+ radial-gradient(ellipse at 50% 4%,rgba(217,173,79,.27),transparent 38%),
+ radial-gradient(circle at 84% 65%,rgba(217,173,79,.12),transparent 24%),
+ linear-gradient(125deg,#07172b 0%,#102b49 58%,#183b5a 100%)!important;
+}
+.account-dashboard .profile-cover:before{content:"";position:absolute;inset:0;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(90deg,transparent,#000,transparent)}
+.account-dashboard .cover-shade{background:linear-gradient(0deg,rgba(4,13,25,.76),transparent 76%)!important}
+.account-dashboard .cover-brand{margin-bottom:32px!important;color:#fff!important;letter-spacing:.24em!important;text-shadow:0 3px 18px #0008}
+.account-dashboard .cover-brand:before{content:"V";display:grid;place-items:center;width:54px;height:54px;margin-bottom:15px;border:1px solid rgba(217,173,79,.8);border-radius:50%;background:rgba(217,173,79,.1);color:#f3d98f;font:italic 2rem Georgia,serif;letter-spacing:0}
+.account-dashboard .cover-brand small{color:#f3d98f!important}
+.account-dashboard .cover-upload{right:20px!important;bottom:18px!important;border:1px solid rgba(217,173,79,.65)!important;border-radius:999px!important;background:#fff!important;color:#102b49!important;padding:11px 16px!important;box-shadow:0 7px 20px #0003!important}
+.account-dashboard .profile-identity{align-items:center!important;gap:20px!important;min-height:138px!important;padding:0 30px 20px!important;background:#fff!important;border-bottom:1px solid #e8edf2!important}
+.account-dashboard .profile-avatar-wrap{width:136px!important;height:136px!important;margin-top:-55px!important;padding:5px!important;border:2px solid #d9ad4f!important;background:#fff!important;box-shadow:0 9px 24px rgba(7,23,43,.15)!important}
+.account-dashboard .profile-avatar{background:#07172b!important}
+.account-dashboard .avatar-upload{width:36px!important;height:36px!important;right:3px!important;bottom:5px!important;border:3px solid #fff!important;background:#d9ad4f!important;color:#07172b!important;font-size:1.3rem!important}
+.account-dashboard .profile-name-block{padding:0 0 4px!important}
+.account-dashboard .profile-name-block .eyebrow{color:#a77b2a!important;letter-spacing:.16em!important}
+.account-dashboard .profile-name-block h2{color:#07172b!important;font-size:clamp(1.6rem,3.5vw,2.35rem)!important;line-height:1.08!important}
+.account-dashboard .profile-friends{color:#6b7889!important;font-size:.88rem!important}
+.account-dashboard .profile-primary-actions{gap:9px!important;padding:0 0 4px!important}
+.account-dashboard .profile-primary-actions button{min-height:43px!important;padding:10px 16px!important;border-radius:999px!important;font-size:.8rem!important}
+.account-dashboard .profile-action-main{border:1px solid #07172b!important;background:#07172b!important;color:#fff!important;box-shadow:0 7px 17px rgba(7,23,43,.16)!important}
+.account-dashboard .profile-action-secondary{border:1px solid #d7e0e9!important;background:#f5f7fa!important;color:#34465a!important}
+.account-dashboard .profile-content{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important;padding:22px!important;background:#f3f6f9!important}
+.account-dashboard .profile-card{min-width:0!important;padding:23px!important;border:1px solid #e0e7ee!important;border-radius:16px!important;background:#fff!important;box-shadow:0 7px 22px rgba(7,23,43,.045)!important}
+.account-dashboard .profile-card .eyebrow,.account-dashboard .profile-collections .eyebrow{color:#a77b2a!important;letter-spacing:.15em!important}
+.account-dashboard .profile-card h3,.account-dashboard .profile-collections h3{color:#102b49!important;font-size:1.35rem!important;line-height:1.2!important}
+.account-dashboard .profile-card>p:not(.eyebrow){color:#657488!important;line-height:1.7!important}
+.account-dashboard .profile-details-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;margin-top:18px!important}
+.account-dashboard .profile-detail-item{min-width:0!important;padding:14px!important;border:1px solid #e8edf2!important;border-radius:12px!important;background:#f8fafc!important}
+.account-dashboard .profile-detail-item strong{display:block!important;margin-bottom:6px!important;color:#34465a!important;font-size:.75rem!important;letter-spacing:.035em!important}
+.account-dashboard .profile-detail-item span{display:block!important;color:#14263b!important;font-size:.86rem!important;line-height:1.55!important;overflow-wrap:anywhere}
+.account-dashboard .profile-detail-empty{color:#8794a5!important}
+.account-dashboard .profile-edit-form{margin-top:18px!important;padding:18px!important;border:1px solid #e3eaf1!important;border-radius:14px!important;background:#f6f8fb!important}
+.account-dashboard .profile-edit-form label{color:#34465a!important}
+.account-dashboard .profile-edit-form input,.account-dashboard .profile-edit-form textarea{border:1px solid #d8e1ea!important;border-radius:10px!important;background:#fff!important;color:#14263b!important}
+.account-dashboard .profile-edit-form textarea{min-height:100px!important;resize:vertical!important}
+.account-dashboard .profile-edit-actions{display:flex!important;gap:10px!important;flex-wrap:wrap!important}
+.account-dashboard .profile-edit-actions .button{background:#07172b!important;color:#fff!important;border-radius:999px!important}
+.account-dashboard #purchasedBooksCard,.account-dashboard #communityActivity{grid-column:auto!important}
+.account-dashboard .library-toolbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;flex-wrap:wrap!important;padding:13px 0!important}
+.account-dashboard .library-help{color:#6b7889!important;font-size:.8rem!important}
+.account-dashboard .library-refresh-button{border:1px solid #d9ad4f!important;border-radius:999px!important;background:#fffaf0!important;color:#79571b!important;padding:9px 14px!important;font-weight:750!important}
+.account-dashboard .saved-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px!important}
+.account-dashboard .saved-card{border:1px solid #e1e8ef!important;border-radius:13px!important;background:#fff!important;box-shadow:0 5px 16px rgba(7,23,43,.035)!important}
+.account-dashboard .saved-card h3{color:#102b49!important}
+.account-dashboard .continue-reading-button,.account-dashboard .saved-actions button{border:1px solid #07172b!important;border-radius:999px!important;background:#07172b!important;color:#fff!important;padding:10px 14px!important;font-weight:750!important}
+.account-dashboard .profile-tabs-bottom{display:flex!important;gap:5px!important;padding:0 18px!important;background:#fff!important;border-top:1px solid #e3e9ef!important;border-bottom:1px solid #e3e9ef!important}
+.account-dashboard .profile-tabs-bottom .profile-collection-tab{padding:16px 15px!important;color:#68788a!important;border-bottom:3px solid transparent!important;font-size:.82rem!important}
+.account-dashboard .profile-tabs-bottom .profile-collection-tab.active{color:#102b49!important;border-bottom-color:#d9ad4f!important}
+.account-dashboard .profile-collections{padding:24px!important;background:#f3f6f9!important;border-top:0!important}
+.account-dashboard .profile-collections>div{max-width:100%!important}
+.account-dashboard .saved-empty{padding:18px!important;border:1px dashed #d4dee8!important;border-radius:12px!important;background:#f9fbfd!important;color:#738195!important;line-height:1.6!important}
+.account-dashboard .account-note{margin:17px 0 0!important;padding:14px 16px!important;border-left:3px solid #d9ad4f!important;border-radius:0 10px 10px 0!important;background:#fffaf0!important;color:#6d5b37!important}
+.account-dashboard .account-status{overflow-wrap:anywhere!important}
+@media(max-width:760px){
+ .account-dashboard .social-profile{border-radius:17px!important}
+ .account-dashboard .profile-cover{height:205px!important;min-height:205px!important}
+ .account-dashboard .profile-identity{align-items:center!important;min-height:0!important;padding:0 16px 18px!important;gap:12px!important;flex-wrap:wrap!important}
+ .account-dashboard .profile-avatar-wrap{width:104px!important;height:104px!important;margin-top:-42px!important}
+ .account-dashboard .profile-name-block{flex:1 1 calc(100% - 125px)!important;padding:0!important}
+ .account-dashboard .profile-name-block h2{font-size:1.45rem!important}
+ .account-dashboard .profile-primary-actions{width:100%!important;margin:3px 0 0!important}
+ .account-dashboard .profile-primary-actions button{flex:1!important}
+ .account-dashboard .profile-content{grid-template-columns:1fr!important;gap:12px!important;padding:13px!important}
+ .account-dashboard .profile-card{padding:18px!important;border-radius:14px!important}
+ .account-dashboard .profile-details-grid{gap:9px!important}
+ .account-dashboard .profile-detail-item{padding:12px!important}
+ .account-dashboard .saved-list{grid-template-columns:1fr!important}
+ .account-dashboard .profile-collections{padding:17px!important}
+ .account-dashboard .profile-tabs-bottom{padding:0 8px!important}
+ .account-dashboard .profile-tabs-bottom .profile-collection-tab{padding:14px 10px!important;font-size:.76rem!important}
+ .account-dashboard .cover-upload{right:12px!important;bottom:12px!important;padding:9px 12px!important;font-size:.7rem!important}
+}
+@media(max-width:380px){.account-dashboard .profile-name-block h2{font-size:1.25rem!important}.account-dashboard .profile-details-grid{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){.account-dashboard *{scroll-behavior:auto!important;transition:none!important}}
