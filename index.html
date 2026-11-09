@@ -146,5 +146,28 @@
   <script src="script.js?v=20261024-sharefix3"></script>
 
   <script src="premium-ux.js" defer></script>
+  <script>
+    // Initialise push notifications only after the homepage has loaded.
+    window.addEventListener("load", function () {
+      const start = function () {
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        window.OneSignalDeferred.push(async function (OneSignal) {
+          await OneSignal.init({
+            appId: "b21452f7-8aa3-478e-808e-bfc3b8fb12ec",
+            safari_web_id: "web.onesignal.auto.1bb493cc-6f2b-4253-90e1-02d85a4b9e78",
+            serviceWorkerPath: "/Voiceoftaade-website/onesignal/OneSignalSDKWorker.js",
+            serviceWorkerParam: { scope: "/Voiceoftaade-website/onesignal/" },
+            notifyButton: { enable: true }
+          });
+        });
+        const sdk = document.createElement("script");
+        sdk.src = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+        sdk.async = true;
+        document.head.appendChild(sdk);
+      };
+      if ("requestIdleCallback" in window) requestIdleCallback(start, { timeout: 2500 });
+      else window.setTimeout(start, 1200);
+    }, { once: true });
+  </script>
 </body>
 </html>
