@@ -169,5 +169,14 @@
       else window.setTimeout(start, 1200);
     }, { once: true });
   </script>
+  <script>
+    // Register the app shell so Android can launch Voiceoftaade as an installed PWA.
+    if ("serviceWorker" in navigator && window.isSecureContext) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./sw.js", { scope: "./" })
+          .catch(function (error) { console.warn("Voiceoftaade app setup:", error); });
+      }, { once: true });
+    }
+  </script>
 </body>
 </html>
