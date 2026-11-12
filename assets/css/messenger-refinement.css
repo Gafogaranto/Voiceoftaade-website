@@ -7,11 +7,11 @@
 .vt-embedded-dm .dm-search input{flex:1;min-width:0;border-radius:999px!important;background:#fff!important;padding:11px 14px!important}
 .vt-embedded-dm .dm-search button{border:0!important;border-radius:999px!important;background:#285447!important;color:#fff!important;padding:0 15px!important;font-weight:800}
 .vt-embedded-dm .dm-list{display:grid;gap:7px;margin:9px 0 19px!important}
-.vt-embedded-dm .dm-item{display:flex;align-items:center;gap:10px;min-width:0;min-height:62px;padding:10px!important;border:1px solid #ebe7df!important;border-radius:13px!important;background:#fff!important;color:#1b302b!important;text-align:left;transition:border-color .16s ease,background .16s ease,transform .16s ease}
+.vt-embedded-dm .dm-item{display:block;min-width:0;min-height:62px;padding:10px!important;border:1px solid #ebe7df!important;border-radius:13px!important;background:#fff!important;color:#1b302b!important;text-align:left;transition:border-color .16s ease,background .16s ease,transform .16s ease}
 .vt-embedded-dm .dm-item:hover,.vt-embedded-dm .dm-item.active{border-color:#c7a45d!important;background:#f7f3e9!important}
 .vt-embedded-dm .dm-item strong{display:block;color:#1b302b!important;font-size:.82rem!important;line-height:1.35}
 .vt-embedded-dm .dm-item small{display:block;margin-top:3px;color:#77837b!important;font-size:.7rem!important;line-height:1.4}
-.vt-conversation-item .vt-conversation-avatar{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;overflow:hidden;border-radius:50%;background:linear-gradient(145deg,#285447,#c7a45d);color:white;font:700 1rem "Playfair Display",serif}
+.vt-embedded-dm .vt-conversation-item{display:flex!important;align-items:center!important;gap:10px!important}\n.vt-conversation-item .vt-conversation-avatar{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;overflow:hidden;border-radius:50%;background:linear-gradient(145deg,#285447,#c7a45d);color:white;font:700 1rem "Playfair Display",serif}
 .vt-conversation-item .vt-conversation-avatar img{width:100%;height:100%;object-fit:cover}
 .vt-conversation-copy{display:grid;min-width:0;flex:1;gap:3px}
 .vt-conversation-copy strong,.vt-conversation-copy small{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
