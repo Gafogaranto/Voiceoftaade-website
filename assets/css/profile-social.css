@@ -82,3 +82,5 @@ body.reader-social-page{background:#f1f4f2!important;color:#1e3029!important}
 @media(max-width:560px){.social-profile-shell{width:100%;margin:0 auto 30px}.social-profile-card{border-radius:0}.social-cover{height:190px}.social-profile-identity{padding-inline:16px}.social-stats span{padding:6px 8px}.social-profile-tabs{padding-inline:8px}}
 
 .profile-menu[hidden]{display:none!important}
+
+.founder-badge{display:inline-flex;align-items:center;gap:7px;margin:8px 0 0;padding:7px 12px;border:1px solid rgba(201,169,103,.48);border-radius:999px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(245,235,210,.58));backdrop-filter:blur(14px);color:#87672e;font-size:.64rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 24px rgba(100,76,35,.09)}.voiceoftaade-founder .social-profile-card{border-color:#c9ad72;box-shadow:0 18px 55px rgba(117,91,42,.12)}.voiceoftaade-founder .social-cover{background-image:radial-gradient(circle at 80% 18%,rgba(235,208,151,.42),transparent 27%),linear-gradient(125deg,#102f28,#1e5948 56%,#b18e55)}.voiceoftaade-founder .social-avatar{box-shadow:0 0 0 3px rgba(198,164,94,.48),0 15px 35px rgba(22,55,40,.22)}
