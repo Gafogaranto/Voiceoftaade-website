@@ -7,6 +7,14 @@ let user=null,staff=false,events=[],rsvps=new Map();
 const say=(id,msg,bad=false)=>{const el=$(id);if(el){el.textContent=msg;el.dataset.state=bad?"error":"ok";}};
 const fmt=(value,tz)=>{try{return new Intl.DateTimeFormat(undefined,{dateStyle:"medium",timeStyle:"short",timeZone:tz||"Africa/Lagos"}).format(new Date(value));}catch(_){return new Date(value).toLocaleString();}};
 const label=t=>({reading_circle:"Reading circle",author_session:"Author session",book_club:"Book club",workshop:"Workshop",launch:"Book launch",discussion:"Open discussion"}[t]||"Reader event");
+const calendarLinks=ev=>{
+ const start=new Date(ev.starts_at),end=ev.ends_at?new Date(ev.ends_at):new Date(start.getTime()+60*60*1000);
+ const stamp=d=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+ const title=encodeURIComponent(ev.title),details=encodeURIComponent((ev.description||"")+"\nVoiceoftaade reader event"),place=encodeURIComponent(ev.location_label||(ev.format==="online"?"Online event":""));
+ const google="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+title+"&dates="+stamp(start)+"/"+stamp(end)+"&details="+details+"&location="+place;
+ const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Voiceoftaade//Reader Events//EN","CALSCALE:GREGORIAN","BEGIN:VEVENT","UID:"+ev.id+"@voiceoftaade","DTSTAMP:"+stamp(new Date()),"DTSTART:"+stamp(start),"DTEND:"+stamp(end),"SUMMARY:"+String(ev.title||"Voiceoftaade event").replace(/[\r\n,;]/g," "),"DESCRIPTION:"+String(ev.description||"Voiceoftaade reader event").replace(/[\r\n]/g," "),"LOCATION:"+String(ev.location_label||"Online").replace(/[\r\n,;]/g," "),"END:VEVENT","END:VCALENDAR"].join("\r\n");
+ return '<div class="event-calendar-actions"><a href="'+google+'" target="_blank" rel="noopener noreferrer">Add to Google Calendar</a><a href="data:text/calendar;charset=utf-8,'+encodeURIComponent(ics)+'" download="'+slug(ev.title)+'.ics">Other calendars</a></div>';
+};
 function render(){
  const host=$("eventsList");if(!host)return;
  if(!events.length){host.innerHTML='<div class="events-empty"><span class="empty-icon">✳</span><h3>The next chapter is being planned.</h3><p>There are no published events on the calendar yet. Check back for reading circles, author sessions, workshops and book-club gatherings.</p><a href="community.html">Join the reader community →</a></div>';return;}
@@ -16,7 +24,8 @@ function render(){
   const where=ev.format==="in_person"?(ev.location_label||"Venue to be announced"):"Online · access details shared with confirmed readers";
   const state=ev.status==="draft"?"Draft":ev.status==="cancelled"?"Cancelled":ev.status==="completed"?"Completed":past?"Started":"Upcoming";
   const action=!user?'<a class="event-rsvp-button" href="account.html">Sign in to RSVP</a>':past||ev.status!=="published"?"":'<button class="event-rsvp-button '+(mine?"is-going":"")+'" data-rsvp="'+ev.id+'">'+(mine?"✓ You’re going · Cancel":"Reserve my place")+'</button>';
-  return '<article class="event-card"><div class="event-date"><strong>'+esc(day)+'</strong><span>'+esc(new Intl.DateTimeFormat(undefined,{weekday:"short",timeZone:ev.timezone||"Africa/Lagos"}).format(date))+'</span></div><div class="event-card-main"><div class="event-card-meta"><span>'+esc(label(ev.event_type))+'</span><span class="event-state '+(state==="Upcoming"?"is-upcoming":"")+'">'+esc(state)+'</span></div><h3>'+esc(ev.title)+'</h3><p>'+esc(ev.description)+'</p><div class="event-details"><span>◷ '+esc(fmt(ev.starts_at,ev.timezone))+'</span><span>⌖ '+esc(where)+'</span></div><div class="event-card-actions">'+action+'</div></div></article>';
+  const calendar=(!past&&ev.status==="published")?calendarLinks(ev):"";
+  return '<article class="event-card"><div class="event-date"><strong>'+esc(day)+'</strong><span>'+esc(new Intl.DateTimeFormat(undefined,{weekday:"short",timeZone:ev.timezone||"Africa/Lagos"}).format(date))+'</span></div><div class="event-card-main"><div class="event-card-meta"><span>'+esc(label(ev.event_type))+'</span><span class="event-state '+(state==="Upcoming"?"is-upcoming":"")+'">'+esc(state)+'</span></div><h3>'+esc(ev.title)+'</h3><p>'+esc(ev.description)+'</p><div class="event-details"><span>◷ '+esc(fmt(ev.starts_at,ev.timezone))+'</span><span>⌖ '+esc(where)+'</span></div><div class="event-card-actions">'+action+calendar+'</div></div></article>';
  }).join("");
  host.querySelectorAll("[data-rsvp]").forEach(btn=>btn.addEventListener("click",()=>rsvp(btn.dataset.rsvp,btn)));
 }
