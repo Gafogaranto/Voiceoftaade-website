@@ -48,22 +48,38 @@
     <div id="upcomingSessions" class="session-grid" aria-live="polite"><p class="clubs-loading">Loading sessions…</p></div>
   </section>
 
-  <section class="clubs-create-panel" id="createClubPanel" hidden>
-    <div><p class="clubs-eyebrow">START A READING CIRCLE</p><h2>Propose a book club</h2><p>New clubs are reviewed by the Voiceoftaade team before appearing publicly.</p></div>
-    <form id="createClubForm" class="clubs-form">
-      <label>Club name<input name="name" required minlength="3" maxlength="80" placeholder="e.g. The Thoughtful Reader Circle"></label>
-      <label>What is this club about?<textarea name="description" required minlength="10" maxlength="1000" placeholder="Describe the reading community and the conversations you hope to create."></textarea></label>
-      <div class="clubs-form-row">
-        <label>Access<select name="visibility"><option value="public">Public — anyone can discover and join</option><option value="private">Private — readers request access</option></select></label>
-        <label>Genre<input name="genre" required maxlength="80" placeholder="Personal growth, fiction, history…"></label>
-      </div>
-      <div class="clubs-form-row">
-        <label>Book title<input name="book_title" required maxlength="180" placeholder="The book your club will read"></label>
-        <label>Book author<input name="book_author" required maxlength="120" placeholder="Author's name"></label>
-      </div>
-      <label>Suggested reading plan<textarea name="reading_plan" maxlength="2000" placeholder="Optional: weekly chapters, reading pace or first meeting plan."></textarea></label>
-      <button class="clubs-button clubs-button-gold" type="submit">Submit book club for review</button>
-    </form>
+  <button type="button" class="club-create-fab" id="openCreateClub" aria-label="Create a book club">＋</button>
+  <section class="clubs-create-panel" id="createClubPanel" hidden role="dialog" aria-modal="true" aria-labelledby="createClubTitle">
+    <div class="club-wizard-card">
+      <header class="club-wizard-header"><div><p class="clubs-eyebrow">START A READING CIRCLE</p><h2 id="createClubTitle">Create a book club</h2><p>Build a thoughtful space for readers to learn together.</p></div><button type="button" id="closeCreateClub" class="club-wizard-close" aria-label="Close">×</button></header>
+      <div class="club-wizard-progress" id="clubWizardProgress"><span class="active">01 · Identity</span><span>02 · Reading focus</span><span>03 · Format</span></div>
+      <form id="createClubForm" class="clubs-form">
+        <section data-club-step="1" class="club-wizard-step">
+          <h3>Give your club an identity</h3>
+          <p class="club-wizard-hint">Start with a name and the kind of conversations you want to create.</p>
+          <label>Club name<input name="name" required minlength="3" maxlength="80" placeholder="e.g. The Thoughtful Reader Circle"></label>
+          <label>Club description<textarea name="description" required minlength="10" maxlength="1000" placeholder="What brings your readers together? What will members explore?"></textarea></label>
+        </section>
+        <section data-club-step="2" class="club-wizard-step" hidden>
+          <h3>Choose your reading focus</h3>
+          <p class="club-wizard-hint">A club can follow one selected title or explore a wider reading theme.</p>
+          <label>Club format<select name="club_type" id="clubType"><option value="single-book">One featured book</option><option value="open-reading">Open reading circle</option></select></label>
+          <div id="featuredBookFields" class="clubs-form-row">
+            <label>Book title<input name="book_title" maxlength="180" placeholder="The book your club will read"></label>
+            <label>Book author<input name="book_author" maxlength="120" placeholder="Author's name"></label>
+          </div>
+          <label>Genre or theme<input name="genre" required maxlength="80" placeholder="Personal growth, fiction, history…"></label>
+        </section>
+        <section data-club-step="3" class="club-wizard-step" hidden>
+          <h3>Set the club's ground rules</h3>
+          <p class="club-wizard-hint">Choose who can discover the club and suggest a pace that feels welcoming.</p>
+          <label>Who can join?<select name="visibility"><option value="public">Public — discoverable by readers</option><option value="private">Private — readers apply to join</option></select></label>
+          <label>Suggested reading plan <span class="clubs-muted">(optional)</span><textarea name="reading_plan" maxlength="2000" placeholder="Weekly chapters, reading pace, first meeting plan, or discussion rhythm."></textarea></label>
+          <p class="club-review-note">New clubs are reviewed by the Voiceoftaade team before appearing publicly. Readers applying to join will answer a short set of thoughtful questions.</p>
+        </section>
+        <div class="club-wizard-actions"><button type="button" id="clubWizardBack" class="clubs-button clubs-button-quiet" hidden>Back</button><button type="button" id="clubWizardNext" class="clubs-button clubs-button-gold">Continue</button><button type="submit" id="clubWizardSubmit" class="clubs-button clubs-button-gold" hidden>Submit for review</button></div>
+      </form>
+    </div>
   </section>
 
   <section class="club-detail-panel" id="clubDetail" hidden>
