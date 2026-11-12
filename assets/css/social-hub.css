@@ -1,0 +1,59 @@
+/* Unified social workspace: public community + private inbox in one reader hub. */
+#workspaceMessages{min-width:0}
+.message-center-intro{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:18px}
+.message-center-intro h2{margin:3px 0;font:600 clamp(1.7rem,3vw,2.3rem)/1.15 "Playfair Display",Georgia,serif;color:#fff}
+.message-center-intro p{margin:5px 0 0;color:#aebfd1;max-width:620px}
+.message-center-shell{width:100%;margin:0!important;padding:0!important}
+.message-center-shell .dm-heading{display:none!important}
+.message-center-layout{display:grid;grid-template-columns:minmax(270px,350px) minmax(0,1fr);min-height:min(720px,calc(100dvh - 250px));max-height:780px;overflow:hidden;border:1px solid rgba(215,173,87,.22);border-radius:20px;background:#f7f4ec;box-shadow:0 20px 55px rgba(0,0,0,.22)}
+.message-center-sidebar{display:flex;flex-direction:column;min-width:0;overflow:auto;padding:18px;background:#fbf8f1;border-right:1px solid #e3dfd6}
+.message-center-sidebar h3{margin:20px 0 8px;color:#536174;font:800 .68rem/1.2 "DM Sans",sans-serif;letter-spacing:.13em;text-transform:uppercase}
+.message-center-sidebar h3:first-child{margin-top:0}
+.message-center-search{display:flex;gap:8px;margin:0 0 6px}
+.message-center-search input{width:100%;min-width:0;border:1px solid #dce1e6;border-radius:999px;background:#fff;padding:12px 15px;font:500 .84rem "DM Sans",sans-serif}
+.message-center-search button{flex:0 0 auto;border:0;border-radius:999px;background:#102b49;color:#fff;padding:0 15px;font-weight:750}
+.message-center-list{display:grid;gap:5px;min-width:0}
+.message-center-list .dm-item{display:block;width:100%;min-width:0;border:1px solid transparent;border-radius:13px;background:transparent;color:#102b49;padding:12px;text-align:left;overflow-wrap:anywhere}
+.message-center-list .dm-item:hover,.message-center-list .dm-item.active{background:#f0eadc;border-color:#e2d4b3}
+.message-center-list .dm-item strong{font-size:.84rem}
+.message-center-list .dm-item small{display:block;margin-top:3px;color:#778392;font-size:.7rem}
+.message-center-list .dm-empty{padding:14px 8px;margin:0;text-align:left;color:#778392;font-size:.82rem}
+.message-center-list .dm-actions button,.message-center-list .dm-actions a{font:700 .75rem "DM Sans",sans-serif}
+.message-center-panel{display:flex;flex-direction:column;position:relative;min-width:0;background:#f2f0e9}
+.message-center-top{display:flex;align-items:center;gap:12px;min-height:76px;padding:13px 20px;border-bottom:1px solid #e5e1d7;background:#fffefa}
+.message-center-avatar{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border-radius:50%;background:linear-gradient(140deg,#173f60,#cba65f);color:#fff;font:700 1.2rem Georgia,serif}
+.message-center-peer{min-width:0}
+.message-center-peer h3{margin:0;color:#142b43;font:750 .94rem "DM Sans",sans-serif}
+.message-center-peer p{margin:4px 0 0;color:#7a8794;font-size:.74rem;overflow-wrap:anywhere}
+.message-center-messages{display:flex;flex:1;flex-direction:column;gap:5px;min-height:300px;max-height:calc(100dvh - 390px);overflow:auto;padding:22px clamp(14px,3vw,38px);background-color:#f0eee8;background-image:radial-gradient(rgba(16,40,68,.035) .8px,transparent .8px);background-size:15px 15px}
+.message-center-messages .dm-bubble{width:fit-content;max-width:min(80%,660px);margin:5px 0;padding:11px 14px 8px;border:0;border-radius:16px 16px 16px 4px;background:#fff;color:#20354c;box-shadow:0 2px 5px rgba(16,40,68,.05);font-size:.9rem;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.message-center-messages .dm-bubble.mine{align-self:flex-end;margin-left:auto;border-radius:16px 16px 4px 16px;background:#e1eedb}
+.message-center-messages .dm-bubble small{display:block;margin-top:4px;text-align:right;color:#85919d;font-size:.66rem}
+.message-center-composer{display:flex;align-items:flex-end;gap:9px;padding:12px;background:#fffefa;border-top:1px solid #e5e1d7}
+.message-center-composer textarea{flex:1;min-width:0;min-height:46px;max-height:120px;border:1px solid #dce1e6;border-radius:22px;background:#f4f5f6;padding:12px 15px;font:500 .9rem "DM Sans",sans-serif;resize:vertical}
+.message-center-composer button{min-height:46px;border:0;border-radius:999px;background:#cda85f;color:#122943;padding:0 18px;font-weight:800}
+.message-center-status{min-height:24px;padding:3px 16px;background:#fffefa;color:#8b713d;font-size:.75rem}
+.message-center-back{display:none;border:0;background:transparent;color:#102b49;font-weight:800}
+#dmComposer[hidden],#dmSearchForm[hidden],#dmSearchResults[hidden]{display:none!important}
+#workspaceMessages[hidden]{display:none!important}
+@media(max-width:760px){
+ .message-center-intro{align-items:flex-start;flex-direction:column}
+ .message-center-layout{display:flex;position:relative;flex-direction:column;height:calc(100dvh - 225px);min-height:510px;max-height:none;border-radius:15px}
+ .message-center-sidebar{flex:1;min-height:0;overflow:auto;padding:13px;border-right:0}
+ .message-center-sidebar h3{margin:14px 2px 6px}
+ .message-center-search{position:sticky;top:0;z-index:2;padding:4px 0;background:#fbf8f1}
+ #dmSearchResults,#dmIncoming,#dmOutgoing{max-height:175px;overflow:auto}
+ #dmConversations .dm-item{border:1px solid #eee8dd;background:#fffefa}
+ .message-center-panel{display:none;flex:1;min-height:0;height:100%;overflow:hidden}
+ .message-center-shell.has-active-chat .message-center-sidebar{display:none}
+ .message-center-shell.has-active-chat .message-center-panel{display:flex}
+ .message-center-top{flex:0 0 65px;min-height:65px;padding:8px 12px;gap:9px}
+ .message-center-back{display:block;padding:8px 4px 8px 0}
+ .message-center-avatar{width:37px;height:37px;flex-basis:37px}
+ .message-center-messages{flex:1;min-height:0;max-height:none;padding:14px 12px}
+ .message-center-messages .dm-bubble{max-width:88%;font-size:.87rem}
+ .message-center-composer{flex:0 0 auto;padding:8px;gap:7px}
+ .message-center-composer textarea{min-height:43px;max-height:90px;font-size:16px}
+ .message-center-composer button{min-height:43px;padding:0 14px}
+ .message-center-status{flex:0 0 auto;padding:3px 10px}
+}
