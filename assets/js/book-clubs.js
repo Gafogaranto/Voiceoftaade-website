@@ -45,6 +45,7 @@
     $("createClubPanel").hidden=true;
     $("openCreateClub").hidden=!state.user;
     $("clubRequests").hidden=!state.user;
+    $("platformApprovals").hidden=!state.staff;
   }
 
   async function loadClubs(){
@@ -248,6 +249,31 @@
   function closeWizard(){$("createClubPanel").hidden=true;document.body.classList.remove("club-wizard-open");}
   function updateBookRequirements(){const single=$("clubType").value==="single-book";$("createClubForm").elements.book_title.required=single;$("createClubForm").elements.book_author.required=single;}
   function stepIsValid(){const section=document.querySelector('[data-club-step="'+wizardStep+'"]');for(const field of section.querySelectorAll("input,textarea,select")){if(!field.checkValidity()){field.reportValidity();return false;}}return true;}
+  async function loadPendingCommunityApprovals(){
+    const section=$("platformApprovals"),host=$("pendingCommunityApprovals");
+    if(!state.user||!state.staff){section.hidden=true;return;}
+    section.hidden=false;host.innerHTML='<p class="clubs-loading">Checking proposed spaces…</p>';
+    const {data,error}=await client.from("communities")
+      .select("id,name,description,visibility,status,created_by,created_at,book_clubs(book_title,book_author,genre,club_type,reading_plan)")
+      .eq("status","pending").order("created_at",{ascending:true}).limit(100);
+    if(error){host.innerHTML='<p class="clubs-empty">Proposals could not be loaded: '+esc(error.message)+'</p>';return;}
+    if(!data?.length){host.innerHTML='<div class="clubs-empty"><strong>No proposals are awaiting review.</strong><br>New book clubs and community spaces submitted for approval will appear here.</div>';return;}
+    host.innerHTML=data.map(row=>{
+      const book=Array.isArray(row.book_clubs)?row.book_clubs[0]:row.book_clubs;
+      const kind=book?'Book club proposal':'Community space proposal';
+      return '<article class="club-request-card owner-approval-card"><div class="owner-approval-card-head"><span class="club-tag pending">Awaiting approval</span><span class="club-tag">'+(book?'Book club':'Community space')+'</span></div><h3>'+esc(row.name)+'</h3><p>'+esc(row.description||'No description provided.')+'</p>'+
+        (book?'<p><strong>Reading focus:</strong> '+esc(book.club_type==='open-reading'?'Open reading circle':(book.book_title||'Book not specified')+(book.book_author?' · '+book.book_author:''))+'</p><p><strong>Genre:</strong> '+esc(book.genre||'Not specified')+'</p>'+(book.reading_plan?'<p><strong>Reading plan:</strong> '+esc(book.reading_plan)+'</p>':''):'')+
+        '<p><strong>Visibility requested:</strong> '+esc(row.visibility)+'</p><p class="clubs-muted">Submitted '+esc(dateText(row.created_at))+'</p><div class="club-request-actions"><button type="button" class="clubs-button clubs-button-gold" data-review-community="'+esc(row.id)+'" data-decision="approved">Approve and publish</button><button type="button" class="clubs-button clubs-button-quiet" data-review-community="'+esc(row.id)+'" data-decision="rejected">Decline proposal</button></div></article>';
+    }).join("");
+  }
+
+  async function reviewCommunityProposal(id,decision){
+    const {error}=await client.rpc("review_community_creation",{p_community_id:id,p_decision:decision});
+    if(error){status("The proposal could not be reviewed: "+error.message,true);return;}
+    status(decision==="approved"?"Proposal approved. The space is now active and discoverable.":"Proposal declined. It will not appear to readers.");
+    await Promise.all([loadPendingCommunityApprovals(),loadClubs()]);
+  }
+
   async function loadManagedRequests(){
     const section=$("clubRequests"),host=$("managedClubRequests");if(!state.user){section.hidden=true;return;}
     section.hidden=false;host.innerHTML='<p class="clubs-loading">Checking membership requests…</p>';
@@ -357,17 +383,17 @@
     updateBookRequirements();showWizardStep();
     $("joinClubBtn").addEventListener("click",joinSelectedClub);
     $("clubApplicationForm").addEventListener("submit",submitClubApplication);
-    document.addEventListener("click",e=>{const b=e.target.closest("[data-review-application]");if(b)reviewApplication(b.dataset.reviewApplication,b.dataset.decision);});
+    document.addEventListener("click",e=>{const b=e.target.closest("[data-review-application]");if(b)reviewApplication(b.dataset.reviewApplication,b.dataset.decision);const proposal=e.target.closest("[data-review-community]");if(proposal)reviewCommunityProposal(proposal.dataset.reviewCommunity,proposal.dataset.decision);});
     $("closeClubBtn").addEventListener("click",()=>{$("clubDetail").hidden=true;state.selected=null;});
     $("createSessionForm").addEventListener("submit",createSession);
     $("createDiscussionForm").addEventListener("submit",createDiscussion);
     $("createPollForm").addEventListener("submit",createPoll);
-    await Promise.all([loadClubs(),loadUpcomingSessions(),loadManagedRequests()]);
+    await Promise.all([loadClubs(),loadUpcomingSessions(),loadManagedRequests(),loadPendingCommunityApprovals()]);
     if(location.hash==="#clubRequests")setTimeout(()=>$("clubRequests").scrollIntoView({behavior:"smooth",block:"start"}),150);
     client.auth.onAuthStateChange((_event,session)=>{
       state.user=session?.user||null;
       Promise.resolve().then(async()=>{
-        await loadPermissions();await loadMemberships();renderAccount();await loadClubs();await loadUpcomingSessions();await loadManagedRequests();
+        await loadPermissions();await loadMemberships();renderAccount();await loadClubs();await loadUpcomingSessions();await loadManagedRequests();await loadPendingCommunityApprovals();
         if(state.selected)await openClub(state.selected.community_id);
       }).catch(error=>{console.error("Book club account refresh failed",error);});
     });
