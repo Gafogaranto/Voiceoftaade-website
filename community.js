@@ -290,9 +290,14 @@
     .on("postgres_changes",{event:"*",schema:"public",table:"community_posts",filter:"community_id=eq."+communityId},refresh)
     .on("postgres_changes",{event:"*",schema:"public",table:"community_replies"},refresh)
     .subscribe((status)=>{
-      const description=$("chatDescription");
+      const description=$("chatDescription"),live=$("chatLiveStatus");
       if(description&&state.selected?.id===communityId){
-        description.textContent=status==="SUBSCRIBED"?"Live conversation · updates appear automatically":status==="CHANNEL_ERROR"?"Live updates unavailable · use refresh to check new activity":"Connecting to live conversation…";
+        description.textContent=state.selected.visibility==="private"?"Private reading room":"Community conversation";
+      }
+      if(live&&state.selected?.id===communityId){
+        live.classList.toggle("is-connected",status==="SUBSCRIBED");
+        live.classList.toggle("is-error",status==="CHANNEL_ERROR"||status==="TIMED_OUT");
+        live.innerHTML=status==="SUBSCRIBED"?"<i></i> Live updates on":status==="CHANNEL_ERROR"||status==="TIMED_OUT"?"<i></i> Live updates unavailable":"<i></i> Connecting to live updates";
       }
     });
   }
