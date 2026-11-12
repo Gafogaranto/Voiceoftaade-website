@@ -106,7 +106,7 @@
     $("clubDetail").hidden=false;
     $("detailClubName").textContent=c.name;
     $("detailClubDescription").textContent=c.description;
-    $("detailClubMeta").innerHTML='<span>'+esc(club.book_title)+' · '+esc(club.book_author)+'</span><span>'+esc(club.genre)+'</span><span>'+esc(c.visibility==="private"?"Private":"Public")+'</span>';
+    $("detailClubMeta").innerHTML='<span>'+esc(club.book_title||"Open reading circle")+(club.book_author?' · '+esc(club.book_author):"")+'</span><span>'+esc(club.genre)+'</span><span>'+esc(c.visibility==="private"?"Private":"Public")+'</span>';
     const join=$("joinClubBtn"),applicationForm=$("clubApplicationForm");
     join.hidden=false;join.disabled=false;applicationForm.hidden=true;$("clubApplications").hidden=true;
     let ownApplication=null;
@@ -348,16 +348,25 @@
     state.user=session?.user||null;
     await loadPermissions();await loadMemberships();renderAccount();
     $("createClubForm").addEventListener("submit",createClub);
+    $("openCreateClub").addEventListener("click",openWizard);
+    $("closeCreateClub").addEventListener("click",closeWizard);
+    $("createClubPanel").addEventListener("click",e=>{if(e.target===$("createClubPanel"))closeWizard();});
+    $("clubWizardNext").addEventListener("click",()=>{if(stepIsValid()&&wizardStep<3){wizardStep++;showWizardStep();}});
+    $("clubWizardBack").addEventListener("click",()=>{if(wizardStep>1){wizardStep--;showWizardStep();}});
+    $("clubType").addEventListener("change",updateBookRequirements);
+    updateBookRequirements();showWizardStep();
     $("joinClubBtn").addEventListener("click",joinSelectedClub);
+    $("clubApplicationForm").addEventListener("submit",submitClubApplication);
+    document.addEventListener("click",e=>{const b=e.target.closest("[data-review-application]");if(b)reviewApplication(b.dataset.reviewApplication,b.dataset.decision);});
     $("closeClubBtn").addEventListener("click",()=>{$("clubDetail").hidden=true;state.selected=null;});
     $("createSessionForm").addEventListener("submit",createSession);
     $("createDiscussionForm").addEventListener("submit",createDiscussion);
     $("createPollForm").addEventListener("submit",createPoll);
-    await Promise.all([loadClubs(),loadUpcomingSessions()]);
+    await Promise.all([loadClubs(),loadUpcomingSessions(),loadManagedRequests()]);
     client.auth.onAuthStateChange((_event,session)=>{
       state.user=session?.user||null;
       Promise.resolve().then(async()=>{
-        await loadPermissions();await loadMemberships();renderAccount();await loadClubs();await loadUpcomingSessions();
+        await loadPermissions();await loadMemberships();renderAccount();await loadClubs();await loadUpcomingSessions();await loadManagedRequests();
         if(state.selected)await openClub(state.selected.community_id);
       }).catch(error=>{console.error("Book club account refresh failed",error);});
     });
