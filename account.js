@@ -129,6 +129,11 @@
     await migrateDeviceCollections(user);
     await renderCloudProgress();
     await renderPurchasedBooks();
+    if(location.hash==="#profile-settings"){
+      requestAnimationFrame(()=>{$("editProfileButton")?.click();$("profile-settings")?.scrollIntoView({behavior:"smooth",block:"start"});});
+    }else if(location.hash==="#privacy-settings"){
+      requestAnimationFrame(()=>$("privacy-settings")?.scrollIntoView({behavior:"smooth",block:"start"}));
+    }
   }
 
   function populateProfileEditor(profile) {
