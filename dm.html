@@ -9,10 +9,38 @@
 <style>
 body{min-height:100vh;background:#f6f2e9;color:#102844}.dm-shell{width:min(1180px,94vw);margin:32px auto 64px}.dm-heading{padding:28px 0}.dm-heading h1{font:600 clamp(2rem,5vw,3.2rem) "Playfair Display",serif}.dm-layout{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:640px;background:#fffdf8;border:1px solid #e4ddce;border-radius:22px;overflow:hidden;box-shadow:0 18px 48px #07172b12}.dm-sidebar{padding:20px;border-right:1px solid #e7e0d4;background:#fbf8f1}.dm-search[hidden],#dmSearchResults[hidden]{display:none!important}.dm-search{display:flex;gap:7px;margin:12px 0}.dm-search input{min-width:0;width:100%;padding:10px;border:1px solid #d9d1c4;border-radius:10px;font:inherit}.dm-search button{border:1px solid #102844;border-radius:10px;background:#102844;color:#fff;padding:9px 12px}.dm-sidebar h2,.dm-panel h2{font:600 1.25rem "Playfair Display",serif}.dm-list{display:grid;gap:9px;margin:14px 0 24px}.dm-item{width:100%;text-align:left;border:1px solid #e8e0d2;border-radius:13px;background:#fffdf8;padding:13px;cursor:pointer;color:#102844}.dm-item strong{display:block}.dm-item small{color:#788496}.dm-item.active{border-color:#c49a4d;background:#f6efdf}.dm-panel{display:flex;flex-direction:column;min-width:0}.dm-top{padding:20px;border-bottom:1px solid #e7e0d4}.dm-messages{flex:1;min-height:360px;max-height:560px;overflow:auto;padding:20px;background:#f7f4ed}.dm-bubble{max-width:min(78%,680px);margin:0 0 12px;padding:13px 15px;border-radius:16px;background:#fff;border:1px solid #e7e0d4;white-space:pre-wrap;overflow-wrap:anywhere}.dm-bubble.mine{margin-left:auto;background:#eaf0f6;border-color:#d4dfeb}.dm-bubble small{display:block;margin-top:7px;color:#788496;font-size:.75rem}.dm-composer{display:flex;gap:10px;padding:16px;border-top:1px solid #e7e0d4}.dm-composer textarea{flex:1;min-height:54px;max-height:130px;padding:12px;border:1px solid #d9d1c4;border-radius:12px;font:inherit;resize:vertical}.dm-empty{padding:32px;color:#687486;line-height:1.7}.dm-status{min-height:24px;padding:0 20px 14px;color:#9a742f}.dm-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.dm-actions button{border:1px solid #d8c69f;border-radius:999px;padding:9px 13px;background:#fff;color:#102844;cursor:pointer}.dm-actions button.primary{background:#102844;color:#fff;border-color:#102844}
 @media(max-width:760px){.dm-shell{width:100%;margin:0}.dm-heading{padding:18px 16px}.dm-layout{display:flex;flex-direction:column;min-height:calc(100dvh - 150px);border-radius:0}.dm-sidebar{border-right:0;border-bottom:1px solid #e7e0d4}.dm-list{display:flex;overflow:auto}.dm-item{min-width:190px}.dm-messages{min-height:280px;max-height:none}.dm-composer{padding:10px}.dm-composer button{align-self:flex-end}}
+
+/* Premium messaging workspace */
+.dm-shell{width:min(1320px,96vw);margin:22px auto 34px}.dm-heading{padding:18px 4px 22px}.dm-heading h1{margin:4px 0;font-size:clamp(2rem,4vw,3rem)}.dm-layout{grid-template-columns:360px minmax(0,1fr);min-height:min(760px,calc(100dvh - 190px));border-radius:24px;background:#fffdf8;box-shadow:0 24px 70px rgba(7,23,43,.12)}.dm-sidebar{padding:22px 18px;background:#fbf8f1}.dm-sidebar h2{margin:16px 0 9px;font:700 .75rem "DM Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#778397}.dm-search input{border-radius:99px;background:#fff;padding:13px 16px}.dm-search button{border-radius:99px;padding:10px 17px;background:#102844}.dm-list{gap:7px}.dm-item{border:1px solid transparent;border-radius:14px;padding:13px 14px;background:transparent;transition:background .16s,border-color .16s}.dm-item:hover,.dm-item.active{background:#f2ead9;border-color:#e4d1a7}.dm-item strong{font-size:.92rem}.dm-item small{display:block;margin-top:4px}.dm-item p{margin:7px 0;color:#58677b;font-size:.84rem;line-height:1.5}.dm-panel{background:#f7f5ef;position:relative}.dm-top{min-height:76px;display:flex;align-items:center;gap:12px;padding:13px 20px;background:#fffdf8;border-bottom:1px solid #e9e3d8}.dm-peer-avatar{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,#102d4c,#d6ad5d);color:#fff;font:700 1.2rem "Playfair Display",serif}.dm-peer-copy{min-width:0}.dm-top h2{margin:0;font:700 1rem "DM Sans",sans-serif}.dm-top p{margin:4px 0 0;font-size:.78rem}.dm-back{display:none;border:0;background:transparent;color:#102844;font-weight:700}.dm-messages{display:flex;flex-direction:column;gap:4px;min-height:420px;max-height:calc(100dvh - 340px);padding:24px clamp(16px,4vw,44px);background-color:#f1eee6;background-image:radial-gradient(rgba(16,40,68,.035) .8px,transparent .8px);background-size:14px 14px}.dm-bubble{position:relative;width:fit-content;max-width:min(78%,620px);margin:5px 0;padding:11px 14px 8px;border:0;border-radius:15px 15px 15px 4px;background:#fff;box-shadow:0 2px 3px #1028440b;font-size:.94rem;line-height:1.6}.dm-bubble.mine{align-self:flex-end;margin-left:auto;border-radius:15px 15px 4px 15px;background:#e4f0df}.dm-bubble small{display:block;margin-top:4px;text-align:right;color:#7d8996;font-size:.68rem}.dm-composer{align-items:flex-end;gap:10px;padding:13px 16px;background:#fffdf8;border-top:1px solid #e8e1d5}.dm-composer textarea{min-height:48px;max-height:130px;resize:none;border-radius:22px;background:#f5f2eb;border-color:#e4dfd5;padding:13px 17px}.dm-composer button{min-height:46px;min-width:78px;border-radius:99px}.dm-status{padding:4px 18px 12px;background:#fffdf8}.dm-empty{margin:auto;text-align:center;max-width:340px}
+@media(max-width:760px){
+ .dm-shell{width:100%;margin:0}.dm-heading{padding:15px 17px 17px}.dm-heading .eyebrow{font-size:.65rem}.dm-heading h1{font-size:1.9rem}.dm-heading>p:last-child{font-size:.84rem;margin:6px 0 0}
+ .dm-layout{display:flex;position:relative;flex-direction:column;min-height:calc(100dvh - 210px);height:calc(100dvh - 210px);border:0;border-radius:0;box-shadow:none;overflow:hidden}
+ .dm-sidebar{display:flex;flex-direction:column;flex:1;min-height:0;overflow:auto;padding:12px 14px 18px;border:0;background:#fbf8f1}
+ .dm-sidebar h2{margin:12px 2px 6px}.dm-search{position:sticky;top:0;z-index:2;padding:4px 0;background:#fbf8f1}
+ #dmSearchResults{max-height:190px;overflow:auto}
+ #dmIncoming,#dmOutgoing{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px}
+ #dmIncoming .dm-item,#dmOutgoing .dm-item{flex:0 0 min(78vw,270px);border:1px solid #e8e0d2;background:#fffdf8}
+ #dmConversations{display:grid;gap:5px}
+ #dmConversations .dm-item{display:block;width:100%;text-align:left;border:1px solid #eee8dd;background:#fffdf8}
+ .dm-panel{display:none;flex:1;min-height:0;height:100%;overflow:hidden}
+ .dm-shell.has-active-chat .dm-sidebar{display:none}
+ .dm-shell.has-active-chat .dm-panel{display:flex}
+ .dm-top{flex:0 0 66px;min-height:66px;padding:9px 13px;gap:9px}
+ .dm-back{display:block;padding:8px 5px 8px 0;font-size:.8rem}
+ .dm-peer-avatar{width:38px;height:38px;flex-basis:38px}
+ .dm-messages{flex:1;min-height:0;max-height:none;overflow:auto;padding:16px 13px calc(14px + env(safe-area-inset-bottom))}
+ .dm-bubble{max-width:86%;font-size:.91rem}
+ .dm-composer{flex:0 0 auto;padding:9px 10px calc(9px + env(safe-area-inset-bottom));gap:7px}
+ .dm-composer textarea{min-height:44px;max-height:100px;padding:11px 14px;font-size:16px}
+ .dm-composer button{min-width:62px;min-height:44px;padding:9px 13px}
+ .dm-status{flex:0 0 auto;padding:2px 12px 7px}
+ body.dm-page{padding-bottom:calc(68px + env(safe-area-inset-bottom))!important}
+}
+
 </style>
 <link rel="stylesheet" href="assets/css/app-nav.css?v=20261112-nav1">
 </head>
-<body class="inner-page">
+<body class="inner-page dm-page">
 <div class="announcement">VOICEOFTAADE · PRIVATE READER MESSAGES</div>
 <header class="site-header"><a class="brand" href="index.html"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav><a href="books.html">Library</a><a href="community.html">Community</a><a href="account.html">My account</a></nav></header>
 <main class="dm-shell">
@@ -24,7 +52,7 @@ body{min-height:100vh;background:#f6f2e9;color:#102844}.dm-shell{width:min(1180p
 <h2>Requests sent</h2><div id="dmOutgoing" class="dm-list"><p class="dm-empty">Loading sent requests…</p></div>
 </aside>
 <section class="dm-panel">
-<div class="dm-top"><h2 id="dmTitle">Choose a conversation</h2><p id="dmSubtitle" class="muted">Your accepted conversations will appear here.</p></div>
+<div class="dm-top"><button id="dmBackButton" class="dm-back" type="button" aria-label="Back to chats">← Chats</button><div class="dm-peer-avatar" aria-hidden="true">V</div><div class="dm-peer-copy"><h2 id="dmTitle">Choose a conversation</h2><p id="dmSubtitle" class="muted">Your accepted conversations will appear here.</p></div></div>
 <div id="dmMessages" class="dm-messages"><p class="dm-empty">Select an accepted conversation to read and reply.</p></div>
 <form id="dmComposer" class="dm-composer" hidden><textarea id="dmBody" maxlength="4000" placeholder="Write a private message…" required></textarea><button class="button button-gold" type="submit">Send</button></form>
 <div id="dmStatus" class="dm-status" role="status" aria-live="polite"></div>
