@@ -42,3 +42,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .button,.button-gold,.button-dark,.button-outline{min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.button,.button-gold,.button-dark,.button-outline{transition:none!important}}
+
+.platform-experiences{padding-top:clamp(50px,7vw,86px);padding-bottom:clamp(50px,7vw,86px)}
+.experience-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:30px}
+.experience-card{display:flex;flex-direction:column;align-items:flex-start;min-height:255px;padding:22px;border:1px solid var(--vt-line);border-radius:20px;background:var(--vt-card);box-shadow:0 14px 36px rgba(25,48,42,.055);transition:transform .2s ease,box-shadow .2s ease}
+.experience-card:hover{transform:translateY(-4px);box-shadow:0 22px 44px rgba(25,48,42,.1)}
+.experience-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:#edf2eb;color:var(--vt-forest);font-size:1.2rem}
+.experience-card>small{margin-top:20px;color:var(--vt-coral);font-size:.62rem;font-weight:700;letter-spacing:.14em}
+.experience-card h3{margin:7px 0;font:600 1.3rem "Playfair Display",serif}
+.experience-card p{margin:0 0 18px;color:var(--vt-muted);font-size:.86rem;line-height:1.6}
+.experience-card b{margin-top:auto;color:var(--vt-forest);font-size:.78rem}
+@media(max-width:900px){.experience-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.experience-grid{grid-template-columns:1fr}.experience-card{min-height:210px;padding:19px}}
