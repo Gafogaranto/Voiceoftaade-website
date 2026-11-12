@@ -52,6 +52,7 @@
    await loadFollowing();
    await loadMentions();
    await loadNotifications();
+   if(new URLSearchParams(location.search).get("view")==="messages")showWorkspace("messages");
   }
   async function refreshPermissions(){
    state.staff=false;state.creator=false;
