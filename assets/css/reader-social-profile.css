@@ -1,0 +1,46 @@
+.reader-profile-page{width:min(1240px,100%);margin:0 auto;padding:clamp(16px,4vw,38px) clamp(13px,3vw,30px) 70px;color:#172c43}
+.reader-profile-hero{overflow:hidden;border:1px solid #e1dfd8;border-radius:22px;background:#fff;box-shadow:0 18px 50px rgba(7,23,43,.08)}
+.reader-profile-cover{height:clamp(170px,24vw,290px);position:relative;overflow:hidden;background:radial-gradient(ellipse at 75% 20%,rgba(228,188,104,.32),transparent 34%),linear-gradient(125deg,#081a2d,#173d5a 60%,#b18c4b)}
+.reader-profile-cover:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(5,15,26,.52),transparent 65%)}
+.reader-profile-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.reader-profile-cover img[hidden]{display:none!important}
+.reader-profile-cover-mark{position:absolute;z-index:1;right:clamp(18px,5vw,55px);bottom:20px;color:rgba(255,255,255,.16);font:clamp(3.8rem,9vw,7rem)/1 "Playfair Display",Georgia,serif;letter-spacing:.12em}
+.reader-profile-identity{display:flex;align-items:flex-end;gap:20px;padding:0 clamp(16px,3.2vw,34px) 21px;border-bottom:1px solid #e9e8e2;min-height:125px}
+.reader-profile-avatar{position:relative;flex:0 0 auto;width:clamp(100px,13vw,146px);height:clamp(100px,13vw,146px);margin-top:-60px;border:5px solid #fff;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#d9bb7c,#183d5b);color:#fff;font:700 2.6rem "Playfair Display",Georgia,serif;box-shadow:0 5px 22px rgba(7,23,43,.17)}
+.reader-profile-avatar img{width:100%;height:100%;object-fit:cover}
+.reader-profile-main{min-width:0;flex:1;padding:0 0 4px}
+.reader-profile-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.reader-profile-title h1{margin:0;color:#102b49;font:600 clamp(1.55rem,3.4vw,2.3rem)/1.12 "Playfair Display",Georgia,serif;overflow-wrap:anywhere}
+.reader-profile-verified{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#1c5e8c;color:#fff;font-size:.75rem}
+.reader-profile-handle{margin:4px 0;color:#7c8794;font-size:.78rem}
+.reader-profile-bio{max-width:680px;margin:10px 0 0;color:#536477;font-size:.88rem;line-height:1.7;white-space:pre-wrap}
+.reader-profile-location{margin:7px 0 0;color:#83909c;font-size:.75rem}
+.reader-profile-stats{display:flex;flex-wrap:wrap;gap:18px;margin-top:13px;color:#687789;font-size:.77rem}
+.reader-profile-stats strong{color:#163550;font-weight:850}
+.reader-profile-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto;padding-bottom:5px}
+.reader-profile-actions .button{min-height:40px;padding:10px 14px;border:0;border-radius:999px;font-size:.75rem;white-space:nowrap}
+.reader-profile-actions #followButton{background:#102f4f;color:#fff}
+.reader-profile-actions #messageRequestButton{background:#e6bd68;color:#142a43}
+.reader-profile-actions #websiteLink,.reader-profile-actions #profileSettingsLink{background:#edf1f5;color:#24394d}
+.reader-profile-actions #profileReportButton,.reader-profile-actions #profileBlockButton{padding:9px 12px;background:transparent;border:1px solid #d9e0e6;color:#667488}
+.reader-profile-actions #profileReportButton:hover,.reader-profile-actions #profileBlockButton:hover{background:#f5f6f7}
+.reader-profile-tabs{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:0 clamp(14px,3vw,30px);scrollbar-width:thin}
+.reader-profile-tabs a{display:inline-flex;align-items:center;justify-content:center;min-height:53px;padding:0 16px;border-bottom:3px solid transparent;color:#687789;font-size:.8rem;font-weight:800;white-space:nowrap}
+.reader-profile-tabs a:first-child,.reader-profile-tabs a:hover{border-color:#c69c50;color:#163550}
+.reader-profile-message{min-height:22px;margin:0;padding:0 clamp(16px,3vw,34px);color:#8c713e;font-size:.78rem;overflow-wrap:anywhere}
+.reader-profile-columns{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);gap:18px;margin-top:20px;align-items:start}
+.reader-profile-card{min-width:0;padding:clamp(18px,3vw,26px);border:1px solid #e3e1da;border-radius:18px;background:#fff;box-shadow:0 10px 30px rgba(7,23,43,.045)}
+.reader-profile-card h2{margin:0 0 17px;color:#14304c;font:600 1.35rem "Playfair Display",Georgia,serif}
+.reader-profile-card h3{margin:22px 0 8px;color:#23445e;font:700 .86rem "DM Sans",sans-serif}
+.reader-profile-card .item{padding:15px 0;border-top:1px solid #eff0ee}
+.reader-profile-card .item p{margin:7px 0;color:#536477;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.reader-profile-card .item small,.reader-profile-card .muted{color:#85919d;font-size:.75rem}
+.reader-profile-about{color:#536477;font-size:.88rem;line-height:1.8;overflow-wrap:anywhere}
+.reader-profile-side{display:grid;gap:15px}
+.reader-profile-side .reader-profile-card{padding:20px}
+.reader-profile-side a{color:#876528;font-weight:800;font-size:.82rem}
+.reader-profile-note{padding:14px;border-radius:12px;background:#f5f4ef;color:#788696;font-size:.75rem;line-height:1.7}
+.reader-profile-private{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eff3f6;color:#61758b;font-size:.67rem;font-weight:800}
+.reader-profile-legacy-actions{display:none!important}
+@media(max-width:850px){.reader-profile-columns{grid-template-columns:1fr}.reader-profile-identity{align-items:flex-start;flex-wrap:wrap;gap:12px;padding-bottom:18px}.reader-profile-main{flex-basis:calc(100% - 124px)}.reader-profile-actions{width:100%;margin-left:0;padding:0}.reader-profile-actions .button{flex:1}}
+@media(max-width:520px){.reader-profile-page{padding:12px 10px 45px}.reader-profile-hero{border-radius:16px}.reader-profile-cover{height:155px}.reader-profile-identity{display:grid;grid-template-columns:86px minmax(0,1fr);align-items:center;gap:10px;padding:0 13px 14px}.reader-profile-avatar{width:86px;height:86px;margin-top:-38px;border-width:4px;font-size:1.7rem}.reader-profile-main{padding:0;min-width:0}.reader-profile-title h1{font-size:1.38rem}.reader-profile-bio{font-size:.8rem}.reader-profile-stats{gap:10px;font-size:.68rem}.reader-profile-actions{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.reader-profile-actions .button{width:100%;min-width:0}.reader-profile-tabs a{padding:0 12px;min-height:48px}.reader-profile-card{padding:17px;border-radius:15px}}
