@@ -1,0 +1,3 @@
+/* Messages keeps direct and group conversations. Status and calling have been retired from the interface. */
+.messenger-rail [data-view="status"],.messenger-rail [data-view="calls"],.status-strip,#sidebarStatus,#sidebarCalls,#statusModal,#statusViewer,#callModal,#incomingCallModal,#audioCallBtn,#videoCallBtn{display:none!important}
+.messenger-rail{grid-template-rows:repeat(3,auto) 1fr auto!important}
