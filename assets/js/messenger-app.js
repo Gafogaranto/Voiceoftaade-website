@@ -42,7 +42,8 @@ function bindUI(){
  $("endCallBtn").addEventListener("click",()=>endCall("ended"));$("muteCallBtn").addEventListener("click",toggleMute);$("cameraCallBtn").addEventListener("click",toggleCamera);
  $("acceptCallBtn").addEventListener("click",acceptIncomingCall);$("declineCallBtn").addEventListener("click",declineIncomingCall);
  $("threadSearch").addEventListener("keydown",e=>{if(e.key==="Escape")e.target.value="";});
- $("chatMenuBtn").addEventListener("click",()=>switchView("requests"));\n $("manageMemberSearch").addEventListener("input",debounce(searchManageMembers,350));
+ $("chatMenuBtn").addEventListener("click",()=>switchView("requests"));
+ $("manageMemberSearch").addEventListener("input",debounce(searchManageMembers,350));
 }
 function debounce(fn,ms){let t;return(...args)=>{clearTimeout(t);t=setTimeout(()=>fn(...args),ms);};}
 async function loadAll(){await Promise.all([loadThreads(),loadRequests(),loadStatuses(),loadCalls()]);}
