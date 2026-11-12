@@ -2,8 +2,10 @@
 const links=[
   ["books.html","Library"],
   ["journals.html","Journal"],
+  ["community.html","Community"],
+  ["activity.html","Activity"],
+  ["messages.html","Messages"],
   ["events.html","Events"],
-  ["community.html","Community & Chats"],
   ["about.html","About"]
 ];
 const current=location.pathname.split("/").pop()||"index.html";
@@ -15,7 +17,7 @@ let nav=header.querySelector("nav.vt-primary-nav");
 if(!nav){nav=header.querySelector("nav");}
 if(!nav){nav=document.createElement("nav");header.append(nav);}
 nav.className="vt-primary-nav";nav.setAttribute("aria-label","Primary navigation");
-const active=(href)=>current===href||(href==="books.html"&&["store.html","featured.html"].includes(current))||(href==="community.html"&&["dm.html","book-clubs.html"].includes(current));
+const active=(href)=>current===href||(href==="books.html"&&["store.html","featured.html"].includes(current))||(href==="community.html"&&["book-clubs.html"].includes(current));
 nav.innerHTML=links.map(([href,label])=>'<a href="'+href+'"'+(active(href)?' aria-current="page" class="is-active"':"")+'>'+label+'</a>').join("")+
 '<a class="vt-account-link" href="account.html"'+(["account.html","profile.html"].includes(current)?' aria-current="page"':"")+'><span class="vt-account-icon" aria-hidden="true">◉</span><span>My account</span></a>';
 const oldToggle=header.querySelector(".menu-toggle,#menuToggle,.vt-menu-toggle");
