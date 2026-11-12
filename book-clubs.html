@@ -88,6 +88,15 @@
       <div class="club-detail-actions"><button type="button" id="joinClubBtn" class="clubs-button clubs-button-gold">Join book club</button><button type="button" id="closeClubBtn" class="clubs-button clubs-button-quiet">Close</button></div>
     </div>
     <p id="clubDetailStatus" class="clubs-status" role="status" aria-live="polite"></p>
+    <form id="clubApplicationForm" class="clubs-form club-application-form" hidden>
+      <h3>Apply to join this reading circle</h3><p class="club-wizard-hint">A few thoughtful questions help organisers welcome readers who share the club's purpose.</p>
+      <label>What is your familiarity with this author or their work?<textarea name="author_familiarity" required minlength="10" maxlength="1200" placeholder="Tell the organiser what you have read or what you know about the author's work."></textarea></label>
+      <label>Why would you like to join this club?<textarea name="purpose" required minlength="15" maxlength="1200" placeholder="What do you hope to learn or contribute?"></textarea></label>
+      <label>How would you contribute to respectful, useful discussions?<textarea name="contribution" required minlength="10" maxlength="1200" placeholder="Share the perspective or participation you would bring."></textarea></label>
+      <label class="club-rules-check"><input type="checkbox" name="agree_rules" required><span>I have read the club description and agree to follow its rules and respect other readers.</span></label>
+      <button type="submit" class="clubs-button clubs-button-gold">Send membership application</button>
+    </form>
+    <section id="clubApplications" class="club-applications" hidden><div class="clubs-section-heading"><div><p class="clubs-eyebrow">COMMUNITY CARE</p><h3>Membership applications</h3></div></div><div id="clubApplicationList"></div></section>
     <section class="club-detail-section">
       <div class="clubs-section-heading"><div><p class="clubs-eyebrow">READING TOGETHER</p><h3>Sessions</h3></div></div>
       <div id="clubSessions" class="session-grid"><p class="clubs-loading">Loading sessions…</p></div>
