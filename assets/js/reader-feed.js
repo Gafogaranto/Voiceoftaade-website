@@ -8,11 +8,11 @@ const avatar=p=>'<span class="reader-avatar">'+(p?.avatar_url?'<img src="'+esc(p
 function say(s,bad=false){$("postFeedback").textContent=s;$("postFeedback").style.color=bad?"#a34d42":"#315f4e";}
 function safeRichHtml(html){
  const doc=new DOMParser().parseFromString("<div>"+String(html||"")+"</div>","text/html"),root=doc.body.firstElementChild;
- const allowed=new Set(["P","BR","STRONG","B","EM","I","H2","H3","UL","OL","LI","BLOCKQUOTE","A"]);
+ const allowed=new Set(["P","DIV","BR","STRONG","B","EM","I","H2","H3","UL","OL","LI","BLOCKQUOTE","A"]);
  const clean=node=>{[...node.childNodes].forEach(child=>{if(child.nodeType===Node.COMMENT_NODE){child.remove();return;}if(child.nodeType!==Node.ELEMENT_NODE)return;if(!allowed.has(child.tagName)){clean(child);child.replaceWith(...child.childNodes);return;}[...child.attributes].forEach(a=>child.removeAttribute(a.name));if(child.tagName==="A"){const raw=child.getAttribute("href")||"";const safe=raw.startsWith("https://")||raw.startsWith("http://")||raw.startsWith("mailto:");if(safe){child.setAttribute("href",raw);child.setAttribute("target","_blank");child.setAttribute("rel","noopener noreferrer");}}clean(child);});};
  clean(root);return root.innerHTML;
 }
-function plainText(html){const d=new DOMParser().parseFromString(String(html||""),"text/html");return(d.body.textContent||"").replace(/\u00a0/g," ").replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();}
+function plainText(html){const d=new DOMParser().parseFromString(String(html||""),"text/html");d.body.querySelectorAll("br").forEach(n=>n.replaceWith(d.createTextNode("\n")));d.body.querySelectorAll("p,div,h2,h3,li,blockquote").forEach(n=>n.append(d.createTextNode("\n")));return(d.body.textContent||"").replace(/\u00a0/g," ").replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();}
 function editorHtml(){return safeRichHtml($("postEditor").innerHTML);}
 function countText(){const n=plainText($("postEditor").innerHTML).length;$("postCount").textContent=n.toLocaleString()+" / 12,000";return n;}
 async function getProfiles(ids){const missing=[...new Set(ids)].filter(id=>id&&!profiles.has(id));if(missing.length){const results=await Promise.all(missing.map(id=>db.rpc("get_public_reader_profile_card",{target_user_id:id})));results.forEach(r=>{const p=Array.isArray(r.data)?r.data[0]:r.data;if(p?.id)profiles.set(p.id,p);});}return profiles;}
