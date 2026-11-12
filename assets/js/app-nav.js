@@ -12,7 +12,7 @@ const icons={
  chevron:icon('<path d="m7 10 5 5 5-5"/>')
 };
 const socialPages=["community.html","activity.html","messages.html"];
-const libraryPages=["books.html","store.html","featured.html","bookshelf.html","book-details.html","reader.html","free-reading.html"];
+const libraryPages=["books.html","store.html","featured.html","bookshelf.html","book-details.html","reader.html","free-reading.html","journals.html"];
 const active=(name)=>name==="home"?current===home:name==="library"?libraryPages.includes(current):name==="social"?socialPages.includes(current):name==="events"?current==="events.html":name==="about"?current==="about.html":false;
 let header=document.querySelector(".site-header");
 if(!header){header=document.createElement("header");header.className="site-header";document.body.prepend(header);}
@@ -32,7 +32,7 @@ nav.innerHTML=
 '</div></div>'+
 '<a class="vt-nav-link '+(active("events")?"is-active":"")+'" href="events.html"'+(active("events")?' aria-current="page"':"")+'>'+icons.events+'<span>Events</span></a>'+
 '<a class="vt-nav-link '+(active("about")?"is-active":"")+'" href="about.html"'+(active("about")?' aria-current="page"':"")+'>'+icons.about+'<span>About</span></a>'+
-'<a class="vt-nav-link vt-profile-link" href="profile.html"'+(["profile.html","profile-settings.html"].includes(current)?' aria-current="page"':"")+'>'+icons.profile+'<span>My profile</span></a>';
+'<a class="vt-nav-link vt-profile-link" href="profile.html"'+(["profile.html","profile-settings.html","account.html"].includes(current)?' aria-current="page"':"")+'>'+icons.profile+'<span>My profile</span></a>';
 let back=header.querySelector(".vt-back-button");
 if(!back){back=document.createElement("button");back.type="button";back.className="vt-back-button";back.innerHTML=icons.back+'<span>Back</span>';back.setAttribute("aria-label","Go to the previous page or homepage");}
 back.hidden=current===home;
