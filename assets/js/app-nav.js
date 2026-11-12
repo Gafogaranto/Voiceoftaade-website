@@ -30,6 +30,10 @@ nav.addEventListener("click",e=>{if(e.target.closest("a"))close();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
 document.addEventListener("click",e=>{if(!header.contains(e.target))close();});
 const designLink=document.createElement("link");designLink.rel="stylesheet";designLink.href="assets/css/platform-redesign.css?v=20261112-platform1";document.head.appendChild(designLink);
+const accountLink=nav.querySelector(".vt-account-link");
+if(accountLink&&window.supabase?.createClient){
+ try{const client=window.supabase.createClient("https://qnnmbngxunmjerpeoxrr.supabase.co","sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67");client.auth.getUser().then(({data})=>{if(data?.user){accountLink.href="profile.html?id="+encodeURIComponent(data.user.id);accountLink.lastElementChild.textContent="My profile";}});}catch(_){}
+}
 document.body.classList.add("has-app-nav");
 document.querySelectorAll(".vt-app-nav").forEach(el=>el.remove());
 })();
