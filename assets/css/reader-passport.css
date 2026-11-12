@@ -1,0 +1,12 @@
+
+.reader-passport-section{grid-column:1/-1}
+.reader-passport-intro{margin:-4px 0 18px;color:#687486;line-height:1.65}
+.reader-passport-badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.reader-passport-badge{display:flex;align-items:center;gap:13px;min-width:0;padding:15px;border:1px solid #e5dfd2;border-radius:14px;background:linear-gradient(135deg,#fffdf8,#f7f4ec)}
+.reader-passport-medal{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border:1px solid #d7b36a;border-radius:50%;background:#f8efd9;color:#785b24;font-size:1.2rem}
+.reader-passport-badge strong{display:block;color:#14263b;font-size:.92rem}
+.reader-passport-badge small{display:block;margin-top:4px;color:#687486;line-height:1.45}
+.reader-passport-empty{padding:16px;border:1px dashed #d9d2c4;border-radius:12px;color:#687486;line-height:1.6}
+.reader-passport-stats{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.reader-passport-stat{padding:8px 11px;border-radius:999px;background:#eef2f5;color:#415267;font-size:.78rem}
+@media(max-width:600px){.reader-passport-badges{grid-template-columns:1fr}.reader-passport-badge{padding:13px}}
