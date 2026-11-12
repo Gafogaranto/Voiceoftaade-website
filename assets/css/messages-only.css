@@ -1,3 +1,5 @@
-/* Messages keeps direct and group conversations. Status and calling have been retired from the interface. */
-.messenger-rail [data-view="status"],.messenger-rail [data-view="calls"],.status-strip,#sidebarStatus,#sidebarCalls,#statusModal,#statusViewer,#callModal,#incomingCallModal,#audioCallBtn,#videoCallBtn{display:none!important}
-.messenger-rail{grid-template-rows:repeat(3,auto) 1fr auto!important}
+/* Focused messaging workspace: Community and Activity live in the app rail. */
+body.messenger-page>.site-header nav{display:none!important}
+body.messenger-page>.site-header .vt-menu-toggle{display:none!important}
+.messenger-rail .rail-item[href]{text-decoration:none}
+.messenger-rail .rail-item[href]:focus-visible,.messenger-rail .rail-item[data-view]:focus-visible{outline:2px solid #0b5c4b;outline-offset:2px}
