@@ -223,3 +223,15 @@ p{line-height:1.75}
 .chat-live-status.is-error{color:#a34d3c}
 .chat-live-status.is-error i{background:#c76b59;box-shadow:0 0 0 3px rgba(199,107,89,.15)}
 @media(max-width:560px){.chat-live-status{font-size:.64rem}.chat-room-title{min-width:0}.chat-room-title h2{overflow-wrap:anywhere}}
+
+/* Reader privacy controls and public reading shelf */
+#readerPrivacySettings{margin-top:22px}
+#readerPrivacySettings form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:760px}
+#readerPrivacySettings label{display:grid;gap:7px;color:#26364b;font-weight:600}
+#readerPrivacySettings select{width:100%;min-height:44px;padding:10px 12px;border:1px solid #d7d1c4;border-radius:10px;background:#fffdf8;color:#14263c;font:inherit}
+#readerPrivacySettings .privacy-toggle{display:flex;align-items:center;gap:10px;grid-column:1/-1}
+#readerPrivacySettings .privacy-toggle input{width:18px;height:18px;accent-color:#9a742f}
+#readerPrivacySettings form button{justify-self:start}
+#privacyStatus.error{color:#a33}
+#readerCollectionsSection .item{padding:12px 0;border-top:1px solid #eee7d9}
+@media(max-width:620px){#readerPrivacySettings form{grid-template-columns:1fr}#readerPrivacySettings .privacy-toggle{grid-column:auto}}
