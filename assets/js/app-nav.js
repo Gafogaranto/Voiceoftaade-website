@@ -29,7 +29,7 @@ toggle.addEventListener("click",()=>{const open=!nav.classList.contains("open");
 nav.addEventListener("click",e=>{if(e.target.closest("a"))close();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
 document.addEventListener("click",e=>{if(!header.contains(e.target))close();});
-const designLink=document.createElement("link");designLink.rel="stylesheet";designLink.href="assets/css/platform-redesign.css?v=20261112-platform1";document.head.appendChild(designLink);
+const designLink=document.createElement("link");designLink.rel="stylesheet";designLink.href="assets/css/platform-redesign.css?v=20261112-platform2";document.head.appendChild(designLink);
 const activityBadge=nav.querySelector("#activityNavBadge");
 if(activityBadge&&window.supabase?.createClient){
  try{const client=window.supabase.createClient("https://qnnmbngxunmjerpeoxrr.supabase.co","sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67");client.auth.getUser().then(async({data})=>{if(!data?.user)return;const r=await client.from("reader_activity_notifications").select("id",{count:"exact",head:true}).eq("recipient_id",data.user.id).is("read_at",null);if(!r.error&&r.count>0){activityBadge.textContent=r.count>99?"99+":String(r.count);activityBadge.hidden=false;}});}catch(_){}
