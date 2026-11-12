@@ -1,6 +1,8 @@
 name: Validate website scripts
 
 on:
+  push:
+    branches: ["main"]
   pull_request:
     branches: ["main"]
     paths:
