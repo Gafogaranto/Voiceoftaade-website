@@ -82,21 +82,29 @@
     "https://qnnmbngxunmjerpeoxrr.supabase.co",
     "sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67"
   );
+  async function syncReader(user) {
+    if (!user) {
+      profile.href="account.html"; profile.textContent="V"; profile.innerHTML="V";
+      profile.setAttribute("aria-label","Sign in or create a reader account");
+      const badge=document.getElementById("vtUnreadBadge");
+      if(badge){badge.hidden=true;badge.textContent="";}
+      return;
+    }
+    profile.href="profile.html?id="+encodeURIComponent(user.id);
+    profile.setAttribute("aria-label","Open your reader profile");
+    const {data: reader} = await db.from("profiles").select("display_name,avatar_url").eq("id",user.id).maybeSingle();
+    if(reader?.avatar_url) profile.innerHTML='<img src="'+String(reader.avatar_url).replace(/["<>]/g,"")+'" alt="">';
+    else profile.textContent=(reader?.display_name||"V").trim().slice(0,1).toUpperCase();
+    const {data: convs} = await db.from("reader_conversations").select("id")
+      .or("user_one.eq."+user.id+",user_two.eq."+user.id);
+    if(!convs?.length)return;
+    const {count} = await db.from("reader_messages").select("id",{count:"exact",head:true})
+      .in("conversation_id",convs.map(row=>row.id)).neq("sender_id",user.id).is("read_at",null);
+    const badge=document.getElementById("vtUnreadBadge");
+    if(badge && count>0){badge.hidden=false;badge.textContent=count>99?"99+":String(count);}
+  }
   if (db) {
-    db.auth.getUser().then(async ({data}) => {
-      if (!data?.user) return;
-      const {data: convs} = await db.from("reader_conversations").select("id")
-        .or("user_one.eq."+data.user.id+",user_two.eq."+data.user.id);
-      if (!convs?.length) return;
-      const {count} = await db.from("reader_messages").select("id",{count:"exact",head:true})
-        .in("conversation_id",convs.map(row=>row.id)).neq("sender_id",data.user.id).is("read_at",null);
-      const badge=document.getElementById("vtUnreadBadge");
-      if (badge && count>0) { badge.hidden=false; badge.textContent=count>99?"99+":String(count); }
-    }).catch(()=>{});
-    db.auth.onAuthStateChange(() => {
-      // Refresh the unread indicator after auth changes without changing navigation layout.
-      const badge=document.getElementById("vtUnreadBadge");
-      if (badge) { badge.hidden=true; badge.textContent=""; }
-    });
+    db.auth.getUser().then(({data})=>syncReader(data?.user||null)).catch(()=>{});
+    db.auth.onAuthStateChange((_event,session)=>{syncReader(session?.user||null).catch(()=>{});});
   }
 })();
