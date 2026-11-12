@@ -58,7 +58,7 @@ function updateEditorPreview(){
  $("brightnessValue").textContent=editState.brightness+"%";$("contrastValue").textContent=editState.contrast+"%";$("saturationValue").textContent=editState.saturation+"%";
 }
 function openImageEditor(){if(!sourceImage)return;$("imageEditorModal").hidden=false;updateEditorPreview();document.body.classList.add("image-editor-open");}
-function closeImageEditor(){$("imageEditorModal").hidden=true;document.body.classList.remove("image-editor-open");}
+function closeImageEditor(){$("imageEditorModal").hidden=true;document.body.classList.remove("image-editor-open");if(!selectedBlob){sourceImage=null;$("postImageInput").value="";}}
 async function renderEditedImage(){
  if(!sourceImage)return null;const img=sourceImage,rot=((editState.rotation%360)+360)%360,ow=rot%180?img.naturalHeight:img.naturalWidth,oh=rot%180?img.naturalWidth:img.naturalHeight;
  let cw=ow,ch=oh;if(editState.ratio!=="original"){const [rw,rh]=editState.ratio.split(":").map(Number),ratio=rw/rh;if(cw/ch>ratio)cw=ch*ratio;else ch=cw/ratio;}
