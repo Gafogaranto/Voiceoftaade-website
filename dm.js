@@ -14,6 +14,7 @@ async function init(){
  await refresh();
  db.auth.onAuthStateChange((_e,s)=>{user=s?.user||null;if(user)refresh();else location.href="account.html";});
  $("dmComposer").addEventListener("submit",send);
+ $("dmSearchForm").addEventListener("submit",searchReaders);
 }
 async function refresh(){
  const [incoming,outgoing,conv]=await Promise.all([
@@ -34,6 +35,16 @@ async function renderRequests(incoming,outgoing){
  $("dmIncoming").querySelectorAll("[data-decline]").forEach(b=>b.addEventListener("click",()=>respond(b.dataset.decline,"declined")));
  const outgoingRows=await Promise.all(outgoing.map(async r=>({r,p:await profile(r.recipient_id)})));
  $("dmOutgoing").innerHTML=outgoingRows.length?outgoingRows.map(({r,p})=>'<div class="dm-item"><strong>'+esc(p?.display_name||"Reader")+'</strong><small>Awaiting acceptance · '+stamp(r.created_at)+'</small></div>').join(""):'<p class="dm-empty">No pending requests sent.</p>';
+}
+async function searchReaders(event){
+ event.preventDefault();
+ const term=$("dmSearchInput").value.trim();
+ if(term.length<2){$("dmSearchResults").innerHTML='<p class="dm-empty">Enter at least two characters.</p>';return;}
+ $("dmSearchResults").innerHTML='<p class="dm-empty">Searching readers…</p>';
+ const {data,error}=await db.rpc("search_reader_directory",{search_term:term});
+ if(error){$("dmSearchResults").innerHTML='<p class="dm-empty">'+esc(error.message)+'</p>';return;}
+ $("dmSearchResults").innerHTML=(data||[]).length?(data||[]).map(p=>'<article class="dm-item"><strong>'+esc(p.display_name||"Voiceoftaade reader")+'</strong><div class="dm-actions"><a href="profile.html?id='+encodeURIComponent(p.id)+'">View profile</a><button class="primary" data-request-reader="'+p.id+'">Request message</button></div></article>').join(""):'<p class="dm-empty">No readers found. Try another name.</p>';
+ $("dmSearchResults").querySelectorAll("[data-request-reader]").forEach(b=>b.addEventListener("click",async()=>{const intro=prompt("Add a short introduction (optional).");if(intro===null)return;b.disabled=true;const sent=await db.rpc("request_reader_message",{target_user_id:b.dataset.requestReader,initial_message:intro.trim()||null});b.disabled=false;if(sent.error){say(sent.error.message,true);return;}b.textContent="Request sent";b.disabled=true;say("Message request sent. You can chat after the reader accepts.");await refresh();}));
 }
 async function respond(id,decision){say(decision==="accepted"?"Accepting request…":"Declining request…");const r=await db.rpc("respond_reader_message_request",{request_id:id,decision});if(r.error){say(r.error.message,true);return;}say(decision==="accepted"?"Request accepted. You can now message each other.":"Request declined.");await refresh();if(decision==="accepted"&&r.data)await openConversation(r.data);}
 async function openConversation(id){
