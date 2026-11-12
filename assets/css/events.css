@@ -1,0 +1,50 @@
+.events-page{width:min(1320px,100%);margin:0 auto;padding:clamp(18px,4vw,44px) clamp(16px,4vw,44px) 72px;color:#102b49}
+.events-hero{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:1.25fr .75fr;align-items:center;gap:28px;padding:clamp(28px,5vw,66px);border-radius:28px;background:radial-gradient(circle at 85% 18%,rgba(228,188,104,.23),transparent 32%),linear-gradient(135deg,#102e4c,#07172b 68%,#173b50);color:#f8f3e7;box-shadow:0 24px 70px rgba(7,23,43,.17)}
+.events-hero:after{content:"✳";position:absolute;z-index:-1;right:6%;top:2%;font:clamp(9rem,22vw,19rem)/1 Georgia,serif;color:rgba(230,189,104,.1)}
+.events-kicker{font-size:.68rem;font-weight:800;letter-spacing:.2em;color:#e6bd68}
+.events-hero h1{max-width:800px;margin:10px 0 18px;font:600 clamp(2.6rem,6vw,5rem)/1.03 "Playfair Display",Georgia,serif;letter-spacing:-.045em}
+.events-hero h1 em{color:#edc978;font-weight:500}
+.events-hero p{max-width:700px;color:#d3deea;line-height:1.8}
+.events-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:24px}
+.events-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:12px 18px;border-radius:999px;border:1px solid transparent;background:#e6bd68;color:#102b49;font:800 .8rem "DM Sans",sans-serif}
+.events-button.outline{border-color:rgba(239,213,157,.48);background:transparent;color:#fff}
+.events-hero-aside{position:relative;z-index:1;display:grid;gap:12px;align-content:center}
+.event-stat{padding:18px;border:1px solid rgba(230,189,104,.24);border-radius:16px;background:rgba(255,255,255,.055);backdrop-filter:blur(8px)}
+.event-stat strong{display:block;color:#f2d18b;font:600 1.7rem "Playfair Display",Georgia,serif}
+.event-stat span{font-size:.72rem;color:#d0dbe8}
+.events-section{margin-top:clamp(38px,6vw,68px)}
+.events-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}
+.events-heading h2{margin:3px 0;font:600 clamp(1.8rem,3.3vw,2.8rem)/1.1 "Playfair Display",Georgia,serif;color:#102b49}
+.events-heading p{max-width:480px;color:#657487;line-height:1.7;font-size:.87rem}
+.events-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.event-card{display:flex;flex-direction:column;min-width:0;padding:22px;border:1px solid #e5e0d5;border-radius:18px;background:#fffefa;box-shadow:0 10px 30px rgba(7,23,43,.05)}
+.event-card .event-date{display:flex;align-items:center;gap:8px;color:#8e6c33;font-size:.72rem;font-weight:800;letter-spacing:.06em}
+.event-card h3{margin:14px 0 7px;color:#142d48;font:600 1.3rem/1.2 "Playfair Display",Georgia,serif}
+.event-card p{color:#667589;font-size:.83rem;line-height:1.65}
+.event-card small{display:block;color:#8a96a4;font-size:.74rem}
+.event-card .events-button{margin-top:auto;align-self:flex-start}
+.event-empty{grid-column:1/-1;padding:30px;border:1px dashed #d7c9a8;border-radius:18px;background:#fffefa;color:#647386;line-height:1.8}
+.passport-panel{padding:clamp(20px,4vw,34px);border:1px solid #e5e0d5;border-radius:22px;background:#fffefa;box-shadow:0 14px 35px rgba(7,23,43,.055)}
+.passport-top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.passport-count{color:#8d6e3a;font-size:.8rem;font-weight:800}
+.passport-meter{height:11px;margin:17px 0 22px;border-radius:999px;background:#e9e6de;overflow:hidden}
+.passport-meter span{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#173c5a,#e4bb68);transition:width .25s ease}
+.passport-parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.passport-part{padding:17px;border:1px solid #ebe5d8;border-radius:15px;background:#faf8f2}
+.passport-part h3{margin:0 0 11px;color:#142d48;font:600 1.08rem "Playfair Display",Georgia,serif}
+.passport-part p{margin:0 0 10px;color:#8290a0;font-size:.72rem}
+.passport-chapters{display:grid;gap:8px}
+.passport-chapter{display:flex;align-items:flex-start;gap:9px;color:#43566b;font-size:.8rem;line-height:1.45}
+.passport-chapter input{width:17px;height:17px;flex:0 0 17px;margin:1px 0 0;accent-color:#1b4b6c}
+.passport-chapter input:checked+span{text-decoration:line-through;color:#8b978f}
+.passport-perks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:18px}
+.passport-perk{padding:13px 10px;border:1px solid #e6e1d7;border-radius:13px;text-align:center;background:#f6f4ed;color:#a2a9af}
+.passport-perk.is-earned{border-color:#d8bb7d;background:#fff7e6;color:#89692e}
+.passport-perk strong{display:block;font-size:.76rem}.passport-perk small{font-size:.65rem}
+.events-ecosystem{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.ecosystem-card{padding:22px;border:1px solid #e2ded4;border-radius:18px;background:#102b49;color:#f7f3e9}
+.ecosystem-card span{color:#edc978;font-size:1.4rem}.ecosystem-card h3{margin:12px 0 7px;font:600 1.15rem "Playfair Display",Georgia,serif}.ecosystem-card p{min-height:65px;color:#d1dae5;font-size:.81rem;line-height:1.7}.ecosystem-card a{display:inline-block;margin-top:10px;color:#f1d38f;font-weight:800;font-size:.79rem}
+.events-footnote{margin-top:15px;color:#8290a0;font-size:.73rem;line-height:1.7}
+@media(max-width:900px){.events-hero{grid-template-columns:1fr}.events-hero-aside{grid-template-columns:repeat(3,minmax(0,1fr))}.events-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.passport-perks{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.events-page{padding:15px 13px 48px}.events-hero{padding:25px 20px;border-radius:19px}.events-hero h1{font-size:clamp(2.5rem,12vw,3.4rem)}.events-hero-aside{grid-template-columns:1fr}.event-stat{padding:13px 15px}.events-heading{display:block}.events-grid,.passport-parts,.events-ecosystem{grid-template-columns:1fr}.event-card{padding:18px}.passport-panel{padding:17px}.passport-perks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.passport-meter span{transition:none}}
