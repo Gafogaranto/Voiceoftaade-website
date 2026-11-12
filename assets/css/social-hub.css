@@ -57,3 +57,13 @@
  .message-center-composer button{min-height:43px;padding:0 14px}
  .message-center-status{flex:0 0 auto;padding:3px 10px}
 }
+
+/* Inbox conversation previews */
+.message-conversation-item{display:flex!important;align-items:center!important;gap:10px!important;min-height:64px}
+.message-list-avatar{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:50%;overflow:hidden;background:linear-gradient(145deg,#183d5c,#c9a35b);color:#fff;font:700 1rem Georgia,serif}
+.message-list-avatar img{width:100%;height:100%;object-fit:cover}
+.message-list-copy{display:grid;gap:5px;min-width:0;flex:1}
+.message-list-copy strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#18314b;font-size:.82rem}
+.message-list-copy small{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#768596;font-size:.7rem}
+.message-list-meta{display:grid;justify-items:end;gap:6px;flex:0 0 auto;color:#8792a0;font-size:.62rem}
+.message-list-meta b{display:grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#2b8d70;color:#fff;font-size:.65rem}
