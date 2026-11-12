@@ -28,15 +28,15 @@ async function init(){
  if(p.website_url){let u=p.website_url;if(!/^https?:\/\//i.test(u))u="https://"+u;const a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener noreferrer";a.textContent=p.website_url;$("aboutWebsite").replaceChildren(a);}else $("aboutWebsite").textContent="Not shared";
  const [counts,posts,replies,activity]=await Promise.all([
   db.rpc("get_reader_follow_counts",{target_user_id:uid}),
-  db.from("community_posts").select("id,title,body,created_at,communities(name,visibility,status)").eq("author_id",uid).eq("status","published").order("created_at",{ascending:false}).limit(40),
-  db.from("community_replies").select("id,body,created_at,community_posts(title,communities(name,visibility,status))").eq("author_id",uid).eq("status","published").order("created_at",{ascending:false}).limit(40),
+  db.from("reader_feed_posts").select("id,title,body,visibility,created_at").eq("author_id",uid).order("created_at",{ascending:false}).limit(40),
+  db.from("reader_feed_comments").select("id,body,created_at,reader_feed_posts(title,visibility,author_id)").eq("author_id",uid).order("created_at",{ascending:false}).limit(40),
   db.rpc("get_reader_public_activity",{target_user_id:uid})
  ]);
- const pubPosts=(posts.data||[]).filter(x=>{const c=first(x.communities);return c?.visibility==="public"&&c?.status==="active";}).map(x=>({id:x.id,kind:"Post",text:(x.title?x.title+"\n":"")+x.body,created_at:x.created_at,community:first(x.communities)?.name}));
- const pubReplies=(replies.data||[]).filter(x=>{const c=first(first(x.community_posts)?.communities);return c?.visibility==="public"&&c?.status==="active";}).map(x=>({id:x.id,kind:"Reply",text:x.body,created_at:x.created_at,community:first(first(x.community_posts)?.communities)?.name}));
+ const pubPosts=(posts.data||[]).filter(x=>x.visibility==="public"||user?.id===uid).map(x=>({id:x.id,kind:"Post",text:(x.title?x.title+"\n":"")+x.body,created_at:x.created_at,community:"Voiceoftaade Reading Room"}));
+ const pubReplies=(replies.data||[]).filter(x=>{const p=first(x.reader_feed_posts);return p&&(p.visibility==="public"||user?.id===uid);}).map(x=>({id:x.id,kind:"Comment",text:x.body,created_at:x.created_at,community:"Reader conversation"}));
  const contributions=[...pubPosts,...pubReplies].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
- $("followersCount").textContent=counts.data?.[0]?.followers||0;$("followingCount").textContent=counts.data?.[0]?.following||0;$("postsCount").textContent=contributions.length;$("postCountLabel").textContent=contributions.length+" posts";
- $("profilePosts").innerHTML=contributions.length?contributions.map(x=>'<article class="profile-post"><div class="post-meta"><span class="post-kind">'+esc(x.kind)+'</span><span>'+esc(x.community||"Public conversation")+'</span><time>'+esc(date(x.created_at))+'</time></div><p>'+esc(x.text)+'</p></article>').join(""):'<div class="profile-empty-card"><span>✦</span><h3>No public posts yet</h3><p>When this reader joins public conversations, their contributions will appear here.</p></div>';
+ $("followersCount").textContent=counts.data?.[0]?.followers||0;$("followingCount").textContent=counts.data?.[0]?.following||0;$("postsCount").textContent=pubPosts.length;$("postCountLabel").textContent=pubPosts.length+" posts";
+ $("profilePosts").innerHTML=contributions.length?contributions.map(x=>'<article class="profile-post"><div class="post-meta"><span class="post-kind">'+esc(x.kind)+'</span><span>'+esc(x.community||"Public conversation")+'</span><time>'+esc(date(x.created_at))+'</time></div><p>'+esc(x.text)+'</p></article>').join(""):'<div class="profile-empty-card"><span>✦</span><h3>No posts yet</h3><p>When this reader publishes in the Reading Room, their writing will appear here.</p></div>';
  const a=first(activity.data)||{};
  const renderCollection=(id,rows)=>{$(id).innerHTML=Array.isArray(rows)&&rows.length?rows.slice(0,16).map(x=>'<div class="collection-row"><span>▤</span><strong>'+esc(journalNames[x.journal_id]||x.journal_id||"Reading entry")+'</strong><small>'+esc(date(x.created_at||x.last_read_at))+'</small></div>').join(""):'<p class="profile-empty">Nothing shared here yet.</p>';};
  renderCollection("publicFavourites",privacy.favourites_visibility==="private"&&user?.id!==uid?null:a.favourites);
