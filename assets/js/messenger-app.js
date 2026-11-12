@@ -42,7 +42,7 @@ function bindUI(){
  $("endCallBtn").addEventListener("click",()=>endCall("ended"));$("muteCallBtn").addEventListener("click",toggleMute);$("cameraCallBtn").addEventListener("click",toggleCamera);
  $("acceptCallBtn").addEventListener("click",acceptIncomingCall);$("declineCallBtn").addEventListener("click",declineIncomingCall);
  $("threadSearch").addEventListener("keydown",e=>{if(e.key==="Escape")e.target.value="";});
- $("chatMenuBtn").addEventListener("click",()=>switchView("requests"));
+ $("chatMenuBtn").addEventListener("click",()=>switchView("requests"));\n $("manageMemberSearch").addEventListener("input",debounce(searchManageMembers,350));
 }
 function debounce(fn,ms){let t;return(...args)=>{clearTimeout(t);t=setTimeout(()=>fn(...args),ms);};}
 async function loadAll(){await Promise.all([loadThreads(),loadRequests(),loadStatuses(),loadCalls()]);}
@@ -182,10 +182,47 @@ async function loadCalls(){const r=await db.from("reader_chat_calls").select("*"
 function subscribeGlobal(){
  db.channel("messenger-global-"+user.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_chat_calls",filter:"recipient_id=eq."+user.id},payload=>{if(payload.new.status==="ringing")showIncomingCall(payload.new);}).on("postgres_changes",{event:"UPDATE",schema:"public",table:"reader_chat_calls",filter:"caller_id=eq."+user.id},payload=>{if(activeCall&&payload.new.id===activeCall.id&&["ended","declined","missed","failed"].includes(payload.new.status))cleanupCall(payload.new.status);}).on("postgres_changes",{event:"UPDATE",schema:"public",table:"reader_chat_calls",filter:"recipient_id=eq."+user.id},payload=>{if(activeCall&&payload.new.id===activeCall.id&&["ended","declined","missed","failed"].includes(payload.new.status))cleanupCall(payload.new.status);if(incomingCall&&payload.new.id===incomingCall.id&&payload.new.status!=="ringing"){incomingCall=null;hideModal("incomingCallModal");}}).on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_chat_statuses"},()=>loadStatuses()).subscribe();
 }
-async function renderInfoDrawer(){if(!active)return;const name=threadName(active),isGroup=active.type==="group";let detail=isGroup?active.group.description||"Reader group":active.peer?.bio||"Voiceoftaade reader";$("chatInfoContent").innerHTML='<div class="info-hero"><span class="chat-avatar">'+(isGroup?"♧":avatar(active.peer,name))+'</span><h3>'+esc(name)+'</h3><p>'+esc(detail)+'</p></div><div class="info-actions"><button data-pref="is_pinned">'+(active.pref.is_pinned?"Unpin":"Pin")+'</button><button data-pref="is_favorite">'+(active.pref.is_favorite?"Unfavourite":"Favourite")+'</button><button data-pref="is_archived">Archive</button></div><div class="info-section"><h4>CHAT SETTINGS</h4><div class="info-row"><span>Mute notifications</span><button data-pref="muted_until">'+(active.pref.muted_until?"Unmute":"Mute")+'</button></div><div class="info-row"><span>Search in conversation</span><button id="drawerSearch">Search</button></div></div>'+(isGroup?'<div class="info-section"><h4>GROUP</h4><div class="info-row"><span>About</span><span>'+esc(active.group.description||"—")+'</span></div><div class="info-row"><button id="leaveGroupBtn">Leave group</button></div></div>':'<div class="info-section"><h4>READER</h4><div class="info-row"><a href="profile.html?id='+active.peerId+'">View reader profile ↗</a></div></div>');$("chatInfoContent").querySelectorAll("[data-pref]").forEach(b=>b.onclick=()=>togglePreference(b.dataset.pref));$("drawerSearch")?.addEventListener("click",searchInChat);$("leaveGroupBtn")?.addEventListener("click",leaveGroup);}
+async function renderInfoDrawer(){if(!active)return;const name=threadName(active),isGroup=active.type==="group";let detail=isGroup?active.group.description||"Reader group":active.peer?.bio||"Voiceoftaade reader";$("chatInfoContent").innerHTML='<div class="info-hero"><span class="chat-avatar">'+(isGroup?"♧":avatar(active.peer,name))+'</span><h3>'+esc(name)+'</h3><p>'+esc(detail)+'</p></div><div class="info-actions"><button data-pref="is_pinned">'+(active.pref.is_pinned?"Unpin":"Pin")+'</button><button data-pref="is_favorite">'+(active.pref.is_favorite?"Unfavourite":"Favourite")+'</button><button data-pref="is_archived">Archive</button></div><div class="info-section"><h4>CHAT SETTINGS</h4><div class="info-row"><span>Mute notifications</span><button data-pref="muted_until">'+(active.pref.muted_until?"Unmute":"Mute")+'</button></div><div class="info-row"><span>Search in conversation</span><button id="drawerSearch">Search</button></div></div>'+(isGroup?'<div class="info-section"><h4>GROUP</h4><div class="info-row"><span>About</span><span>'+esc(active.group.description||"—")+'</span></div><div class="info-row"><button id="manageGroupBtn">Manage members</button></div><div class="info-row"><button id="leaveGroupBtn">Leave group</button></div></div>':'<div class="info-section"><h4>READER</h4><div class="info-row"><a href="profile.html?id='+active.peerId+'">View reader profile ↗</a></div></div>');$("chatInfoContent").querySelectorAll("[data-pref]").forEach(b=>b.onclick=()=>togglePreference(b.dataset.pref));$("drawerSearch")?.addEventListener("click",searchInChat);$("leaveGroupBtn")?.addEventListener("click",leaveGroup);$("manageGroupBtn")?.addEventListener("click",openManageGroup);}
 function openChatInfo(){if(!active)return;renderInfoDrawer();$("chatInfoDrawer").hidden=false;}
 function closeChatInfo(){$("chatInfoDrawer").hidden=true;}
 async function togglePreference(key){if(!active)return;const p={user_id:user.id,thread_type:active.type,thread_id:active.id};if(key==="muted_until")p.muted_until=active.pref.muted_until?null:new Date(Date.now()+7*86400000).toISOString();else p[key]=!active.pref[key];const r=await db.from("reader_chat_preferences").upsert(p,{onConflict:"user_id,thread_type,thread_id"});if(r.error){say(r.error.message,true);return;}active.pref={...active.pref,...p};await loadThreads();renderInfoDrawer();say("Chat settings updated.");}
+async function openManageGroup(){
+ if(!active||active.type!=="group")return;
+ $("manageGroupTitle").textContent=active.group.name;
+ $("manageGroupDetails").textContent=active.group.description||"Reader group";
+ $("manageGroupAdminTools").hidden=active.role!=="admin";
+ $("manageMemberSearch").value="";$("manageMemberResults").innerHTML="";
+ $("manageGroupStatus").textContent="";
+ await refreshGroupMembers();showModal("manageGroupModal");
+}
+async function refreshGroupMembers(){
+ if(!active||active.type!=="group")return;
+ const r=await db.from("reader_chat_group_members").select("user_id,role,joined_at").eq("group_id",active.id).order("joined_at",{ascending:true});
+ if(r.error){$("manageGroupStatus").textContent=r.error.message;return;}
+ const rows=await Promise.all((r.data||[]).map(async m=>({m,p:await profile(m.user_id)})));
+ $("currentGroupMembers").innerHTML=rows.length?rows.map(({m,p})=>'<div class="modal-reader"><span class="thread-avatar">'+avatar(p,p.display_name)+'</span><span><strong>'+esc(p.display_name||"Reader")+'</strong><small>'+esc(m.role==="admin"?"Group admin":"Member")+'</small></span>'+(active.role==="admin"&&m.role!=="admin"&&m.user_id!==user.id?'<button data-remove-group-member="'+m.user_id+'">Remove</button>':"")+'</div>').join(""):'<p class="empty-list">No members found.</p>';
+ $("currentGroupMembers").querySelectorAll("[data-remove-group-member]").forEach(b=>b.onclick=()=>removeGroupMember(b.dataset.removeGroupMember));
+}
+async function searchManageMembers(){
+ const term=$("manageMemberSearch").value.trim();if(term.length<2){$("manageMemberResults").innerHTML="";return;}
+ const r=await db.rpc("search_reader_directory",{search_term:term});if(r.error){$("manageMemberResults").textContent=r.error.message;return;}
+ const current=await db.from("reader_chat_group_members").select("user_id").eq("group_id",active.id);
+ const existing=new Set((current.data||[]).map(x=>x.user_id));
+ const rows=(r.data||[]).filter(p=>p.id!==user.id&&!existing.has(p.id));
+ $("manageMemberResults").innerHTML=rows.length?rows.map(p=>'<div class="modal-reader"><span class="thread-avatar">'+avatar(p,p.display_name)+'</span><span><strong>'+esc(p.display_name||"Reader")+'</strong><small>Voiceoftaade reader</small></span><button data-add-group-member="'+p.id+'">Add</button></div>').join(""):'<p class="empty-list">No available readers found.</p>';
+ $("manageMemberResults").querySelectorAll("[data-add-group-member]").forEach(b=>b.onclick=()=>addGroupMember(b.dataset.addGroupMember,b));
+}
+async function addGroupMember(id,button){
+ button.disabled=true;const r=await db.rpc("add_reader_chat_group_member",{p_group_id:active.id,p_target_user_id:id});
+ if(r.error){$("manageGroupStatus").textContent=r.error.message;button.disabled=false;return;}
+ $("manageGroupStatus").textContent="Reader added to the group.";await refreshGroupMembers();await loadThreads();
+}
+async function removeGroupMember(id){
+ if(!confirm("Remove this reader from the group?"))return;
+ const r=await db.rpc("remove_reader_chat_group_member",{p_group_id:active.id,p_target_user_id:id});
+ if(r.error){$("manageGroupStatus").textContent=r.error.message;return;}
+ $("manageGroupStatus").textContent="Member removed.";await refreshGroupMembers();await loadThreads();
+}
 async function leaveGroup(){if(!active||active.type!=="group")return;if(!confirm("Leave this reader group?"))return;const r=await db.rpc("leave_reader_chat_group",{p_group_id:active.id});if(r.error){say(r.error.message,true);return;}active=null;$("activeChat").hidden=true;$("emptyChat").hidden=false;$("messengerApp").classList.remove("mobile-chat-open");closeChatInfo();await loadThreads();}
 function searchInChat(){if(!active)return;const q=prompt("Search messages in this conversation:");if(!q)return;const matches=activeRows.filter(m=>(m.body||"").toLowerCase().includes(q.toLowerCase()));$("messageList").innerHTML=matches.length?matches.map(m=>renderMessage(m,null,[],null,null)).join(""):'<div class="empty-list">No matching messages.</div>';}
 async function startCall(type){handledSignalIds.clear();if(!active||active.type!=="direct"){say("Calls are available in direct conversations.",true);return;}try{const r=await db.rpc("start_reader_chat_call",{p_conversation_id:active.id,p_call_type:type});if(r.error)throw r.error;activeCall={id:r.data,conversation_id:active.id,call_type:type,caller_id:user.id,recipient_id:active.peerId,initiator:true};await showCallUI(active.peer,type,"Calling…");await setupPeerConnection(true);const offer=await pc.createOffer();await pc.setLocalDescription(offer);await sendSignal("offer",offer);say("Calling "+threadName(active));}catch(e){say(e.message||"Could not start call.",true);if(activeCall)await db.rpc("update_reader_chat_call_status",{p_call_id:activeCall.id,p_status:"failed"});cleanupCall("failed");}}
