@@ -55,7 +55,7 @@ async function openConversation(id){
  $("dmComposer").hidden=false;
  if(channel){await db.removeChannel(channel);channel=null;}
  await loadMessages();
- channel=db.channel("reader-messages-"+id).on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_messages",filter:"conversation_id=eq."+id},()=>loadMessages()).subscribe();
+ channel=db.channel("reader-messages-"+id).on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_messages",filter:"conversation_id=eq."+id},()=>loadMessages()).subscribe((status)=>{if(status==="SUBSCRIBED")say("Connected · private conversation");else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")say("Live connection interrupted. Messages will refresh when reopened.",true);});
  document.querySelectorAll("[data-conversation]").forEach(b=>b.classList.toggle("active",b.dataset.conversation===id));
 }
 async function loadMessages(){
