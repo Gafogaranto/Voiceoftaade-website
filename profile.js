@@ -47,10 +47,10 @@ async function init(){
  const renderCollection=(id,rows)=>{$(id).innerHTML=Array.isArray(rows)&&rows.length?rows.slice(0,16).map(x=>'<div class="collection-row"><span>▤</span><strong>'+esc(journalNames[x.journal_id]||x.journal_id||"Reading entry")+'</strong><small>'+esc(date(x.created_at||x.last_read_at))+'</small></div>').join(""):'<p class="profile-empty">Nothing shared here yet.</p>';};
  renderCollection("publicFavourites",privacy.favourites_visibility==="private"&&user?.id!==uid?null:a.favourites);
  renderCollection("publicSaved",privacy.saved_collections_visibility==="private"&&user?.id!==uid?null:a.saved);
- const bookRows=bookItems.data||[],bookVisible=privacy.favourite_books_visibility!=="private"||user?.id===uid;
+ const bookRows=bookItems.data||[],favouriteBooksVisible=privacy.favourite_books_visibility!=="private"||user?.id===uid,recommendationsVisible=privacy.recommendations_visibility!=="private"||user?.id===uid;
  const renderBooks=(id,rows)=>{$(id).innerHTML=Array.isArray(rows)&&rows.length?rows.slice(0,20).map(x=>'<div class="collection-row"><span>▤</span><div><strong>'+esc(x.book_title)+'</strong><small>'+esc(x.book_author||"")+'</small>'+(x.note?'<p>'+esc(x.note)+'</p>':"")+(x.book_url?'<a href="'+esc(x.book_url)+'" target="_blank" rel="noopener noreferrer">View book</a>':"")+'</div></div>').join(""):'<p class="profile-empty">Nothing shared here yet.</p>';};
- renderBooks("publicFavouriteBooks",bookVisible?bookRows.filter(x=>x.item_type==="favourite"):null);
- renderBooks("publicBookRecommendations",bookVisible?bookRows.filter(x=>x.item_type==="recommendation"):null);
+ renderBooks("publicFavouriteBooks",favouriteBooksVisible?bookRows.filter(x=>x.item_type==="favourite"):null);
+ renderBooks("publicBookRecommendations",recommendationsVisible?bookRows.filter(x=>x.item_type==="recommendation"):null);
  const readerRows=readerRecs.data||[],readerCards=await Promise.all(readerRows.map(async x=>{const r=await db.rpc("get_public_reader_profile_card",{target_user_id:x.recommended_user_id});const p=first(r.data);return {...x,profile:p};}));
  $("publicReaderRecommendations").innerHTML=readerCards.length?readerCards.filter(x=>x.profile?.id).map(x=>'<div class="collection-row"><span>♧</span><div><strong><a href="profile.html?id='+encodeURIComponent(x.profile.id)+'">'+esc(x.profile.display_name||"Reader")+'</a></strong>'+(x.note?'<p>'+esc(x.note)+'</p>':"")+'</div></div>').join(""):'<p class="profile-empty">No reader recommendations shared yet.</p>';
  const reading=privacy.reading_activity_visibility==="private"&&user?.id!==uid?null:a.reading_activity;
