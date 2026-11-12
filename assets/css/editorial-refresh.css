@@ -216,3 +216,10 @@ p{line-height:1.75}
   html{scroll-behavior:auto}
   *,*:before,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
+.chat-live-status{display:inline-flex;align-items:center;gap:7px;margin-top:5px;color:#8b7445;font:700 .7rem "DM Sans",sans-serif;letter-spacing:.035em}
+.chat-live-status i{width:7px;height:7px;border-radius:50%;background:#c49a4c;box-shadow:0 0 0 3px rgba(196,154,76,.14)}
+.chat-live-status.is-connected{color:#28734f}
+.chat-live-status.is-connected i{background:#35a56f;box-shadow:0 0 0 3px rgba(53,165,111,.15)}
+.chat-live-status.is-error{color:#a34d3c}
+.chat-live-status.is-error i{background:#c76b59;box-shadow:0 0 0 3px rgba(199,107,89,.15)}
+@media(max-width:560px){.chat-live-status{font-size:.64rem}.chat-room-title{min-width:0}.chat-room-title h2{overflow-wrap:anywhere}}
