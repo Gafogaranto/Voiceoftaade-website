@@ -1724,3 +1724,11 @@ hr{border:0;border-top:1px solid var(--vt-line)}
 .nav-dropdown:hover .nav-dropdown-menu,.nav-dropdown:focus-within .nav-dropdown-menu,.nav-dropdown.open .nav-dropdown-menu{display:block}
 .nav-dropdown-menu a[aria-current="page"]{color:#e7c77e}
 @media(max-width:900px){.nav-dropdown{display:block;width:100%}.nav-dropdown-trigger{width:100%;padding:10px 0}.nav-dropdown-menu{position:static;box-shadow:none;margin:0 0 8px 12px;min-width:0;border-radius:8px}}
+
+/* Voiceoftaade platform-wide polish: calm editorial depth and consistent interaction states */
+:root{--vt-forest:#1f4938;--vt-forest-deep:#123327;--vt-paper:#f7f6f0;--vt-gold:#c6a15c;--vt-glass:rgba(255,255,250,.72)}
+:focus-visible{outline:3px solid rgba(198,161,92,.82);outline-offset:3px}
+.button,.text-link,.experience-card,.contact-links>a,.article-card,.home-library-panel{transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease,background .24s ease}
+.experience-card:hover,.article-card:hover,.home-library-panel:hover{transform:translateY(-4px);box-shadow:0 20px 46px rgba(18,48,35,.11)}
+.site-footer{position:relative}
+@media(prefers-reduced-motion:reduce){.button,.text-link,.experience-card,.contact-links>a,.article-card,.home-library-panel{transition:none!important}.experience-card:hover,.article-card:hover,.home-library-panel:hover{transform:none!important}}
