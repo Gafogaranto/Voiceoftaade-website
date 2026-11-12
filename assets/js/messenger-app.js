@@ -20,7 +20,7 @@ async function init(){
  const deep=new URLSearchParams(location.search).get("conversation");if(deep){const t=threads.find(x=>x.type==="direct"&&x.id===deep);if(t)openThread(t);}
 }
 function bindUI(){
- document.querySelectorAll(".rail-item").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
+ document.querySelectorAll(".rail-item[data-view]").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
  document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.filter;document.querySelectorAll("[data-filter]").forEach(x=>x.classList.toggle("active",x===b));renderThreads();}));
  $("threadSearch").addEventListener("input",renderThreads);$("refreshChats").addEventListener("click",loadAll);
  ["newChatBtn","emptyNewChat"].forEach(id=>$(id).addEventListener("click",()=>{showModal("newChatModal");$("readerSearchInput").focus();}));
