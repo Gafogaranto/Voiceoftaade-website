@@ -1,0 +1,44 @@
+/* Final visual system for the Voiceoftaade Community workspace. */
+.community-platform{width:min(1440px,100%)!important;max-width:1440px!important;margin:0 auto!important;padding:clamp(18px,3vw,36px) clamp(12px,2.5vw,30px) 64px!important}
+.community-intro{width:100%;max-width:none!important;min-height:250px;display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,5vw,58px)!important;border-radius:24px!important;background:radial-gradient(ellipse at 82% 15%,rgba(230,189,104,.14),transparent 32%),linear-gradient(130deg,#123653,#07172b 72%)!important;border:1px solid rgba(230,189,104,.26)!important;box-shadow:0 20px 55px rgba(0,0,0,.2)!important}
+.community-intro h1{max-width:900px!important;font-size:clamp(2.3rem,5.4vw,4.3rem)!important;line-height:1.05!important;color:#fff!important}
+.community-intro>p:not(.eyebrow){max-width:780px!important;color:#d1dbe6!important}
+.community-hub-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.community-workspace{grid-template-columns:265px minmax(0,1fr)!important;min-height:760px!important;margin:25px 0!important;border-color:rgba(230,189,104,.2)!important;border-radius:22px!important;background:#091a2b!important;box-shadow:0 24px 70px rgba(0,0,0,.22)!important}
+.community-sidebar{padding:22px 14px!important;background:linear-gradient(180deg,#102a43,#09182a)!important;border-right:1px solid rgba(230,189,104,.15)!important}
+.sidebar-brand{padding:5px 8px 19px!important;margin-bottom:8px!important}
+.workspace-nav{min-height:45px!important;border-radius:11px!important;padding:11px 13px!important;color:#c7d3df!important}
+.workspace-nav:hover,.workspace-nav.active{background:rgba(230,189,104,.1)!important;border-color:rgba(230,189,104,.24)!important;color:#f4d58e!important}
+.workspace-nav.active{box-shadow:inset 3px 0 #e6bd68!important}
+.joined-community-nav button{min-height:41px;border-radius:10px!important}
+.community-workspace-main{min-width:0!important;background:radial-gradient(ellipse at 100% 0%,rgba(42,85,118,.19),transparent 42%),#0b1b2d!important}
+.workspace-view{min-height:760px!important}
+.workspace-topbar{padding:clamp(22px,3vw,32px)!important;border-bottom:1px solid rgba(230,189,104,.13)!important}
+.workspace-topbar h2,.chat-room-title h2{color:#fff!important}
+.workspace-topbar p:not(.eyebrow){color:#afbdca!important}
+.social-feed{display:grid!important;gap:13px!important;padding:20px clamp(14px,2.4vw,28px)!important}
+.social-feed .social-feed-item{padding:21px!important;border:1px solid rgba(230,189,104,.16)!important;border-radius:17px!important;background:linear-gradient(145deg,#102943,#0c2035)!important;color:#d2dce7!important;box-shadow:0 8px 24px rgba(0,0,0,.12)!important}
+.social-feed-item h3{font:600 1.2rem/1.3 "Playfair Display",Georgia,serif!important;color:#fff!important}
+.social-feed-item p{color:#c6d2de!important;line-height:1.8!important}
+.social-feed-item .feed-community{color:#edcb7b!important;letter-spacing:.05em}
+.social-feed-item .feed-author a,.chat-post-author a{color:#f7f4ea!important}
+.social-feed-item .feed-meta{color:#8ea3b8!important}
+.social-feed-item button,.chat-post-actions button{min-height:36px!important;border:1px solid #35506b!important;border-radius:999px!important;background:#132f4b!important;color:#d6e0e9!important;padding:8px 13px!important;font:650 .75rem "DM Sans",sans-serif!important}
+.social-feed-item button:hover,.chat-post-actions button:hover,.chat-post-actions button.is-liked{border-color:#e6bd68!important;background:#213d57!important;color:#f5d891!important}
+.chat-post{margin:0 18px!important;padding:22px!important;border:1px solid rgba(230,189,104,.16)!important;border-radius:17px!important;background:linear-gradient(145deg,#102943,#0c2035)!important;box-shadow:0 8px 24px rgba(0,0,0,.12)!important}
+.chat-post+.chat-post{margin-top:13px!important}
+.chat-post h3{font:600 1.17rem/1.35 "Playfair Display",Georgia,serif!important;color:#fff!important}
+.chat-post-body{color:#d0dbe7!important}
+.chat-post .chat-avatar{border-radius:50%!important}
+.chat-comments{border-color:rgba(230,189,104,.25)!important}
+.chat-comment{border:1px solid rgba(230,189,104,.12)!important;background:#0b2035!important}
+.chat-comment-content{color:#d5deea!important}
+.comment-form input{border-radius:999px!important;background:#081a2d!important}
+.comment-form button{border-radius:999px!important;padding:0 17px!important}
+.community-card{border-radius:17px!important}
+.community-card .button{border-radius:999px!important}
+#workspaceMessages{padding:clamp(16px,2vw,24px)!important}
+#workspaceMessages .message-center-intro{padding:0 2px}
+@media(max-width:900px){.community-workspace{grid-template-columns:minmax(0,1fr)!important}.community-sidebar{border-right:0!important}.workspace-view{min-height:560px!important}.community-intro{min-height:unset}}
+@media(max-width:760px){.community-platform{padding:14px 10px 42px!important}.community-intro{padding:25px 19px!important;border-radius:17px!important}.community-intro h1{font-size:clamp(2.25rem,10vw,3.4rem)!important}.community-workspace{margin:16px 0!important;border-radius:16px!important}.workspace-topbar{align-items:flex-start!important;flex-direction:column!important}.social-feed{padding:12px!important}.social-feed .social-feed-item{padding:17px!important}.chat-post{margin:0 10px!important;padding:17px!important}.community-hub-actions{display:grid;grid-template-columns:1fr}.community-hub-actions .button{width:100%;box-sizing:border-box;text-align:center}}
+@media(prefers-reduced-motion:reduce){.community-card,.workspace-nav{transition:none!important}}
