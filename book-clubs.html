@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07172b">
+<meta name="description" content="Find a reading circle, join a book club, plan reading sessions and discuss books with the Voiceoftaade community.">
+<link rel="icon" href="assets/icon-192.png" type="image/png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css?v=20261112-library-nav3">
+<link rel="stylesheet" href="assets/css/editorial-refresh.css?v=20261112-hybrid-editorial4">
+<link rel="stylesheet" href="assets/css/app-nav.css?v=20261112-nav2">
+<link rel="stylesheet" href="assets/css/book-clubs.css?v=20261112-clubs1">
+<title>Book Clubs | Voiceoftaade</title>
+<script src="theme.js?v=20261028-library-nav2"></script>
+</head>
+<body>
+<div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
+<header class="site-header">
+  <a class="brand" href="./" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"></a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <nav id="mainNav" aria-label="Main navigation">
+    <a href="books.html">Library</a><a href="store.html">Store</a><a href="journals.html">Journal</a>
+    <a href="community.html">Community</a><a href="book-clubs.html" aria-current="page">Book Clubs</a>
+    <a class="nav-cta" href="contact.html">Contact</a><a href="dm.html">Messages</a>
+    <a class="account-avatar-link" href="account.html" aria-label="Open reader profile" title="Reader profile"><span class="account-avatar" aria-hidden="true">＋</span></a>
+  </nav>
+</header>
+<main class="book-clubs-page">
+  <section class="clubs-hero">
+    <p class="clubs-eyebrow">READ TOGETHER · THINK DEEPER</p>
+    <h1>Good books deserve <em>good conversations.</em></h1>
+    <p>Find your reading circle, follow a shared reading plan, meet for thoughtful sessions and exchange ideas chapter by chapter.</p>
+    <div class="clubs-hero-actions">
+      <a class="clubs-button clubs-button-gold" href="#discoverClubs">Explore book clubs</a>
+      <a class="clubs-button clubs-button-quiet" href="community.html">Visit the community</a>
+    </div>
+    <p id="clubAccountState" class="clubs-account-state" aria-live="polite">Checking reader account…</p>
+  </section>
+
+  <section class="clubs-section" id="discoverClubs">
+    <div class="clubs-section-heading"><div><p class="clubs-eyebrow">FIND YOUR PEOPLE</p><h2>Discover book clubs</h2></div><p>Join a public reading circle or request access to a private one.</p></div>
+    <div id="clubList" class="club-grid" aria-live="polite"><p class="clubs-loading">Loading book clubs…</p></div>
+  </section>
+
+  <section class="clubs-section">
+    <div class="clubs-section-heading"><div><p class="clubs-eyebrow">WHAT'S NEXT</p><h2>Upcoming reading sessions</h2></div><p>See the next scheduled conversations across clubs you can access.</p></div>
+    <div id="upcomingSessions" class="session-grid" aria-live="polite"><p class="clubs-loading">Loading sessions…</p></div>
+  </section>
+
+  <section class="clubs-create-panel" id="createClubPanel" hidden>
+    <div><p class="clubs-eyebrow">START A READING CIRCLE</p><h2>Propose a book club</h2><p>New clubs are reviewed by the Voiceoftaade team before appearing publicly.</p></div>
+    <form id="createClubForm" class="clubs-form">
+      <label>Club name<input name="name" required minlength="3" maxlength="80" placeholder="e.g. The Thoughtful Reader Circle"></label>
+      <label>What is this club about?<textarea name="description" required minlength="10" maxlength="1000" placeholder="Describe the reading community and the conversations you hope to create."></textarea></label>
+      <div class="clubs-form-row">
+        <label>Access<select name="visibility"><option value="public">Public — anyone can discover and join</option><option value="private">Private — readers request access</option></select></label>
+        <label>Genre<input name="genre" required maxlength="80" placeholder="Personal growth, fiction, history…"></label>
+      </div>
+      <div class="clubs-form-row">
+        <label>Book title<input name="book_title" required maxlength="180" placeholder="The book your club will read"></label>
+        <label>Book author<input name="book_author" required maxlength="120" placeholder="Author's name"></label>
+      </div>
+      <label>Suggested reading plan<textarea name="reading_plan" maxlength="2000" placeholder="Optional: weekly chapters, reading pace or first meeting plan."></textarea></label>
+      <button class="clubs-button clubs-button-gold" type="submit">Submit book club for review</button>
+    </form>
+  </section>
+
+  <section class="club-detail-panel" id="clubDetail" hidden>
+    <div class="club-detail-head">
+      <div><p class="clubs-eyebrow">YOUR READING CIRCLE</p><h2 id="detailClubName">Book club</h2><p id="detailClubDescription"></p><div id="detailClubMeta" class="club-meta"></div></div>
+      <div class="club-detail-actions"><button type="button" id="joinClubBtn" class="clubs-button clubs-button-gold">Join book club</button><button type="button" id="closeClubBtn" class="clubs-button clubs-button-quiet">Close</button></div>
+    </div>
+    <p id="clubDetailStatus" class="clubs-status" role="status" aria-live="polite"></p>
+    <section class="club-detail-section">
+      <div class="clubs-section-heading"><div><p class="clubs-eyebrow">READING TOGETHER</p><h3>Sessions</h3></div></div>
+      <div id="clubSessions" class="session-grid"><p class="clubs-loading">Loading sessions…</p></div>
+      <form id="createSessionForm" class="clubs-form compact-form" hidden>
+        <h4>Schedule a reading session</h4>
+        <label>Session title<input name="title" required maxlength="160" placeholder="Weekly reading circle"></label>
+        <div class="clubs-form-row"><label>Chapter or section<input name="chapter_label" maxlength="120" placeholder="Chapters 1–2"></label><label>Starts<input name="starts_at" type="datetime-local" required></label></div>
+        <label>Ends (optional)<input name="ends_at" type="datetime-local"></label>
+        <label>Session notes<textarea name="details" maxlength="2000" placeholder="What should readers prepare?"></textarea></label>
+        <button class="clubs-button clubs-button-gold" type="submit">Schedule session</button>
+      </form>
+    </section>
+
+    <section class="club-detail-section">
+      <div class="clubs-section-heading"><div><p class="clubs-eyebrow">SHARE IDEAS</p><h3>Chapter discussions</h3></div></div>
+      <form id="createDiscussionForm" class="clubs-form compact-form" hidden>
+        <label>Chapter or topic<input name="title" required maxlength="180" placeholder="Chapter 1 — The central idea"></label>
+        <label>Discussion prompt<textarea name="body" required maxlength="10000" placeholder="What stood out to you? What would you like the group to explore?"></textarea></label>
+        <button class="clubs-button clubs-button-gold" type="submit">Start discussion</button>
+      </form>
+      <div id="clubDiscussions" class="discussion-list"><p class="clubs-loading">Loading discussions…</p></div>
+    </section>
+
+    <section class="club-detail-section">
+      <div class="clubs-section-heading"><div><p class="clubs-eyebrow">DECIDE TOGETHER</p><h3>Club polls</h3></div></div>
+      <form id="createPollForm" class="clubs-form compact-form" hidden>
+        <h4>Create a club poll</h4>
+        <label>Question<input name="question" required minlength="5" maxlength="240" placeholder="Which chapter should we discuss next?"></label>
+        <label>Options <span class="clubs-muted">(one per line, 2–6 options)</span><textarea name="options" required rows="4" placeholder="Chapter 1&#10;Chapter 2&#10;Chapter 3"></textarea></label>
+        <label>Poll closes (optional)<input name="closes_at" type="datetime-local"></label>
+        <button class="clubs-button clubs-button-gold" type="submit">Publish poll</button>
+      </form>
+      <div id="clubPolls" class="poll-list"><p class="clubs-loading">Loading polls…</p></div>
+    </section>
+  </section>
+  <p id="bookClubsStatus" class="clubs-status page-status" role="status" aria-live="polite"></p>
+</main>
+<footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade. Words for a more thoughtful life.</p></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/book-clubs.js?v=20261112-clubs1"></script>
+<script src="premium-ux.js" defer></script>
+<script src="assets/js/app-nav.js?v=20261112-nav2" defer></script>
+</body>
+</html>
