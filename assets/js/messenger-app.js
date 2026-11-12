@@ -190,11 +190,18 @@ async function togglePreference(key){if(!active)return;const p={user_id:user.id,
 async function openManageGroup(){
  if(!active||active.type!=="group")return;
  $("manageGroupTitle").textContent=active.group.name;
- $("manageGroupDetails").textContent=active.group.description||"Reader group";
+ $("manageGroupDetails").innerHTML=active.role==="admin"?'<label>Group name<input id="editGroupName" maxlength="80" value="'+esc(active.group.name)+'"></label><label>Group description<textarea id="editGroupDescription" maxlength="500">'+esc(active.group.description||"")+'</textarea></label><button type="button" id="saveGroupDetails" class="primary-action">Save group details</button>':'<p>'+esc(active.group.description||"Reader group")+'</p>';
  $("manageGroupAdminTools").hidden=active.role!=="admin";
+ $("saveGroupDetails")?.addEventListener("click",saveGroupDetails);
  $("manageMemberSearch").value="";$("manageMemberResults").innerHTML="";
  $("manageGroupStatus").textContent="";
  await refreshGroupMembers();showModal("manageGroupModal");
+}
+async function saveGroupDetails(){
+ const name=$("editGroupName").value.trim(),description=$("editGroupDescription").value.trim();
+ const r=await db.rpc("update_reader_chat_group",{p_group_id:active.id,p_name:name,p_description:description});
+ if(r.error){$("manageGroupStatus").textContent=r.error.message;return;}
+ active.group.name=name;active.group.description=description;$("chatTitle").textContent=name;$("manageGroupTitle").textContent=name;$("manageGroupStatus").textContent="Group details saved.";await loadThreads();renderInfoDrawer();
 }
 async function refreshGroupMembers(){
  if(!active||active.type!=="group")return;
