@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b5c4b">
+<meta name="description" content="Private reader conversations and groups on Voiceoftaade.">
+<title>Messages | Voiceoftaade</title>
+<link rel="icon" href="assets/icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1"><link rel="stylesheet" href="assets/css/messenger-app.css?v=20261112-wa2"><link rel="stylesheet" href="assets/css/messages-only.css?v=20261112-messages1"">
+<script src="theme.js" defer></script></head>
+<body class="messenger-page">
+<header class="site-header"><a class="brand" href="index.html" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav aria-label="Primary navigation"></nav></header>
+<main class="messenger-app" id="messengerApp">
+<aside class="messenger-rail" aria-label="Messaging sections">
+<button class="rail-item active" data-view="chats" title="Chats" aria-label="Chats"><span>▤</span><small>Chats</small></button>
+<button class="rail-item" data-view="status" title="Status" aria-label="Status"><span>◉</span><small>Status</small></button>
+<button class="rail-item" data-view="calls" title="Calls" aria-label="Calls"><span>⌕</span><small>Calls</small></button>
+<button class="rail-item" data-view="groups" title="Groups" aria-label="Groups"><span>♧</span><small>Groups</small></button>
+<button class="rail-item" data-view="requests" title="Requests" aria-label="Message requests"><span>✉</span><small>Requests</small><i id="requestBadge" hidden>0</i></button>
+<a class="rail-profile" id="myProfileLink" href="account.html" title="My reader profile">V</a>
+</aside>
+<section class="messenger-sidebar" id="messengerSidebar">
+<div class="sidebar-view" id="sidebarChats">
+<div class="messenger-sidebar-head"><div><span class="wa-kicker">VOICEOFTAADE MESSENGER</span><h1>Chats</h1></div><div class="head-actions"><button id="newChatBtn" class="icon-button" title="New chat" aria-label="New chat">＋</button><button id="newGroupBtn" class="icon-button" title="New group" aria-label="New group">♧</button><button id="chatMenuBtn" class="icon-button" title="Message requests" aria-label="Message requests">⋮</button></div></div>
+<div class="sidebar-search"><span>⌕</span><input id="threadSearch" type="search" placeholder="Search or start a new chat" aria-label="Search chats"></div>
+<div class="thread-filters" role="group" aria-label="Filter chats"><button class="active" data-filter="all">All</button><button data-filter="unread">Unread</button><button data-filter="groups">Groups</button><button data-filter="archived">Archived</button></div>
+<div class="status-strip"><button id="myStatusBtn" class="status-avatar add-status"><span>＋</span><small>My status</small></button><div id="statusPreview" class="status-preview"></div></div>
+<div class="thread-list-heading"><span id="threadListLabel">RECENT CHATS</span><button id="refreshChats" title="Refresh chats" aria-label="Refresh chats">↻</button></div>
+<div id="threadList" class="thread-list" aria-live="polite"><div class="messenger-loading">Loading your chats…</div></div>
+</div>
+<div class="sidebar-view" id="sidebarStatus" hidden>
+<div class="messenger-sidebar-head"><div><span class="wa-kicker">QUICK UPDATES</span><h1>Status</h1></div><button id="createStatusBtn" class="icon-button" title="Add status">＋</button></div>
+<p class="sidebar-hint">Share a thought, photo or short video. Status updates disappear after 24 hours.</p>
+<div id="statusList" class="status-list"></div>
+</div>
+<div class="sidebar-view" id="sidebarCalls" hidden>
+<div class="messenger-sidebar-head"><div><span class="wa-kicker">STAY CONNECTED</span><h1>Calls</h1></div></div>
+<p class="sidebar-hint">Audio and video calls with your accepted contacts. Calls are in beta and depend on network support.</p>
+<div id="callList" class="call-list"></div>
+</div>
+<div class="sidebar-view" id="sidebarGroups" hidden>
+<div class="messenger-sidebar-head"><div><span class="wa-kicker">READ TOGETHER</span><h1>Groups</h1></div><button id="groupsCreateBtn" class="icon-button" title="Create group">＋</button></div>
+<p class="sidebar-hint">Create a reader group and keep the conversation moving.</p>
+<div id="groupList" class="thread-list"></div>
+</div>
+<div class="sidebar-view" id="sidebarRequests" hidden>
+<div class="messenger-sidebar-head"><div><span class="wa-kicker">NEW CONNECTIONS</span><h1>Requests</h1></div></div>
+<p class="sidebar-hint">Choose who can start a private conversation with you.</p>
+<h3 class="list-section-title">RECEIVED</h3><div id="incomingRequests" class="request-list"></div>
+<h3 class="list-section-title">SENT</h3><div id="outgoingRequests" class="request-list"></div>
+</div>
+</section>
+<section class="messenger-main" id="messengerMain">
+<div class="empty-chat" id="emptyChat"><div class="empty-chat-art"><span class="empty-chat-mark">V</span><span class="empty-chat-orbit orbit-one"></span><span class="empty-chat-orbit orbit-two"></span></div><h2>Conversations that bring readers together.</h2><p>Choose a chat, find a reader, or create a group to begin.</p><button id="emptyNewChat" class="primary-action">Start a conversation</button><small>Private conversations are protected by reader access controls.</small></div>
+<div class="active-chat" id="activeChat" hidden>
+<header class="chat-header">
+<button id="mobileChatBack" class="chat-back-button" aria-label="Back to chats">←</button>
+<button id="chatPeerInfo" class="chat-peer-info"><span id="chatAvatar" class="chat-avatar">V</span><span><strong id="chatTitle">Reader</strong><small id="chatPresence">Voiceoftaade reader</small></span></button>
+<div class="chat-header-actions"><button id="chatSearchBtn" class="icon-button" title="Search messages" aria-label="Search messages">⌕</button><button id="audioCallBtn" class="icon-button" title="Audio call" aria-label="Audio call">☎</button><button id="videoCallBtn" class="icon-button" title="Video call" aria-label="Video call">▣</button><button id="chatInfoBtn" class="icon-button" title="Chat information" aria-label="Chat information">ⓘ</button><button id="chatMoreBtn" class="icon-button" title="Chat options" aria-label="Chat options">⋮</button></div>
+</header>
+<div id="pinnedMessageBar" class="pinned-message-bar" hidden></div>
+<div id="messageList" class="message-list" aria-live="polite"><div class="messenger-loading">Loading messages…</div></div>
+<div id="replyComposerPreview" class="reply-composer-preview" hidden></div>
+<form id="messageComposer" class="message-composer">
+<input type="file" id="attachmentInput" hidden accept="image/*,video/mp4,audio/*,.pdf,.txt">
+<button type="button" id="attachBtn" class="composer-icon" aria-label="Attach a file" title="Attach a file">＋</button>
+<button type="button" id="emojiBtn" class="composer-icon" aria-label="Add emoji" title="Add emoji">☺</button>
+<textarea id="messageInput" rows="1" maxlength="4000" placeholder="Write a message…" aria-label="Write a message"></textarea>
+<button type="button" id="voiceNoteBtn" class="composer-icon" aria-label="Record voice note" title="Record voice note">🎙</button>
+<button type="submit" id="sendMessageBtn" class="send-button" aria-label="Send message">➤</button>
+</form>
+</div>
+<aside class="chat-info-drawer" id="chatInfoDrawer" hidden><div class="drawer-head"><strong>Contact info</strong><button id="closeInfoDrawer" class="icon-button" aria-label="Close information">×</button></div><div id="chatInfoContent"></div></aside>
+</section>
+</main>
+<div id="loginGate" class="modal-backdrop" hidden><section class="app-modal login-modal"><div class="modal-mark">V</div><p class="wa-kicker">VOICEOFTAADE MESSENGER</p><h2>Sign in to your reader account</h2><p>Your chats, groups and status updates are connected to your reader profile.</p><a href="account.html" class="primary-action">Sign in or create an account</a></section></div>
+<div id="newChatModal" class="modal-backdrop" hidden><section class="app-modal"><div class="modal-head"><div><span class="wa-kicker">NEW CONNECTION</span><h2>Start a chat</h2></div><button class="icon-button" data-close-modal="newChatModal">×</button></div><input id="readerSearchInput" class="modal-search" type="search" placeholder="Search reader names…"><div id="readerSearchResults" class="modal-results"></div></section></div>
+<div id="groupModal" class="modal-backdrop" hidden><form id="groupForm" class="app-modal"><div class="modal-head"><div><span class="wa-kicker">BRING READERS TOGETHER</span><h2>Create a group</h2></div><button type="button" class="icon-button" data-close-modal="groupModal">×</button></div><label>Group name<input id="groupName" required maxlength="80" placeholder="e.g. The Sunday Reading Circle"></label><label>About the group<textarea id="groupDescription" maxlength="500" placeholder="What brings this group together?"></textarea></label><label>Find members<input id="groupMemberSearch" type="search" placeholder="Search readers to add"></label><div id="groupMemberResults" class="modal-results"></div><div id="selectedGroupMembers" class="selected-members"></div><p id="groupStatus" class="form-status" role="status"></p><button class="primary-action" type="submit">Create group</button></form></div>
+<div id="manageGroupModal" class="modal-backdrop" hidden><section class="app-modal"><div class="modal-head"><div><span class="wa-kicker">GROUP SETTINGS</span><h2 id="manageGroupTitle">Group members</h2></div><button type="button" class="icon-button" data-close-modal="manageGroupModal">×</button></div><div id="manageGroupDetails" class="group-manage-details"></div><div id="manageGroupAdminTools" hidden><label>Find readers to add<input id="manageMemberSearch" type="search" placeholder="Search readers…"></label><div id="manageMemberResults" class="modal-results"></div></div><h3 class="list-section-title">CURRENT MEMBERS</h3><div id="currentGroupMembers" class="modal-results"></div><p id="manageGroupStatus" class="form-status" role="status"></p></section></div>
+<div id="statusModal" class="modal-backdrop" hidden><form id="statusForm" class="app-modal"><div class="modal-head"><div><span class="wa-kicker">A MOMENT FROM YOUR DAY</span><h2>Share a status</h2></div><button type="button" class="icon-button" data-close-modal="statusModal">×</button></div><label>Your thought<textarea id="statusCaption" maxlength="500" placeholder="Share something worth remembering…"></textarea></label><label>Add a photo or short video<input id="statusMedia" type="file" accept="image/jpeg,image/png,image/webp,video/mp4"></label><label>Who can see it<select id="statusVisibility"><option value="community">Your reader community</option><option value="public">Everyone</option><option value="private">Only you</option></select></label><p class="form-status" id="statusFormMessage" role="status"></p><button class="primary-action" type="submit">Share status</button></form></div>
+<div id="statusViewer" class="modal-backdrop" hidden><section class="status-viewer"><button class="status-viewer-close" data-close-modal="statusViewer">×</button><div id="statusViewerContent"></div></section></div>
+<div id="callModal" class="modal-backdrop" hidden><section class="call-modal"><div class="call-modal-head"><span class="wa-kicker" id="callTypeLabel">VOICE CALL</span><button class="icon-button" data-close-modal="callModal">×</button></div><div class="call-person"><span id="callAvatar" class="call-avatar">V</span><h2 id="callPersonName">Reader</h2><p id="callStatusText">Connecting…</p></div><video id="remoteVideo" autoplay playsinline></video><video id="localVideo" autoplay muted playsinline></video><audio id="remoteAudio" autoplay></audio><div class="call-controls"><button id="muteCallBtn" type="button">Mute</button><button id="cameraCallBtn" type="button">Camera</button><button id="endCallBtn" class="end-call-btn" type="button">End call</button></div></section></div>
+<div id="incomingCallModal" class="modal-backdrop" hidden><section class="app-modal incoming-call-modal"><span class="wa-kicker">INCOMING CALL</span><h2 id="incomingCallerName">A reader is calling</h2><p id="incomingCallType">Audio call</p><div class="incoming-call-actions"><button id="declineCallBtn" class="danger-action">Decline</button><button id="acceptCallBtn" class="primary-action">Accept</button></div></section></div>
+<div id="toast" class="messenger-toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/app-nav.js?v=20261112-single-nav3" defer></script><script src="assets/js/messenger-app.js?v=20261112-wa2"></script>
+</body></html>
