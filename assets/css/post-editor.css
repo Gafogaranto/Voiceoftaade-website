@@ -37,7 +37,7 @@
 .image-editor-dialog>header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px;border-bottom:1px solid #eeeae2}
 .image-editor-dialog>header h2{margin:4px 0 0;font:600 1.5rem "Playfair Display",serif}
 .image-editor-dialog>header button{width:36px;height:36px;border:0;border-radius:50%;background:#f2f0e9;color:#42554c;font-size:1.35rem;cursor:pointer}
-.image-editor-preview-wrap{display:grid;place-items:center;align-self:center;width:min(100% - 36px,520px);max-height:360px;aspect-ratio:4/3;overflow:hidden;margin:16px;background:#e8e7e1;border-radius:12px}
+.image-editor-preview-wrap{display:grid;place-items:center;align-self:center;width:min(calc(100% - 36px),520px);max-height:360px;aspect-ratio:4/3;overflow:hidden;margin:16px;background:#e8e7e1;border-radius:12px}
 .image-editor-preview-wrap img{display:block;max-width:100%;max-height:100%;object-fit:contain;transition:filter .1s ease,transform .1s ease}
 .image-editor-controls{display:grid;gap:14px;padding:0 20px 18px}
 .image-editor-controls>label,.image-adjust-grid label{display:grid;gap:6px;color:#526258;font-size:.72rem;font-weight:700}
