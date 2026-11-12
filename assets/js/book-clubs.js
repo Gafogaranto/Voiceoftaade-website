@@ -72,7 +72,7 @@
       const c=communityOf(club), own=c.created_by===state.user?.id, pending=c.status!=="active";
       const access=c.visibility==="private"?"Private club":"Public club";
       return '<article class="club-card"><span class="club-tag">'+esc(access)+'</span>'+(pending&&own?' <span class="club-tag pending">Awaiting review</span>':'')+
-        '<h3>'+esc(c.name)+'</h3><p class="club-book">'+esc(club.book_title)+' · '+esc(club.book_author)+'</p><p>'+esc(c.description)+'</p>'+
+        '<h3>'+esc(c.name)+'</h3><p class="club-book">'+esc(club.book_title||"Open reading circle")+(club.book_author?' · '+esc(club.book_author):"")+'</p><p>'+esc(c.description)+'</p>'+
         '<div class="club-card-bottom"><span class="clubs-muted">'+esc(club.genre)+'</span><button class="clubs-button clubs-button-quiet" type="button" data-open-club="'+esc(club.community_id)+'">View club</button></div></article>';
     }).join("");
     host.querySelectorAll("[data-open-club]").forEach(button=>button.addEventListener("click",()=>openClub(button.dataset.openClub)));
@@ -285,7 +285,7 @@
     button.disabled=false;
     if(error){status("The book club could not be submitted: "+error.message,true);return;}
     form.reset();updateBookRequirements();closeWizard();showWizardStep();status("Your book club proposal has been submitted for review. It will appear publicly after approval.");
-    await loadClubs();
+    await loadClubs();await loadManagedRequests();
     if(data)await openClub(data);
   }
 
