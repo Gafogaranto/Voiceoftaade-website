@@ -83,7 +83,7 @@ function renderGroupList(){$("groupList").innerHTML=threads.filter(t=>t.type==="
 async function openThread(t){
  active=t;replyTarget=null;$("replyComposerPreview").hidden=true;$("messengerApp").classList.add("mobile-chat-open");$("emptyChat").hidden=true;$("activeChat").hidden=false;$("chatInfoDrawer").hidden=true;
  $("chatTitle").textContent=threadName(t);$("chatPresence").textContent=t.type==="group"?(t.group.description||"Reader group"):"Private conversation";$("chatAvatar").innerHTML=t.type==="group"?"♧":avatar(t.peer,threadName(t));$("audioCallBtn").hidden=t.type!=="direct";$("videoCallBtn").hidden=t.type!=="direct";
- await loadThreadMessages();await markRead();await subscribeThread();renderThreads();renderInfoDrawer();
+ await loadThreadMessages();await markRead();t.unread=0;await subscribeThread();renderThreads();renderInfoDrawer();
 }
 async function loadThreadMessages(){
  if(!active)return;const table=active.type==="direct"?"reader_messages":"reader_chat_group_messages",key=active.type==="direct"?"conversation_id":"group_id";
