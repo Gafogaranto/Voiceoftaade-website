@@ -92,6 +92,12 @@
       : "";
   }
   async function showDashboard(user) {
+    if (user?.id) {
+      // Signed-in readers use the concise public-facing profile. Account editing and privacy
+      // controls live behind the profile menu in profile-settings.html.
+      location.replace("profile.html?id=" + encodeURIComponent(user.id));
+      return;
+    }
     currentUser = user;
     const publicProfileLink=$("viewPublicProfile");if(publicProfileLink){publicProfileLink.href="profile.html?id="+encodeURIComponent(user.id);publicProfileLink.hidden=false;}
     $("authPanel").style.display = "none";
