@@ -24,9 +24,23 @@ async function refresh(){
  ]);
  renderRequests(incoming.data||[],outgoing.data||[]);
  conversations=conv.data||[];
- const rows=await Promise.all(conversations.map(async c=>({c,peer:await profile(c.user_one===user.id?c.user_two:c.user_one)})));
- $("dmConversations").innerHTML=rows.length?rows.map(({c,peer})=>'<button class="dm-item '+(active?.id===c.id?"active":"")+'" data-conversation="'+c.id+'"><strong>'+esc(peer?.display_name||"Voiceoftaade reader")+'</strong><small>Open private conversation</small></button>').join(""):'<p class="dm-empty">No accepted conversations yet.</p>';
+ const lastMessages=new Map(),unreadCounts=new Map();
+ if(conversations.length){
+  const ids=conversations.map(c=>c.id);
+  const messageRows=await db.from("reader_messages").select("conversation_id,body,sender_id,created_at,read_at")
+   .in("conversation_id",ids).order("created_at",{ascending:false}).limit(500);
+  (messageRows.data||[]).forEach(m=>{
+   if(!lastMessages.has(m.conversation_id))lastMessages.set(m.conversation_id,m);
+   if(m.sender_id!==user.id&&!m.read_at)unreadCounts.set(m.conversation_id,(unreadCounts.get(m.conversation_id)||0)+1);
+  });
+ }
+ const rows=await Promise.all(conversations.map(async c=>({c,peer:await profile(c.user_one===user.id?c.user_two:c.user_one),last:lastMessages.get(c.id),unread:unreadCounts.get(c.id)||0})));
+ rows.sort((a,b)=>new Date(b.last?.created_at||b.c.created_at)-new Date(a.last?.created_at||a.c.created_at));
+ $("dmConversations").innerHTML=rows.length?rows.map(({c,peer,last,unread})=>'<button class="dm-item message-conversation-item '+(active?.id===c.id?"active":"")+'" data-conversation="'+c.id+'"><span class="message-list-avatar">'+(peer?.avatar_url?'<img src="'+esc(peer.avatar_url)+'" alt="">':esc((peer?.display_name||"V").trim().charAt(0).toUpperCase()))+'</span><span class="message-list-copy"><strong>'+esc(peer?.display_name||"Voiceoftaade reader")+'</strong><small>'+esc(last?.body||"Start a private conversation")+'</small></span><span class="message-list-meta"><time>'+esc(last?stamp(last.created_at):"")+'</time>'+(unread?'<b>'+unread+'</b>':"")+'</span></button>').join(""):'<p class="dm-empty">No accepted conversations yet.</p>';
  $("dmConversations").querySelectorAll("[data-conversation]").forEach(b=>b.addEventListener("click",()=>openConversation(b.dataset.conversation)));
+ const navBadge=document.getElementById("messagesNavCount");
+ const totalUnread=[...unreadCounts.values()].reduce((sum,n)=>sum+n,0);
+ if(navBadge){navBadge.hidden=!totalUnread;navBadge.textContent=totalUnread>99?"99+":String(totalUnread);}
 }
 async function renderRequests(incoming,outgoing){
  const incomingRows=await Promise.all(incoming.map(async r=>({r,p:await profile(r.sender_id)})));
