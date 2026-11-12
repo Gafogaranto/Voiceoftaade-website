@@ -105,3 +105,6 @@ body:has(.book-clubs-page){background:#f8f7f1;color:#213b30}
 .club-request-card h4{margin:0 0 8px;color:#254535}.club-request-card p{color:#627369;font-size:.79rem;line-height:1.6}
 .club-request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 @media(max-width:620px){.book-clubs-page{width:100%}.clubs-hero{border-radius:0;padding:28px 20px}.club-create-fab{right:14px;width:56px;height:56px}.club-wizard-progress span{font-size:.58rem;padding:9px 4px}.club-wizard-card{padding:18px}.clubs-form-row{grid-template-columns:1fr}}
+
+/* Platform owner proposal review */
+.owner-approval-section{scroll-margin-top:110px}.owner-approval-note{max-width:760px;padding:13px 16px;border:1px solid #e8dfd2;border-radius:14px;background:#fffaf3;color:#536258;font-size:.9rem}.owner-approval-card{padding:22px!important;border:1px solid #dfd4c5!important;border-radius:18px!important;background:linear-gradient(145deg,#fffdf9,#f8f4eb)!important}.owner-approval-card h3{margin:10px 0 8px;color:#203d34;font:600 1.35rem/1.25 "Playfair Display",Georgia,serif}.owner-approval-card-head{display:flex;flex-wrap:wrap;gap:8px}.owner-approval-card .club-request-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.owner-approval-card .clubs-muted{font-size:.82rem}.club-tag.pending{background:#f6ead4;color:#795c24}
