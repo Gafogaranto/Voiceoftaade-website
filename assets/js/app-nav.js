@@ -18,9 +18,10 @@ nav.className="vt-primary-nav";nav.setAttribute("aria-label","Primary navigation
 const active=(href)=>current===href||(href==="books.html"&&["store.html","featured.html"].includes(current))||(href==="community.html"&&["dm.html","book-clubs.html"].includes(current));
 nav.innerHTML=links.map(([href,label])=>'<a href="'+href+'"'+(active(href)?' aria-current="page" class="is-active"':"")+'>'+label+'</a>').join("")+
 '<a class="vt-account-link" href="account.html"'+(["account.html","profile.html"].includes(current)?' aria-current="page"':"")+'><span class="vt-account-icon" aria-hidden="true">◉</span><span>My account</span></a>';
-let toggle=header.querySelector(".menu-toggle,#menuToggle,.vt-menu-toggle");
-if(!toggle){toggle=document.createElement("button");toggle.type="button";toggle.className="menu-toggle vt-menu-toggle";toggle.setAttribute("aria-label","Open navigation");toggle.setAttribute("aria-expanded","false");toggle.textContent="☰";header.append(toggle);}
-toggle.classList.add("vt-menu-toggle");toggle.setAttribute("aria-controls","vtPrimaryNav");nav.id="vtPrimaryNav";
+const oldToggle=header.querySelector(".menu-toggle,#menuToggle,.vt-menu-toggle");
+const toggle=document.createElement("button");toggle.type="button";toggle.className="menu-toggle vt-menu-toggle";toggle.setAttribute("aria-label","Open navigation");toggle.setAttribute("aria-expanded","false");toggle.textContent="☰";
+if(oldToggle)oldToggle.replaceWith(toggle);else header.append(toggle);
+if(!nav.id)nav.id="vtPrimaryNav";toggle.setAttribute("aria-controls",nav.id);
 const close=()=>{nav.classList.remove("open");toggle.setAttribute("aria-expanded","false");toggle.setAttribute("aria-label","Open navigation");toggle.textContent="☰";};
 toggle.addEventListener("click",()=>{const open=!nav.classList.contains("open");nav.classList.toggle("open",open);toggle.setAttribute("aria-expanded",String(open));toggle.setAttribute("aria-label",open?"Close navigation":"Open navigation");toggle.textContent=open?"×":"☰";});
 nav.addEventListener("click",e=>{if(e.target.closest("a"))close();});
