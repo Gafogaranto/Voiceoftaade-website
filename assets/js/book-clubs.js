@@ -363,6 +363,7 @@
     $("createDiscussionForm").addEventListener("submit",createDiscussion);
     $("createPollForm").addEventListener("submit",createPoll);
     await Promise.all([loadClubs(),loadUpcomingSessions(),loadManagedRequests()]);
+    if(location.hash==="#clubRequests")setTimeout(()=>$("clubRequests").scrollIntoView({behavior:"smooth",block:"start"}),150);
     client.auth.onAuthStateChange((_event,session)=>{
       state.user=session?.user||null;
       Promise.resolve().then(async()=>{
