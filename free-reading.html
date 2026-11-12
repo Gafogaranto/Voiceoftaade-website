@@ -7,6 +7,7 @@
 <title>Free Reading Room | Voiceoftaade Publications</title>
 <link rel="icon" href="assets/icon-192.png" type="image/png"><link rel="stylesheet" href="styles.css?v=20261028-library-modal2"><link rel="stylesheet" href="free-reading.css?v=20261028-free1">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><script src="theme.js?v=20261028-library-nav2"></script>
+<link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav2">
 </head>
 <body class="inner-page free-reading-page">
 <div class="announcement">VOICEOFTAADE · FREE READING ROOM</div>
@@ -27,4 +28,5 @@
 const menuToggle=document.getElementById('menuToggle'),mainNav=document.getElementById('mainNav');menuToggle.addEventListener('click',()=>{const open=mainNav.classList.toggle('open');menuToggle.setAttribute('aria-expanded',String(open));menuToggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');menuToggle.textContent=open?'×':'☰'});mainNav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{mainNav.classList.remove('open');menuToggle.setAttribute('aria-expanded','false');menuToggle.textContent='☰'}));document.getElementById('year').textContent=new Date().getFullYear();
 document.getElementById('downloadWorksheet').addEventListener('click',()=>{const text='VOICEOFTAADE PUBLICATIONS\nPERSONAL REFLECTION WORKSHEET\n\n1. What idea stood out to me today?\n\n__________________________________________________\n\n2. What do I know for certain, and what am I assuming?\n\n__________________________________________________\n\n3. What is one perspective I have not considered?\n\n__________________________________________________\n\n4. What boundary or small promise would help me act with intention?\n\n__________________________________________________\n\n5. What is one practical step I will take, and when?\n\n__________________________________________________\n\nRead · Reflect · Live deliberately.\nVoiceoftaade Publications';const blob=new Blob([text],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='Voiceoftaade-Reflection-Worksheet.txt';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);});
 </script><script src="premium-ux.js?v=20261028-premium4" defer></script>
+<script src="assets/js/app-nav.js?v=20261112-single-nav2" defer></script>
 </body></html>
