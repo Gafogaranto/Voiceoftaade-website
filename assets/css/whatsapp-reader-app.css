@@ -191,3 +191,15 @@ body.wa-app-page .site-header nav.vt-primary-nav .vt-account-link{border-color:v
 }
 @media(max-width:390px){.wa-chat-top strong{font-size:.85rem}.wa-filter{padding:6px 10px}.wa-request-strip{padding:10px 12px}.wa-list-header h1{font-size:1.32rem}.wa-icon-btn{width:36px;height:36px}}
 @media(prefers-reduced-motion:reduce){.wa-chat-wallpaper{scroll-behavior:auto}.wa-message-actions{transition:none}}
+
+.wa-app.has-chat-open~.wa-mobile-tabs{display:none!important}
+.wa-status-viewer{position:fixed;inset:0;z-index:9600;background:#101f25f5;color:#fff;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 15px env(safe-area-inset-bottom)}
+.wa-status-viewer[hidden]{display:none}
+.wa-status-viewer-top{height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wa-status-viewer-top strong{font-size:.94rem}
+.wa-status-viewer-top button{width:42px;height:42px;border:0;border-radius:50%;background:#ffffff1c;color:#fff;font-size:1.4rem}
+.wa-status-viewer-content{min-height:0;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+.wa-status-viewer-content img{max-width:min(620px,96vw);max-height:70dvh;object-fit:contain;border-radius:12px}
+.wa-status-viewer-content p{max-width:700px;text-align:center;font-size:1rem;line-height:1.5}
+.wa-status-viewer-note{text-align:center;color:#b5c8c9;font-size:.7rem}
+.profile-anchor{display:block;position:relative;top:-95px;visibility:hidden}
