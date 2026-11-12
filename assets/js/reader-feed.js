@@ -46,7 +46,7 @@ async function comments(id){
 async function suggestions(){$("suggestedReaders").innerHTML='<span class="feed-muted">Open a writer’s profile from any post to follow their work and see more in your Following feed.</span>';}
 function setPostType(){
  const type=$("postType").value,isImage=type==="image",isArticle=type==="article";
- $("richEditorWrap").hidden=isImage;$("postTitle").hidden=isImage;$("postTitle").placeholder=isArticle?"Article headline":"Title (optional for a note)";
+ $("richEditorWrap").hidden=isImage;$("postTitle").hidden=isImage;if(isImage)$("postTitle").value="";$("postTitle").placeholder=isArticle?"Article headline":"Title (optional for a note)";
  $("editorTypeHint").textContent=isImage?"Share an image with an optional caption.":isArticle?"A longer piece with headings and subheadings.":"A quick thought or reflection.";
  $("publishPost").textContent=isImage?"Publish image":isArticle?"Publish article":"Publish note";
  if(isImage&&!selectedBlob){$("postImageInput").click();}
@@ -103,7 +103,7 @@ $("postForm").addEventListener("submit",async e=>{
   $("postEditor").innerHTML="";$("postTitle").value="";$("postCaption").value="";$("postImageInput").value="";$("imagePreviewCard").hidden=true;selectedBlob=null;sourceImage=null;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;resetEdits();countText();$("postType").value="note";setPostType();say("Your "+(type==="image"?"image":type)+" is published.");
   filter="for-you";document.querySelectorAll("[data-feed-filter]").forEach(b=>b.classList.toggle("active",b.dataset.feedFilter===filter));await load(true);
  }catch(err){if(imagePath)await db.storage.from("reader-feed-images").remove([imagePath]);say(err.message||"Your post could not be published.",true);}
- button.disabled=false;button.textContent=type==="image"?"Publish image":type==="article"?"Publish article":"Publish note";
+ button.disabled=false;if($("postType").value===type)button.textContent=type==="image"?"Publish image":type==="article"?"Publish article":"Publish note";else setPostType();
 });
 document.querySelectorAll("[data-feed-filter]").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.feedFilter;document.querySelectorAll("[data-feed-filter]").forEach(x=>x.classList.toggle("active",x===b));load(true);}));
 $("refreshFeed").addEventListener("click",()=>load(true));$("loadMorePosts").addEventListener("click",()=>load());
