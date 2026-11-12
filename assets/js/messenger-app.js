@@ -30,7 +30,7 @@ function bindUI(){
  document.querySelectorAll(".modal-backdrop").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)hideModal(m.id);}));
  $("readerSearchInput").addEventListener("input",debounce(searchReaders,350));
  $("groupMemberSearch").addEventListener("input",debounce(searchGroupMembers,350));
- $("groupForm").addEventListener("submit",createGroup);$("statusForm").addEventListener("submit",createStatus);
+ $("groupForm").addEventListener("submit",createGroup);
  $("messageComposer").addEventListener("submit",sendMessage);$("attachBtn").addEventListener("click",()=>$("attachmentInput").click());
  $("attachmentInput").addEventListener("change",()=>{if($("attachmentInput").files[0])sendMessage(null,$("attachmentInput").files[0]);});
  $("emojiBtn").addEventListener("click",insertEmoji);$("voiceNoteBtn").addEventListener("click",toggleVoiceNote);
@@ -38,9 +38,6 @@ function bindUI(){
  $("chatInfoBtn").addEventListener("click",openChatInfo);$("closeInfoDrawer").addEventListener("click",closeChatInfo);$("chatPeerInfo").addEventListener("click",openChatInfo);
  $("chatSearchBtn").addEventListener("click",searchInChat);$("chatMoreBtn").addEventListener("click",openChatInfo);
  $("messageList").addEventListener("click",messageAction);
- $("audioCallBtn").addEventListener("click",()=>startCall("audio"));$("videoCallBtn").addEventListener("click",()=>startCall("video"));
- $("endCallBtn").addEventListener("click",()=>endCall("ended"));$("muteCallBtn").addEventListener("click",toggleMute);$("cameraCallBtn").addEventListener("click",toggleCamera);
- $("acceptCallBtn").addEventListener("click",acceptIncomingCall);$("declineCallBtn").addEventListener("click",declineIncomingCall);
  $("threadSearch").addEventListener("keydown",e=>{if(e.key==="Escape")e.target.value="";});
  $("chatMenuBtn").addEventListener("click",()=>switchView("requests"));
  $("manageMemberSearch").addEventListener("input",debounce(searchManageMembers,350));
