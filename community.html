@@ -327,6 +327,7 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 <link rel="stylesheet" href="assets/css/editorial-refresh.css?v=20261112-hybrid-editorial4">
 <link rel="stylesheet" href="assets/css/community-mobile.css?v=20261112-iphone1">
 <link rel="stylesheet" href="assets/css/app-nav-v3.css?v=1">
+<link rel="stylesheet" href="assets/css/social-hub.css?v=20261112-social1">
 </head>
 <body>
 <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
@@ -341,7 +342,8 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
   <p class="sidebar-label">YOUR COMMUNITIES</p>
   <nav id="joinedCommunityNav" class="joined-community-nav" aria-label="Your community chats"><p class="sidebar-empty">Join a community to see its chat here.</p></nav>
   <button id="adminNavBtn" class="workspace-nav admin-nav" data-workspace="admin" type="button" hidden><span>⚙</span> Admin requests <span id="adminRequestCount" class="nav-count">0</span></button>
-  <button class="workspace-nav" data-workspace="discover" type="button"><span>＋</span> Find communities</button><button class="workspace-nav ai-nav" data-workspace="ai" type="button"><span>✧</span> AI reading companion <span class="ai-beta-tag">Preview</span></button>
+  <button class="workspace-nav" data-workspace="discover" type="button"><span>＋</span> Find communities</button>
+  <button class="workspace-nav" id="messagesWorkspaceBtn" data-workspace="messages" type="button"><span>✉</span> Messages <span id="messagesNavCount" class="nav-count" hidden>0</span></button><button class="workspace-nav ai-nav" data-workspace="ai" type="button"><span>✧</span> AI reading companion <span class="ai-beta-tag">Preview</span></button>
   <div class="sidebar-foot"><strong>Featured Voiceoftaade book</strong><br><a href="books.html">Series of Life Hacks to Live By · Free premium book ↗</a><br><span>Read · Reflect · Connect</span></div>
  </aside>
  <div class="community-workspace-main">
@@ -350,6 +352,27 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
   <section id="workspaceDiscover" class="workspace-view" hidden>
    <div class="workspace-topbar"><div><p class="eyebrow">THE READING ROOM</p><h2>Find your community</h2><p>Open a room to join the conversation.</p></div><span class="workspace-status"><i></i> Community online</span></div>
    <div id="communityList" class="community-list" aria-live="polite" hidden></div>
+  </section>
+  <section id="workspaceMessages" class="workspace-view message-workspace" hidden>
+   <div class="message-center-intro"><div><p class="eyebrow">YOUR PRIVATE READING NETWORK</p><h2>Messages</h2><p>Keep your reader conversations together. Message requests are accepted before private chats begin.</p></div><a class="community-small-btn" href="account.html">Profile &amp; settings ↗</a></div>
+   <div class="dm-shell message-center-shell">
+    <section class="dm-layout message-center-layout">
+     <aside class="dm-sidebar message-center-sidebar">
+      <h3>Find readers</h3>
+      <form id="dmSearchForm" class="dm-search message-center-search"><input id="dmSearchInput" type="search" minlength="2" placeholder="Search reader names…" aria-label="Search readers"><button type="submit">Search</button></form>
+      <div id="dmSearchResults" class="dm-list message-center-list" hidden><p class="dm-empty">Find readers who allow message requests.</p></div>
+      <h3>Requests received</h3><div id="dmIncoming" class="dm-list message-center-list"><p class="dm-empty">Loading requests…</p></div>
+      <h3>Your conversations</h3><div id="dmConversations" class="dm-list message-center-list"><p class="dm-empty">Loading conversations…</p></div>
+      <h3>Requests sent</h3><div id="dmOutgoing" class="dm-list message-center-list"><p class="dm-empty">Loading sent requests…</p></div>
+     </aside>
+     <section class="dm-panel message-center-panel">
+      <div class="dm-top message-center-top"><button id="dmBackButton" class="message-center-back" type="button" aria-label="Back to conversations">← Chats</button><div class="dm-peer-avatar message-center-avatar" id="dmPeerAvatar" aria-hidden="true">V</div><div class="dm-peer-copy message-center-peer"><h3 id="dmTitle">Choose a conversation</h3><p id="dmSubtitle">Your accepted conversations will appear here.</p></div></div>
+      <div id="dmMessages" class="dm-messages message-center-messages"><p class="dm-empty">Select an accepted conversation to read and reply.</p></div>
+      <form id="dmComposer" class="dm-composer message-center-composer" hidden><textarea id="dmBody" maxlength="4000" placeholder="Write a private message…" required></textarea><button type="submit" aria-label="Send message">Send ↗</button></form>
+      <div id="dmStatus" class="dm-status message-center-status" role="status" aria-live="polite"></div>
+     </section>
+    </section>
+   </div>
   </section>
   <section id="workspaceChat" class="workspace-view" hidden>
    <div class="chat-topbar"><button id="chatMenuToggle" class="chat-menu-button" type="button" aria-label="Open community navigation" aria-expanded="false">☰</button><button id="backToDiscover" class="chat-back" type="button">← Communities</button><div class="chat-room-mark">✦</div><div class="chat-room-title"><h2 id="chatHeading">Choose a community</h2><p id="chatDescription">Your reading-room conversation starts here.</p><span id="chatLiveStatus" class="chat-live-status" role="status" aria-live="polite"><i></i> Connecting to live updates</span></div><button id="chatRoomInfo" class="chat-info-button" type="button" title="Community information" aria-label="View community information, members and admins">ⓘ</button></div>
@@ -377,6 +400,7 @@ body>.site-footer{flex:0 0 auto;width:100%;margin-top:auto;clear:both;position:r
 </main>
 <footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade. Words for a more thoughtful life.</p></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="community.js?v=20261112-live-chat2"></script>
+<script src="dm.js?v=20261112-unified-messages1"></script>
   <script src="premium-ux.js" defer></script>
 <script src="assets/js/app-nav.js?v=20261112-unified1" defer></script>
 </body></html>
