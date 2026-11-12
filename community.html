@@ -22,8 +22,8 @@
 <div class="feed-side-card"><span class="feed-side-label">OUR COMMUNITY</span><p>Bring curiosity, generosity and a point of view. Share what you are reading, learning, or an idea worth discussing.</p><a href="events.html">Explore reader events →</a></div>
 </aside>
 <section class="feed-main">
-<section class="composer-card" aria-labelledby="composerHeading">
-<div class="composer-top"><div class="composer-avatar" id="composerAvatar">V</div><div><strong id="composerGreeting">Join the conversation</strong><span id="composerHeading">What would you like to publish today?</span></div></div>
+<section class="composer-card" id="postComposer" aria-labelledby="composerHeading" hidden>
+<div class="composer-top"><div class="composer-avatar" id="composerAvatar">V</div><div><strong id="composerGreeting">Join the conversation</strong><span id="composerHeading">What would you like to publish today?</span></div><button type="button" class="composer-close" id="closePostComposer" aria-label="Close composer">×</button></div>
 <form id="postForm">
 <div class="editor-type-row">
 <label class="editor-type-label" for="postType">Create</label>
@@ -83,7 +83,7 @@
 <header><div><span class="feed-eyebrow">IMAGE STUDIO</span><h2 id="imageEditorTitle">Adjust your image</h2></div><button type="button" id="closeImageEditor" aria-label="Close image editor">×</button></header>
 <div class="image-editor-preview-wrap" id="imageEditorPreviewWrap"><img id="imageEditorPreview" alt="Image editing preview"></div>
 <div class="image-editor-controls">
-<label>Crop shape<select id="imageCropRatio"><option value="original">Original</option><option value="1:1">Square · 1:1</option><option value="4:5">Portrait · 4:5</option><option value="16:9">Landscape · 16:9</option></select></label>
+<label>Filter<select id="imageFilter"><option value="none">Original</option><option value="mono">Black &amp; white</option><option value="sepia">Sepia</option><option value="warm">Warm</option><option value="cool">Cool</option><option value="vivid">Vivid</option><option value="fade">Soft fade</option></select></label>\n<label>Crop shape<select id="imageCropRatio"><option value="original">Original</option><option value="1:1">Square · 1:1</option><option value="4:5">Portrait · 4:5</option><option value="16:9">Landscape · 16:9</option></select></label>
 <div class="image-adjust-grid">
 <label>Brightness <output id="brightnessValue">100%</output><input id="imageBrightness" type="range" min="60" max="150" value="100"></label>
 <label>Contrast <output id="contrastValue">100%</output><input id="imageContrast" type="range" min="60" max="150" value="100"></label>
