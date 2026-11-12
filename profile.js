@@ -16,7 +16,7 @@ async function init(){
  const [pr,card,visibility]=await Promise.all([db.rpc("get_public_reader_profile",{target_user_id:uid}),db.rpc("get_public_reader_profile_card",{target_user_id:uid}),db.rpc("get_reader_profile_visibility",{target_user_id:uid})]);
  profileData={...(first(pr.data)||{}),...(first(card.data)||{})};
  if(pr.error||!profileData.id){$("profileName").textContent="Profile not found";feedback("This reader profile is unavailable or private.");return;}
- const p=profileData,privacy=first(visibility.data)||{};
+ const p=profileData,privacy=first(visibility.data)||{};const ownerCheck=await db.rpc("is_community_platform_owner",{target_user:uid});if(ownerCheck.data===true){document.body.classList.add("voiceoftaade-founder");$("founderBadge").hidden=false;}
  if(privacy.profile_visibility==="private"&&user?.id!==uid){$("profileName").textContent="This profile is private";feedback("This reader has chosen to keep their profile private.");return;}
  $("profileName").textContent=p.display_name||"Voiceoftaade reader";
  const handle=String(p.display_name||"reader").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
