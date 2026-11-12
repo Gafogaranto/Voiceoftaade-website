@@ -5,7 +5,7 @@
 <title>Community & Chats | Voiceoftaade</title>
 <link rel="icon" href="assets/icon-192.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1"><link rel="stylesheet" href="assets/css/messenger-app.css?v=20261112-wa1">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1"><link rel="stylesheet" href="assets/css/messenger-app.css?v=20261112-wa2">
 <script src="theme.js" defer></script></head>
 <body class="messenger-page">
 <header class="site-header"><a class="brand" href="index.html" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav aria-label="Primary navigation"></nav></header>
@@ -20,7 +20,7 @@
 </aside>
 <section class="messenger-sidebar" id="messengerSidebar">
 <div class="sidebar-view" id="sidebarChats">
-<div class="messenger-sidebar-head"><div><span class="wa-kicker">VOICEOFTAADE MESSENGER</span><h1>Chats</h1></div><div class="head-actions"><button id="newChatBtn" class="icon-button" title="New chat" aria-label="New chat">＋</button><button id="newGroupBtn" class="icon-button" title="New group" aria-label="New group">♧</button><button id="chatMenuBtn" class="icon-button" title="More options" aria-label="More options">⋮</button></div></div>
+<div class="messenger-sidebar-head"><div><span class="wa-kicker">VOICEOFTAADE MESSENGER</span><h1>Chats</h1></div><div class="head-actions"><button id="newChatBtn" class="icon-button" title="New chat" aria-label="New chat">＋</button><button id="newGroupBtn" class="icon-button" title="New group" aria-label="New group">♧</button><button id="chatMenuBtn" class="icon-button" title="Message requests" aria-label="Message requests">⋮</button></div></div>
 <div class="sidebar-search"><span>⌕</span><input id="threadSearch" type="search" placeholder="Search or start a new chat" aria-label="Search chats"></div>
 <div class="thread-filters" role="group" aria-label="Filter chats"><button class="active" data-filter="all">All</button><button data-filter="unread">Unread</button><button data-filter="groups">Groups</button><button data-filter="archived">Archived</button></div>
 <div class="status-strip"><button id="myStatusBtn" class="status-avatar add-status"><span>＋</span><small>My status</small></button><div id="statusPreview" class="status-preview"></div></div>
@@ -81,5 +81,5 @@
 <div id="callModal" class="modal-backdrop" hidden><section class="call-modal"><div class="call-modal-head"><span class="wa-kicker" id="callTypeLabel">VOICE CALL</span><button class="icon-button" data-close-modal="callModal">×</button></div><div class="call-person"><span id="callAvatar" class="call-avatar">V</span><h2 id="callPersonName">Reader</h2><p id="callStatusText">Connecting…</p></div><video id="remoteVideo" autoplay playsinline></video><video id="localVideo" autoplay muted playsinline></video><audio id="remoteAudio" autoplay></audio><div class="call-controls"><button id="muteCallBtn" type="button">Mute</button><button id="cameraCallBtn" type="button">Camera</button><button id="endCallBtn" class="end-call-btn" type="button">End call</button></div></section></div>
 <div id="incomingCallModal" class="modal-backdrop" hidden><section class="app-modal incoming-call-modal"><span class="wa-kicker">INCOMING CALL</span><h2 id="incomingCallerName">A reader is calling</h2><p id="incomingCallType">Audio call</p><div class="incoming-call-actions"><button id="declineCallBtn" class="danger-action">Decline</button><button id="acceptCallBtn" class="primary-action">Accept</button></div></section></div>
 <div id="toast" class="messenger-toast" role="status" aria-live="polite"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/app-nav.js?v=20261112-single-nav2" defer></script><script src="assets/js/messenger-app.js?v=20261112-wa1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/app-nav.js?v=20261112-single-nav2" defer></script><script src="assets/js/messenger-app.js?v=20261112-wa2"></script>
 </body></html>
