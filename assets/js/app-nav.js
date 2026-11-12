@@ -11,7 +11,7 @@ const icons={
  back:icon('<path d="m15 18-6-6 6-6"/><path d="M9 12h12"/>'),
  chevron:icon('<path d="m7 10 5 5 5-5"/>')
 };
-const socialPages=["community.html","activity.html","messages.html"];
+const socialPages=["community.html","activity.html","messages.html","book-clubs.html"];
 const libraryPages=["books.html","store.html","featured.html","bookshelf.html","book-details.html","reader.html","free-reading.html","journals.html"];
 const active=(name)=>name==="home"?current===home:name==="library"?libraryPages.includes(current):name==="social"?socialPages.includes(current):name==="events"?current==="events.html":name==="about"?current==="about.html":false;
 let header=document.querySelector(".site-header");
@@ -29,6 +29,8 @@ nav.innerHTML=
 '<a href="community.html"'+(current==="community.html"?' aria-current="page"':"")+'>'+icon('<path d="M4 5h16v12H8l-4 3z"/><path d="M8 9h8M8 13h5"/>')+'<span>Community</span></a>'+
 '<a href="activity.html"'+(current==="activity.html"?' aria-current="page"':"")+'>'+icon('<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>')+'<span>Activity</span><span class="vt-nav-badge" id="activityNavBadge" hidden></span></a>'+
 '<a href="messages.html"'+(current==="messages.html"?' aria-current="page"':"")+'>'+icon('<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-4.7a9 9 0 0 1-.9-4.3A8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8z"/>')+'<span>Messages</span></a>'+
+'<a href="book-clubs.html"'+(current==="book-clubs.html"?' aria-current="page"':"")+'>'+icon('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M8 7h8M8 11h8M8 15h5"/>')+'<span>Book clubs</span></a>'+
+'<a href="book-clubs.html#clubRequests"'+(current==="book-clubs.html"&&location.hash==="#clubRequests"?' aria-current="page"':"")+'>'+icon('<path d="M4 6h16M4 12h10M4 18h7"/><path d="m16 16 2 2 4-4"/>')+'<span>Requests</span></a>'+
 '</div></div>'+
 '<a class="vt-nav-link '+(active("events")?"is-active":"")+'" href="events.html"'+(active("events")?' aria-current="page"':"")+'>'+icons.events+'<span>Events</span></a>'+
 '<a class="vt-nav-link '+(active("about")?"is-active":"")+'" href="about.html"'+(active("about")?' aria-current="page"':"")+'>'+icons.about+'<span>About</span></a>'+

@@ -5,7 +5,7 @@
 <title>Community | Voiceoftaade</title><meta name="description" content="Publish notes, articles and images. Discover ideas and join thoughtful conversations.">
 <link rel="icon" href="assets/icon-192.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1"><link rel="stylesheet" href="assets/css/reader-feed.css?v=20261112-feed3"><link rel="stylesheet" href="assets/css/post-editor.css?v=20261112-editor1">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1"><link rel="stylesheet" href="assets/css/reader-feed.css?v=20261112-feed5"><link rel="stylesheet" href="assets/css/post-editor.css?v=20261112-editor1">
 <script src="theme.js" defer></script>
 </head>
 <body class="reader-feed-page">
@@ -78,6 +78,7 @@
 </div>
 </main>
 <button type="button" class="feed-compose-fab" id="openPostComposer" aria-label="Create a post" aria-controls="postComposer" aria-expanded="false"><span aria-hidden="true">+</span></button>
+<div class="echo-dialog" id="echoDialog" hidden role="dialog" aria-modal="true" aria-labelledby="echoDialogTitle"><div class="echo-dialog-card"><span class="feed-eyebrow">PASS THE IDEA ALONG</span><h2 id="echoDialogTitle">Echo this post</h2><p>Add your own thought, or share the post as it is.</p><label for="echoCommentary">Your note <span>(optional)</span></label><textarea id="echoCommentary" maxlength="1000" rows="4" placeholder="What would you like to add to this conversation?"></textarea><div class="echo-dialog-actions"><button type="button" class="echo-quiet" id="cancelEchoButton">Cancel</button><button type="button" class="echo-quiet" id="echoOnlyButton">Echo only</button><button type="button" class="echo-primary" id="echoWithTextButton">Echo with text</button></div></div></div>
 <div class="image-editor-modal" id="imageEditorModal" hidden>
 <div class="image-editor-backdrop" data-close-image-editor></div>
 <section class="image-editor-dialog" role="dialog" aria-modal="true" aria-labelledby="imageEditorTitle">
@@ -98,6 +99,6 @@
 </div>
 <footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade Publications · Read · Reflect · Connect.</p></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/reader-feed.js?v=20261112-feed3"></script>
-<script src="assets/js/app-nav.js?v=20261112-nav1" defer></script>
+<script src="assets/js/reader-feed.js?v=20261112-feed5"></script>
+<script src="assets/js/app-nav.js?v=20261112-nav2" defer></script>
 </body></html>

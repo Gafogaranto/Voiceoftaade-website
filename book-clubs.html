@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="styles.css?v=20261112-library-nav3">
 <link rel="stylesheet" href="assets/css/editorial-refresh.css?v=20261112-hybrid-editorial4">
 <link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1">
-<link rel="stylesheet" href="assets/css/book-clubs.css?v=20261112-clubs1">
+<link rel="stylesheet" href="assets/css/book-clubs.css?v=20261112-clubs2">
 <title>Book Clubs | Voiceoftaade</title>
 <script src="theme.js?v=20261028-library-nav2"></script>
 </head>
@@ -43,27 +43,45 @@
     <div id="clubList" class="club-grid" aria-live="polite"><p class="clubs-loading">Loading book clubs…</p></div>
   </section>
 
+  <section class="clubs-section" id="clubRequests" hidden><div class="clubs-section-heading"><div><p class="clubs-eyebrow">CLUB ORGANISERS</p><h2>Membership requests</h2></div><p>Review applications from readers who want to join your clubs.</p></div><div id="managedClubRequests" class="club-request-list"></div></section>
+
   <section class="clubs-section">
     <div class="clubs-section-heading"><div><p class="clubs-eyebrow">WHAT'S NEXT</p><h2>Upcoming reading sessions</h2></div><p>See the next scheduled conversations across clubs you can access.</p></div>
     <div id="upcomingSessions" class="session-grid" aria-live="polite"><p class="clubs-loading">Loading sessions…</p></div>
   </section>
 
-  <section class="clubs-create-panel" id="createClubPanel" hidden>
-    <div><p class="clubs-eyebrow">START A READING CIRCLE</p><h2>Propose a book club</h2><p>New clubs are reviewed by the Voiceoftaade team before appearing publicly.</p></div>
-    <form id="createClubForm" class="clubs-form">
-      <label>Club name<input name="name" required minlength="3" maxlength="80" placeholder="e.g. The Thoughtful Reader Circle"></label>
-      <label>What is this club about?<textarea name="description" required minlength="10" maxlength="1000" placeholder="Describe the reading community and the conversations you hope to create."></textarea></label>
-      <div class="clubs-form-row">
-        <label>Access<select name="visibility"><option value="public">Public — anyone can discover and join</option><option value="private">Private — readers request access</option></select></label>
-        <label>Genre<input name="genre" required maxlength="80" placeholder="Personal growth, fiction, history…"></label>
-      </div>
-      <div class="clubs-form-row">
-        <label>Book title<input name="book_title" required maxlength="180" placeholder="The book your club will read"></label>
-        <label>Book author<input name="book_author" required maxlength="120" placeholder="Author's name"></label>
-      </div>
-      <label>Suggested reading plan<textarea name="reading_plan" maxlength="2000" placeholder="Optional: weekly chapters, reading pace or first meeting plan."></textarea></label>
-      <button class="clubs-button clubs-button-gold" type="submit">Submit book club for review</button>
-    </form>
+  <button type="button" class="club-create-fab" id="openCreateClub" aria-label="Create a book club">＋</button>
+  <section class="clubs-create-panel" id="createClubPanel" hidden role="dialog" aria-modal="true" aria-labelledby="createClubTitle">
+    <div class="club-wizard-card">
+      <header class="club-wizard-header"><div><p class="clubs-eyebrow">START A READING CIRCLE</p><h2 id="createClubTitle">Create a book club</h2><p>Build a thoughtful space for readers to learn together.</p></div><button type="button" id="closeCreateClub" class="club-wizard-close" aria-label="Close">×</button></header>
+      <div class="club-wizard-progress" id="clubWizardProgress"><span class="active">01 · Identity</span><span>02 · Reading focus</span><span>03 · Format</span></div>
+      <form id="createClubForm" class="clubs-form">
+        <section data-club-step="1" class="club-wizard-step">
+          <h3>Give your club an identity</h3>
+          <p class="club-wizard-hint">Start with a name and the kind of conversations you want to create.</p>
+          <label>Club name<input name="name" required minlength="3" maxlength="80" placeholder="e.g. The Thoughtful Reader Circle"></label>
+          <label>Club description<textarea name="description" required minlength="10" maxlength="1000" placeholder="What brings your readers together? What will members explore?"></textarea></label>
+        </section>
+        <section data-club-step="2" class="club-wizard-step" hidden>
+          <h3>Choose your reading focus</h3>
+          <p class="club-wizard-hint">A club can follow one selected title or explore a wider reading theme.</p>
+          <label>Club format<select name="club_type" id="clubType"><option value="single-book">One featured book</option><option value="open-reading">Open reading circle</option></select></label>
+          <div id="featuredBookFields" class="clubs-form-row">
+            <label>Book title<input name="book_title" maxlength="180" placeholder="The book your club will read"></label>
+            <label>Book author<input name="book_author" maxlength="120" placeholder="Author's name"></label>
+          </div>
+          <label>Genre or theme<input name="genre" required maxlength="80" placeholder="Personal growth, fiction, history…"></label>
+        </section>
+        <section data-club-step="3" class="club-wizard-step" hidden>
+          <h3>Set the club's ground rules</h3>
+          <p class="club-wizard-hint">Choose who can discover the club and suggest a pace that feels welcoming.</p>
+          <label>Who can join?<select name="visibility"><option value="public">Public — discoverable by readers</option><option value="private">Private — readers apply to join</option></select></label>
+          <label>Suggested reading plan <span class="clubs-muted">(optional)</span><textarea name="reading_plan" maxlength="2000" placeholder="Weekly chapters, reading pace, first meeting plan, or discussion rhythm."></textarea></label>
+          <p class="club-review-note">New clubs are reviewed by the Voiceoftaade team before appearing publicly. Readers applying to join will answer a short set of thoughtful questions.</p>
+        </section>
+        <div class="club-wizard-actions"><button type="button" id="clubWizardBack" class="clubs-button clubs-button-quiet" hidden>Back</button><button type="button" id="clubWizardNext" class="clubs-button clubs-button-gold">Continue</button><button type="submit" id="clubWizardSubmit" class="clubs-button clubs-button-gold" hidden>Submit for review</button></div>
+      </form>
+    </div>
   </section>
 
   <section class="club-detail-panel" id="clubDetail" hidden>
@@ -72,6 +90,15 @@
       <div class="club-detail-actions"><button type="button" id="joinClubBtn" class="clubs-button clubs-button-gold">Join book club</button><button type="button" id="closeClubBtn" class="clubs-button clubs-button-quiet">Close</button></div>
     </div>
     <p id="clubDetailStatus" class="clubs-status" role="status" aria-live="polite"></p>
+    <form id="clubApplicationForm" class="clubs-form club-application-form" hidden>
+      <h3>Apply to join this reading circle</h3><p class="club-wizard-hint">A few thoughtful questions help organisers welcome readers who share the club's purpose.</p>
+      <label>What is your familiarity with this author or their work?<textarea name="author_familiarity" required minlength="10" maxlength="1200" placeholder="Tell the organiser what you have read or what you know about the author's work."></textarea></label>
+      <label>Why would you like to join this club?<textarea name="purpose" required minlength="15" maxlength="1200" placeholder="What do you hope to learn or contribute?"></textarea></label>
+      <label>How would you contribute to respectful, useful discussions?<textarea name="contribution" required minlength="10" maxlength="1200" placeholder="Share the perspective or participation you would bring."></textarea></label>
+      <label class="club-rules-check"><input type="checkbox" name="agree_rules" required><span>I have read the club description and agree to follow its rules and respect other readers.</span></label>
+      <button type="submit" class="clubs-button clubs-button-gold">Send membership application</button>
+    </form>
+    <section id="clubApplications" class="club-applications" hidden><div class="clubs-section-heading"><div><p class="clubs-eyebrow">COMMUNITY CARE</p><h3>Membership applications</h3></div></div><div id="clubApplicationList"></div></section>
     <section class="club-detail-section">
       <div class="clubs-section-heading"><div><p class="clubs-eyebrow">READING TOGETHER</p><h3>Sessions</h3></div></div>
       <div id="clubSessions" class="session-grid"><p class="clubs-loading">Loading sessions…</p></div>
@@ -111,8 +138,8 @@
 </main>
 <footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade. Words for a more thoughtful life.</p></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/book-clubs.js?v=20261112-clubs1"></script>
+<script src="assets/js/book-clubs.js?v=20261112-clubs2"></script>
 <script src="premium-ux.js" defer></script>
-<script src="assets/js/app-nav.js?v=20261112-nav1" defer></script>
+<script src="assets/js/app-nav.js?v=20261112-nav2" defer></script>
 </body>
 </html>
