@@ -1,7 +1,7 @@
 (() => {
 "use strict";
 const $=id=>document.getElementById(id),db=window.supabase?.createClient("https://qnnmbngxunmjerpeoxrr.supabase.co","sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67");
-let user=null,active=null,channel=null,conversations=[];
+let user=null,active=null,channel=null,conversations=[],typingTimer=null;
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const say=(m,bad=false)=>{$("dmStatus").textContent=m;$("dmStatus").style.color=bad?"#a33":"#9a742f";};
 const stamp=v=>new Date(v).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
@@ -55,7 +55,7 @@ async function openConversation(id){
  $("dmComposer").hidden=false;
  if(channel){await db.removeChannel(channel);channel=null;}
  await loadMessages();
- channel=db.channel("reader-messages-"+id).on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_messages",filter:"conversation_id=eq."+id},()=>loadMessages()).subscribe((status)=>{if(status==="SUBSCRIBED")say("Connected · private conversation");else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")say("Live connection interrupted. Messages will refresh when reopened.",true);});
+ channel=db.channel("reader-messages-"+id,{config:{presence:{key:user.id}}}).on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_messages",filter:"conversation_id=eq."+id},()=>loadMessages()).on("presence",{event:"sync"},()=>{const online=Object.keys(channel.presenceState()).some(key=>key!==user.id);$("dmSubtitle").textContent=online?"Online now · Private conversation":"Private conversation · Only you and this reader can see these messages.";}).on("broadcast",{event:"typing"},({payload})=>{if(payload?.user_id!==user.id){$("dmSubtitle").textContent="Typing…";clearTimeout(typingTimer);typingTimer=setTimeout(()=>$("dmSubtitle").textContent="Private conversation · Only you and this reader can see these messages.",2200);}}).subscribe(async(status)=>{if(status==="SUBSCRIBED"){await channel.track({user_id:user.id,online_at:new Date().toISOString()});say("Connected · private conversation");}else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")say("Live connection interrupted. Messages will refresh when reopened.",true);});
  document.querySelectorAll("[data-conversation]").forEach(b=>b.classList.toggle("active",b.dataset.conversation===id));
 }
 async function loadMessages(){
@@ -75,6 +75,7 @@ async function send(event){
  $("dmBody").value="";say("Message sent.");await loadMessages();
 }
 $("dmBackButton")?.addEventListener("click",()=>document.querySelector(".dm-shell")?.classList.remove("has-active-chat"));
+$("dmBody")?.addEventListener("input",()=>{if(channel)channel.send({type:"broadcast",event:"typing",payload:{user_id:user.id}});});
 window.addEventListener("beforeunload",()=>{if(channel)db.removeChannel(channel);});
 init().catch(e=>say(e.message,true));
 })();
