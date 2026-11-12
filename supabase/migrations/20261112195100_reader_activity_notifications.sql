@@ -14,6 +14,7 @@ create index if not exists reader_activity_unread_idx on public.reader_activity_
 alter table public.reader_activity_notifications enable row level security;
 create policy "Readers view their own activity" on public.reader_activity_notifications for select to authenticated using(recipient_id=(select auth.uid()));
 create policy "Readers mark their own activity read" on public.reader_activity_notifications for update to authenticated using(recipient_id=(select auth.uid())) with check(recipient_id=(select auth.uid()));
+revoke all on table public.reader_activity_notifications from public,anon,authenticated;
 grant select,update on public.reader_activity_notifications to authenticated;
 create or replace function private.notify_reader_feed_activity()
 returns trigger language plpgsql security definer set search_path=''
