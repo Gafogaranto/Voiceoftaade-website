@@ -94,8 +94,9 @@ async function openConversation(type,id){
 async function subscribeActive(){
  if(state.channel){await db.removeChannel(state.channel);state.channel=null;}
  const a=state.active;if(!a)return;
- const topic="wa-"+a.type+"-"+a.id;
- let ch=db.channel(topic,{config:{presence:{key:state.user.id}}});
+ const topic="wa:"+a.type+":"+a.id;
+ await db.realtime.setAuth();
+ let ch=db.channel(topic,{config:{presence:{key:state.user.id},private:true}});
  if(a.type==="direct")ch=ch.on("postgres_changes",{event:"*",schema:"public",table:"reader_messages",filter:"conversation_id=eq."+a.id},()=>{loadMessages();markCurrentRead();});
  else ch=ch.on("postgres_changes",{event:"*",schema:"public",table:"reader_chat_group_messages",filter:"group_id=eq."+a.id},()=>{loadMessages();markCurrentRead();});
  ch=ch.on("presence",{event:"sync"},()=>{const online=Object.keys(ch.presenceState()).filter(k=>k!==state.user.id).length;if(a.type==="direct")$("waActivePresence").textContent=online?"Online now":"Private conversation";});
@@ -201,7 +202,7 @@ async function sendPayload(body,attachment,forcedType){
  const args=a.type==="direct"?Object.assign({p_conversation_id:a.id},common):Object.assign({p_group_id:a.id},common);
  const r=await db.rpc(rpc,args);button.disabled=false;
  if(r.error){say(r.error.message,true);return;}
- $("waMessageBody").value="";clearReply();$("waAttachmentMenu").hidden=true;await loadMessages();await refreshChats();
+ $("waMessageBody").value="";clearReply();$("waAttachMenu").hidden=true;await loadMessages();await refreshChats();
 }
 async function sendComposer(event){
  event.preventDefault();const text=$("waMessageBody").value.trim();if(!text)return;
@@ -373,7 +374,7 @@ async function connectCall(initiator){
 }
 async function subscribeCallSignals(){
  if(state.signalChannel){await db.removeChannel(state.signalChannel);state.signalChannel=null;}
- const ch=db.channel("wa-call-signals-"+state.call.id);
+ await db.realtime.setAuth();const ch=db.channel("wa:call:"+state.call.id,{config:{private:true}});
  ch.on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_chat_call_signals",filter:"call_id=eq."+state.call.id},async payload=>{
   const s=payload.new;if(!s||s.sender_id===state.user.id)return;
   if(s.signal_type==="answer"&&state.call.role==="caller"){await state.rtc.setRemoteDescription(new RTCSessionDescription(s.payload));for(const c of state.queuedIce.splice(0))await state.rtc.addIceCandidate(new RTCIceCandidate(c));}
@@ -417,7 +418,7 @@ async function checkIncomingCalls(){
  const r=await db.from("reader_chat_calls").select("id,conversation_id,caller_id,recipient_id,call_type,status,created_at").eq("recipient_id",state.user.id).eq("status","ringing").order("created_at",{ascending:false}).limit(1);
  if(r.data?.[0]&&Date.now()-new Date(r.data[0].created_at).getTime()<120000)handleIncomingCall(r.data[0]);
  if(state.incomingChannel)await db.removeChannel(state.incomingChannel);
- state.incomingChannel=db.channel("wa-incoming-calls-"+state.user.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_chat_calls",filter:"recipient_id=eq."+state.user.id},payload=>handleIncomingCall(payload.new)).subscribe();
+ await db.realtime.setAuth();state.incomingChannel=db.channel("wa:incoming:"+state.user.id,{config:{private:true}}).on("postgres_changes",{event:"INSERT",schema:"public",table:"reader_chat_calls",filter:"recipient_id=eq."+state.user.id},payload=>handleIncomingCall(payload.new)).subscribe();
 }
 async function declineIncomingCall(){
  const c=state.pendingCall||state.call;if(!c)return;
