@@ -192,25 +192,30 @@
       .eq("community_id",id).order("created_at",{ascending:false}).limit(20);
     if(error){host.innerHTML='<p class="clubs-empty">Club polls could not be loaded.</p>';return;}
     if(!data?.length){host.innerHTML='<p class="clubs-empty">No polls yet. Club organisers can publish a poll for members.</p>';return;}
-    const results=await Promise.all(data.map(row=>client.rpc("get_book_club_poll_results",{target_poll_id:row.id})));
-    const optionsResult=await client.from("book_club_poll_options").select("id,poll_id,option_text,position")
-      .in("poll_id",data.map(row=>row.id)).order("position",{ascending:true});
+    const pollIds=data.map(row=>row.id);
+    const [optionsResult,votesResult]=await Promise.all([
+      client.from("book_club_poll_options").select("id,poll_id,option_text,position,vote_count")
+        .in("poll_id",pollIds).order("position",{ascending:true}),
+      state.user
+        ? client.from("book_club_poll_votes").select("poll_id").eq("user_id",state.user.id).in("poll_id",pollIds)
+        : Promise.resolve({data:[],error:null})
+    ]);
     const options=optionsResult.error?[]:(optionsResult.data||[]);
-    host.innerHTML=data.map((poll,index)=>{
-      const result=results[index]?.data||{};
+    const votedPolls=new Set((votesResult.data||[]).map(row=>row.poll_id));
+    host.innerHTML=data.map(poll=>{
       const pollOptions=options.filter(option=>option.poll_id===poll.id);
+      const hasVoted=votedPolls.has(poll.id);
       const closed=poll.status!=="open"||(poll.closes_at&&new Date(poll.closes_at)<=new Date())||new Date(poll.opens_at)>new Date();
-      const canVote=activeMember(id)&&!result.has_voted&&!closed;
-      const total=pollOptions.reduce((sum,option)=>sum+Number((result.options||[]).find(x=>x.id===option.id)?.votes||0),0);
+      const canVote=activeMember(id)&&!hasVoted&&!closed;
+      const total=pollOptions.reduce((sum,option)=>sum+Number(option.vote_count||0),0);
       const voteForm=canVote?'<form class="poll-vote-form" data-vote-poll="'+esc(poll.id)+'">'+pollOptions.map(option=>'<label class="poll-option"><input type="radio" name="option_id" value="'+esc(option.id)+'" required> '+esc(option.option_text)+'</label>').join("")+'<button class="clubs-button clubs-button-gold" type="submit">Cast vote</button></form>':'';
       const resultMarkup=pollOptions.map(option=>{
-        const count=Number((result.options||[]).find(x=>x.id===option.id)?.votes||0);
-        const pct=total?Math.round(count/total*100):0;
+        const count=Number(option.vote_count||0),pct=total?Math.round(count/total*100):0;
         return '<div class="poll-result"><span>'+esc(option.option_text)+'</span><span>'+count+' · '+pct+'%</span><div class="poll-bar"><span style="width:'+pct+'%"></span></div></div>';
       }).join("");
       return '<article class="poll-card"><span class="club-tag">'+(closed?'Closed poll':'Club poll')+'</span><h4>'+esc(poll.question)+'</h4>'+
         (poll.closes_at?'<small>Closes '+esc(dateText(poll.closes_at))+'</small>':'')+voteForm+
-        (result.has_voted?'<p class="clubs-muted">Your vote has been recorded.</p>':'')+
+        (hasVoted?'<p class="clubs-muted">Your vote has been recorded.</p>':'')+
         '<div class="poll-results">'+resultMarkup+'</div></article>';
     }).join("");
     host.querySelectorAll("[data-vote-poll]").forEach(form=>form.addEventListener("submit",event=>castPollVote(event,form)));
