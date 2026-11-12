@@ -24,8 +24,20 @@ async function refresh(){
  ]);
  renderRequests(incoming.data||[],outgoing.data||[]);
  conversations=conv.data||[];
- const rows=await Promise.all(conversations.map(async c=>({c,peer:await profile(c.user_one===user.id?c.user_two:c.user_one)})));
- $("dmConversations").innerHTML=rows.length?rows.map(({c,peer})=>'<button class="dm-item '+(active?.id===c.id?"active":"")+'" data-conversation="'+c.id+'"><strong>'+esc(peer?.display_name||"Voiceoftaade reader")+'</strong><small>Open private conversation</small></button>').join(""):'<p class="dm-empty">No accepted conversations yet.</p>';
+ const recent=new Map();
+ if(conversations.length){
+  const ids=conversations.map(c=>c.id);
+  const messageResult=await db.from("reader_messages").select("conversation_id,body,sender_id,created_at")
+   .in("conversation_id",ids).order("created_at",{ascending:false}).limit(Math.min(1000,Math.max(200,ids.length*30)));
+  (messageResult.data||[]).forEach(message=>{if(!recent.has(message.conversation_id))recent.set(message.conversation_id,message);});
+ }
+ const rows=await Promise.all(conversations.map(async c=>({c,peer:await profile(c.user_one===user.id?c.user_two:c.user_one),last:recent.get(c.id)})));
+ rows.sort((a,b)=>new Date(b.last?.created_at||b.c.created_at)-new Date(a.last?.created_at||a.c.created_at));
+ $("dmConversations").innerHTML=rows.length?rows.map(({c,peer,last})=>{
+  const avatar=peer?.avatar_url?'<img src="'+esc(peer.avatar_url)+'" alt="">':esc((peer?.display_name||"V").trim().slice(0,1).toUpperCase());
+  const preview=last?(last.sender_id===user.id?"You: ":"")+last.body:"Your private conversation is ready.";
+  return '<button class="dm-item vt-conversation-item '+(active?.id===c.id?"active":"")+'" data-conversation="'+c.id+'"><span class="vt-conversation-avatar">'+avatar+'</span><span class="vt-conversation-copy"><strong>'+esc(peer?.display_name||"Voiceoftaade reader")+'</strong><small>'+esc(preview)+'</small></span><time>'+esc(last?stamp(last.created_at):"")+'</time></button>';
+ }).join(""):'<p class="dm-empty">No accepted conversations yet. Search for a reader and send a request to begin.</p>';
  $("dmConversations").querySelectorAll("[data-conversation]").forEach(b=>b.addEventListener("click",()=>openConversation(b.dataset.conversation)));
 }
 async function renderRequests(incoming,outgoing){
