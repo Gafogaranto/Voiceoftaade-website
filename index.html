@@ -67,6 +67,7 @@
   <script src="theme.js?v=20261028-library-nav2"></script>
 <link rel="stylesheet" href="assets/css/editorial-refresh.css?v=20261112-hybrid-editorial4">
 <link rel="stylesheet" href="assets/css/app-nav-v3.css?v=1">
+<link rel="stylesheet" href="assets/css/events-preview.css?v=20261112-events1">
 </head>
 <body>
   <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
@@ -134,7 +135,9 @@
 
     
 
-    <section class="community-section" id="community"><div class="community-copy"><p class="eyebrow">STAY IN THE LOOP</p><h2>Good ideas are better <em>shared.</em></h2><p>Join the Voiceoftaade community for publication news, new reflections, and project announcements.</p><div class="community-actions"><a class="button button-gold" href="https://chat.whatsapp.com/IR6dkKefPvXEmSbqfiatM9" target="_blank" rel="noopener noreferrer"><img class="platform-icon" src="https://cdn.simpleicons.org/whatsapp" alt="" aria-hidden="true" loading="lazy"> Join WhatsApp community ↗</a><a class="social-link" href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer"><img class="platform-icon" src="https://cdn.simpleicons.org/telegram" alt="" aria-hidden="true" loading="lazy"> Telegram channel ↗</a><a class="social-link" href="https://www.facebook.com/share/1Hr1NPfXEZ/" target="_blank" rel="noopener noreferrer"><img class="platform-icon" src="https://cdn.simpleicons.org/facebook" alt="" aria-hidden="true" loading="lazy"> Facebook ↗</a></div></div><div class="community-mark"><img src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"><small>READ · REFLECT · REPEAT</small></div></section>
+    <section class="home-events-preview" id="reading-events"><div class="home-events-preview-inner"><div class="home-events-preview-head"><div><p class="eyebrow">READ TOGETHER · THINK DEEPER</p><h2>Meet us <em>between the pages.</em></h2></div><p>Join live reading sessions, discover book clubs, and keep your personal reading journey moving with the Voiceoftaade Reader Passport.</p></div><div class="home-event-grid" id="homeUpcomingEvents" aria-live="polite"><p class="home-event-empty">Loading upcoming reading sessions…</p></div><div class="home-events-actions"><a href="events.html">Explore reading events &amp; passport ↗</a><a class="secondary" href="book-clubs.html">Discover book clubs</a></div></div></section>
+
+<section class="community-section" id="community"><div class="community-copy"><p class="eyebrow">STAY IN THE LOOP</p><h2>Good ideas are better <em>shared.</em></h2><p>Join the Voiceoftaade community for publication news, new reflections, and project announcements.</p><div class="community-actions"><a class="button button-gold" href="https://chat.whatsapp.com/IR6dkKefPvXEmSbqfiatM9" target="_blank" rel="noopener noreferrer"><img class="platform-icon" src="https://cdn.simpleicons.org/whatsapp" alt="" aria-hidden="true" loading="lazy"> Join WhatsApp community ↗</a><a class="social-link" href="https://t.me/voiceoftaade" target="_blank" rel="noopener noreferrer"><img class="platform-icon" src="https://cdn.simpleicons.org/telegram" alt="" aria-hidden="true" loading="lazy"> Telegram channel ↗</a><a class="social-link" href="https://www.facebook.com/share/1Hr1NPfXEZ/" target="_blank" rel="noopener noreferrer"><img class="platform-icon" src="https://cdn.simpleicons.org/facebook" alt="" aria-hidden="true" loading="lazy"> Facebook ↗</a></div></div><div class="community-mark"><img src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade logo"><small>READ · REFLECT · REPEAT</small></div></section>
 
     <section class="section contact-section" id="contact">
       <div><p class="eyebrow">LET'S CONNECT</p><h2>Have a project in <em>mind?</em></h2><p>For publishing enquiries, collaborations, reader feedback, and bulk orders, reach out through any of the channels below.</p></div>
@@ -147,6 +150,7 @@
   <dialog id="articleDialog" class="article-dialog"><button class="dialog-close" id="dialogClose" aria-label="Close reflection">×</button><p class="eyebrow" id="dialogCategory">REFLECTION</p><h2 id="dialogTitle"></h2><div id="dialogBody"></div><div class="reflection-actions"><button class="button button-dark" id="saveReflection" type="button">＋ Save reflection</button><button class="button button-outline" id="favouriteReflection" type="button" aria-pressed="false">♡ Add to favourites</button></div><p class="dialog-signoff">VOICEOFTAADE JOURNAL · READ, REFLECT, REPEAT</p></dialog>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js?v=20261024-sharefix3"></script>
+  <script src="assets/js/events-preview.js?v=20261112-events1" defer></script>
 
   <script src="premium-ux.js" defer></script>
   <script>
