@@ -235,3 +235,8 @@ p{line-height:1.75}
 #privacyStatus.error{color:#a33}
 #readerCollectionsSection .item{padding:12px 0;border-top:1px solid #eee7d9}
 @media(max-width:620px){#readerPrivacySettings form{grid-template-columns:1fr}#readerPrivacySettings .privacy-toggle{grid-column:auto}}
+
+/* Respect hidden states even when component styling sets display explicitly. */
+#readerPrivacyForm[hidden],.dm-composer[hidden],#followButton[hidden],#messageRequestButton[hidden],
+#reportReaderButton[hidden],#blockReaderButton[hidden],#profileBlockButton[hidden],#profileReportButton[hidden],
+#websiteLink[hidden],#profileSettingsLink[hidden],#profileVerified[hidden]{display:none!important}
