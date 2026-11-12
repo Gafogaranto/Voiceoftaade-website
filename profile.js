@@ -28,12 +28,15 @@ async function init(){
  $("aboutLocation").textContent=p.location||"Not shared";
  $("aboutInterests").textContent=p.reading_interests||"Not shared";
  $("aboutSince").textContent=date(p.created_at);
+ $("aboutProfession").textContent=p.profession||"Not shared";$("aboutEducation").textContent=p.education||"Not shared";$("aboutCity").textContent=p.city||"Not shared";$("aboutCountry").textContent=p.country||"Not shared";$("aboutGenres").textContent=p.favourite_genres||"Not shared";$("aboutCurrentlyReading").textContent=p.currently_reading||"Not shared";$("aboutQuote").textContent=p.favourite_quote||"Not shared";
  if(p.website_url){let u=p.website_url;if(!/^https?:\/\//i.test(u))u="https://"+u;const a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener noreferrer";a.textContent=p.website_url;$("aboutWebsite").replaceChildren(a);}else $("aboutWebsite").textContent="Not shared";
- const [counts,posts,replies,activity]=await Promise.all([
+ const [counts,posts,replies,activity,bookItems,readerRecs]=await Promise.all([
   db.rpc("get_reader_follow_counts",{target_user_id:uid}),
   db.from("reader_feed_posts").select("id,title,body,visibility,created_at").eq("author_id",uid).order("created_at",{ascending:false}).limit(40),
   db.from("reader_feed_comments").select("id,body,created_at,reader_feed_posts(title,visibility,author_id)").eq("author_id",uid).order("created_at",{ascending:false}).limit(40),
-  db.rpc("get_reader_public_activity",{target_user_id:uid})
+  db.rpc("get_reader_public_activity",{target_user_id:uid}),
+  db.from("reader_profile_books").select("*").eq("user_id",uid).order("created_at",{ascending:false}),
+  db.from("reader_profile_recommendations").select("*").eq("user_id",uid).order("created_at",{ascending:false})
  ]);
  const pubPosts=(posts.data||[]).filter(x=>x.visibility==="public"||user?.id===uid).map(x=>({id:x.id,kind:"Post",text:(x.title?x.title+"\n":"")+x.body,created_at:x.created_at,community:"Voiceoftaade Reading Room"}));
  const pubReplies=(replies.data||[]).filter(x=>{const p=first(x.reader_feed_posts);return p&&(p.visibility==="public"||user?.id===uid);}).map(x=>({id:x.id,kind:"Comment",text:x.body,created_at:x.created_at,community:"Reader conversation"}));
@@ -44,6 +47,12 @@ async function init(){
  const renderCollection=(id,rows)=>{$(id).innerHTML=Array.isArray(rows)&&rows.length?rows.slice(0,16).map(x=>'<div class="collection-row"><span>▤</span><strong>'+esc(journalNames[x.journal_id]||x.journal_id||"Reading entry")+'</strong><small>'+esc(date(x.created_at||x.last_read_at))+'</small></div>').join(""):'<p class="profile-empty">Nothing shared here yet.</p>';};
  renderCollection("publicFavourites",privacy.favourites_visibility==="private"&&user?.id!==uid?null:a.favourites);
  renderCollection("publicSaved",privacy.saved_collections_visibility==="private"&&user?.id!==uid?null:a.saved);
+ const bookRows=bookItems.data||[],favouriteBooksVisible=privacy.favourite_books_visibility!=="private"||user?.id===uid,recommendationsVisible=privacy.recommendations_visibility!=="private"||user?.id===uid;
+ const renderBooks=(id,rows)=>{$(id).innerHTML=Array.isArray(rows)&&rows.length?rows.slice(0,20).map(x=>'<div class="collection-row"><span>▤</span><div><strong>'+esc(x.book_title)+'</strong><small>'+esc(x.book_author||"")+'</small>'+(x.note?'<p>'+esc(x.note)+'</p>':"")+(x.book_url?'<a href="'+esc(x.book_url)+'" target="_blank" rel="noopener noreferrer">View book</a>':"")+'</div></div>').join(""):'<p class="profile-empty">Nothing shared here yet.</p>';};
+ renderBooks("publicFavouriteBooks",favouriteBooksVisible?bookRows.filter(x=>x.item_type==="favourite"):null);
+ renderBooks("publicBookRecommendations",recommendationsVisible?bookRows.filter(x=>x.item_type==="recommendation"):null);
+ const readerRows=readerRecs.data||[],readerCards=await Promise.all(readerRows.map(async x=>{const r=await db.rpc("get_public_reader_profile_card",{target_user_id:x.recommended_user_id});const p=first(r.data);return {...x,profile:p};}));
+ $("publicReaderRecommendations").innerHTML=readerCards.length?readerCards.filter(x=>x.profile?.id).map(x=>'<div class="collection-row"><span>♧</span><div><strong><a href="profile.html?id='+encodeURIComponent(x.profile.id)+'">'+esc(x.profile.display_name||"Reader")+'</a></strong>'+(x.note?'<p>'+esc(x.note)+'</p>':"")+'</div></div>').join(""):'<p class="profile-empty">No reader recommendations shared yet.</p>';
  const reading=privacy.reading_activity_visibility==="private"&&user?.id!==uid?null:a.reading_activity;
  renderCollection("publicReadingActivity",Array.isArray(reading)?reading.map(x=>({...x,created_at:x.last_read_at, journal_id:x.journal_id+" · "+Math.round(Number(x.progress_percent)||0)+"% read"})):null);
  const milestones=[];const journals=new Set((reading||[]).map(x=>x.journal_id));if(journals.size>=1)milestones.push("First reflection");if(journals.size>=5)milestones.push("Five journeys");if(contributions.length>=1)milestones.push("Community voice");if(contributions.length>=5)milestones.push("Conversation builder");

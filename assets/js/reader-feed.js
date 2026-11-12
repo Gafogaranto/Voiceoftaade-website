@@ -3,7 +3,7 @@ const db=window.supabase?.createClient("https://qnnmbngxunmjerpeoxrr.supabase.co
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const initials=n=>(String(n||"V").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"V");
 const ago=v=>{const m=Math.floor((Date.now()-new Date(v).getTime())/60000);return m<1?"Just now":m<60?m+"m ago":m<1440?Math.floor(m/60)+"h ago":new Date(v).toLocaleDateString([],{month:"short",day:"numeric"});};
-let user=null,filter="for-you",offset=0,limit=12,hasMore=true,loading=false,profiles=new Map(),liked=new Set(),cache=[],selectedBlob=null,selectedName="",previewUrl=null,sourceImage=null,editState={rotation:0,flip:false,brightness:100,contrast:100,saturation:100,ratio:"original"};
+let user=null,filter="for-you",offset=0,limit=12,hasMore=true,loading=false,profiles=new Map(),liked=new Set(),savedPosts=new Set(),echoedPosts=new Set(),cache=[],selectedBlob=null,selectedName="",previewUrl=null,sourceImage=null,editState={rotation:0,flip:false,brightness:100,contrast:100,saturation:100,ratio:"original",filter:"none",cropX:0,cropY:0};
 const avatar=p=>'<span class="reader-avatar">'+(p?.avatar_url?'<img src="'+esc(p.avatar_url)+'" alt="">':esc(initials(p?.display_name)))+'</span>';
 function say(s,bad=false){$("postFeedback").textContent=s;$("postFeedback").style.color=bad?"#a34d42":"#315f4e";}
 function safeRichHtml(html){
@@ -17,16 +17,17 @@ function editorHtml(){return safeRichHtml($("postEditor").innerHTML);}
 function countText(){const n=plainText($("postEditor").innerHTML).length;$("postCount").textContent=n.toLocaleString()+" / 12,000";return n;}
 async function getProfiles(ids){const missing=[...new Set(ids)].filter(id=>id&&!profiles.has(id));if(missing.length){const results=await Promise.all(missing.map(id=>db.rpc("get_public_reader_profile_card",{target_user_id:id})));results.forEach(r=>{const p=Array.isArray(r.data)?r.data[0]:r.data;if(p?.id)profiles.set(p.id,p);});}return profiles;}
 async function signedImage(path){if(!path)return null;const r=await db.storage.from("reader-feed-images").createSignedUrl(path,3600);return r.error?null:r.data?.signedUrl||null;}
+const feedIcon=k=>{const paths={like:'<path d="M7 10v11H3V10h4Zm4 11h6.2a2 2 0 0 0 1.9-1.4l2.1-7A2 2 0 0 0 19.3 10H14l.7-4.1A2.5 2.5 0 0 0 12.2 3L7 10v11h4Z"/>',comment:'<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-4.7a9 9 0 0 1-.9-4.3A8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8Z"/>',save:'<path d="M6 4h12v17l-6-4-6 4V4Z"/>',echo:'<path d="M4 12a8 8 0 0 1 13.7-5.7L20 8.5"/><path d="M20 3v5.5h-5.5"/><path d="M20 12a8 8 0 0 1-13.7 5.7L4 15.5"/><path d="M4 21v-5.5h5.5"/>',share:'<path d="M12 16V3m-5 5 5-5 5 5"/><path d="M5 13v7h14v-7"/>'};return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+paths[k]+'</svg>';};
 function card(p){
- const a=profiles.get(p.author_id)||{},n=p.like_count||0,c=p.comment_count||0,on=liked.has(p.id),type=p.post_type||"note",label=type==="article"?"ARTICLE":type==="image"?"IMAGE":"NOTE";
+ const a=profiles.get(p.author_id)||{},n=p.like_count||0,c=p.comment_count||0,e=p.echo_count||0,on=liked.has(p.id),isSaved=savedPosts.has(p.id),isEchoed=echoedPosts.has(p.id),type=p.post_type||"note",label=type==="article"?"ARTICLE":type==="image"?"IMAGE":"NOTE";
  const content=p.content_html?safeRichHtml(p.content_html):esc(p.body||"").replace(/\n/g,"<br>");
  const media=p.image_url?'<figure class="feed-post-media"><img src="'+esc(p.image_url)+'" alt="'+esc(p.caption||p.title||"Reader image")+'" loading="lazy">'+(p.caption?'<figcaption>'+esc(p.caption)+'</figcaption>':"")+'</figure>':"";
- return '<article class="feed-post-card" id="post-'+p.id+'"><div class="post-author">'+avatar(a)+'<div class="post-author-info"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+esc(a.display_name||"Voiceoftaade reader")+'</a><span>'+ago(p.created_at)+'</span></div><span class="post-kind">'+label+'</span><span class="post-audience">'+(p.visibility==="followers"?"Followers":"Public")+'</span></div>'+(p.title?'<h3 class="post-title">'+esc(p.title)+'</h3>':"")+(content?'<div class="post-body">'+content+'</div>':"")+media+'<div class="post-actions"><button class="post-action '+(on?"is-liked":"")+'" data-action="like" data-id="'+p.id+'">'+(on?"♥":"♡")+' '+n+' Like</button><button class="post-action" data-action="comments" data-id="'+p.id+'">◯ '+c+' Comments</button><button class="post-action" data-action="share" data-id="'+p.id+'">↗ Share</button></div><section class="post-comments" id="comments-'+p.id+'" hidden><div class="comment-list" id="comment-list-'+p.id+'"></div><form class="comment-form" data-post="'+p.id+'"><input name="comment" maxlength="3000" placeholder="Write a thoughtful reply…" required><button type="submit">Reply</button></form></section></article>';
+ return '<article class="feed-post-card" id="post-'+p.id+'"><div class="post-author">'+avatar(a)+'<div class="post-author-info"><a href="profile.html?id='+encodeURIComponent(p.author_id)+'">'+esc(a.display_name||"Voiceoftaade reader")+'</a><span>'+ago(p.created_at)+'</span></div><span class="post-kind">'+label+'</span><span class="post-audience">'+(p.visibility==="followers"?"Followers":"Public")+'</span></div>'+(p.title?'<h3 class="post-title">'+esc(p.title)+'</h3>':"")+(content?'<div class="post-body">'+content+'</div>':"")+media+'<div class="post-actions"><button class="post-action '+(on?"is-liked":"")+'" data-action="like" data-id="'+p.id+'" aria-label="Like post">'+feedIcon("like")+'<span>'+n+' Like</span></button><button class="post-action" data-action="comments" data-id="'+p.id+'" aria-label="Comment on post">'+feedIcon("comment")+'<span>'+c+' Comment</span></button><button class="post-action '+(isSaved?"is-saved":"")+'" data-action="save" data-id="'+p.id+'" aria-label="'+(isSaved?"Unsave post":"Save post")+'">'+feedIcon("save")+'<span>'+(isSaved?"Saved":"Save")+'</span></button><button class="post-action '+(isEchoed?"is-echoed":"")+'" data-action="echo" data-id="'+p.id+'" aria-label="Echo post">'+feedIcon("echo")+'<span>'+e+' Echo</span></button><button class="post-action" data-action="share" data-id="'+p.id+'" aria-label="Share post">'+feedIcon("share")+'<span>Share</span></button></div><section class="post-comments" id="comments-'+p.id+'" hidden><div class="comment-list" id="comment-list-'+p.id+'"></div><form class="comment-form" data-post="'+p.id+'"><input name="comment" maxlength="3000" placeholder="Write a thoughtful reply…" required><button type="submit">Reply</button></form></section></article>';
 }
 async function enrich(rows){
- if(!rows.length)return rows;await getProfiles(rows.map(x=>x.author_id));const ids=rows.map(x=>x.id),[l,c,m]=await Promise.all([db.from("reader_feed_likes").select("post_id").in("post_id",ids),db.from("reader_feed_comments").select("post_id").in("post_id",ids),user?db.from("reader_feed_likes").select("post_id").eq("user_id",user.id).in("post_id",ids):Promise.resolve({data:[]})]);
- const lc={},cc={};(l.data||[]).forEach(x=>lc[x.post_id]=(lc[x.post_id]||0)+1);(c.data||[]).forEach(x=>cc[x.post_id]=(cc[x.post_id]||0)+1);(m.data||[]).forEach(x=>liked.add(x.post_id));
- return Promise.all(rows.map(async p=>({...p,like_count:lc[p.id]||0,comment_count:cc[p.id]||0,image_url:p.image_path?await signedImage(p.image_path):null})));
+ if(!rows.length)return rows;await getProfiles(rows.map(x=>x.author_id));const ids=rows.map(x=>x.id),[l,c,m,e,us,ue]=await Promise.all([db.from("reader_feed_likes").select("post_id").in("post_id",ids),db.from("reader_feed_comments").select("post_id").in("post_id",ids),user?db.from("reader_feed_likes").select("post_id").eq("user_id",user.id).in("post_id",ids):Promise.resolve({data:[]}),db.from("reader_feed_echoes").select("post_id").in("post_id",ids),user?db.from("reader_feed_saves").select("post_id").eq("user_id",user.id).in("post_id",ids):Promise.resolve({data:[]}),user?db.from("reader_feed_echoes").select("post_id").eq("user_id",user.id).in("post_id",ids):Promise.resolve({data:[]})]);
+ const lc={},cc={},ec={};(l.data||[]).forEach(x=>lc[x.post_id]=(lc[x.post_id]||0)+1);(c.data||[]).forEach(x=>cc[x.post_id]=(cc[x.post_id]||0)+1);(e.data||[]).forEach(x=>ec[x.post_id]=(ec[x.post_id]||0)+1);(m.data||[]).forEach(x=>liked.add(x.post_id));(us.data||[]).forEach(x=>savedPosts.add(x.post_id));(ue.data||[]).forEach(x=>echoedPosts.add(x.post_id));
+ return Promise.all(rows.map(async p=>({...p,like_count:lc[p.id]||0,comment_count:cc[p.id]||0,echo_count:ec[p.id]||0,image_url:p.image_path?await signedImage(p.image_path):null})));
 }
 async function load(reset=false){
  if(loading)return;loading=true;if(reset){offset=0;hasMore=true;cache=[];$("feedPosts").innerHTML='<p class="feed-loading">Gathering reader voices…</p>';}
@@ -34,7 +35,7 @@ async function load(reset=false){
  let q=db.from("reader_feed_posts").select("*").order("created_at",{ascending:false}).range(offset,offset+limit-1);
  if(filter==="following"){if(!user){$("feedPosts").innerHTML='<p class="feed-empty">Sign in to build your following feed.</p>';loading=false;return;}const f=await db.from("reader_follows").select("followed_id").eq("follower_id",user.id),ids=(f.data||[]).map(x=>x.followed_id);if(!ids.length){$("feedPosts").innerHTML='<p class="feed-empty">Follow readers to build this feed. Explore For you in the meantime.</p>';loading=false;return;}q=q.in("author_id",ids);}
  const r=await q;if(r.error){$("feedPosts").innerHTML='<p class="feed-empty">Could not load posts: '+esc(r.error.message)+'</p>';loading=false;return;}
- const rows=await enrich(r.data||[]);if(filter==="for-you")rows.sort((a,b)=>(b.like_count+b.comment_count)-(a.like_count+a.comment_count)||new Date(b.created_at)-new Date(a.created_at));cache.push(...rows);hasMore=rows.length===limit;offset+=rows.length;if(reset)$("feedPosts").innerHTML="";
+ const rows=await enrich(r.data||[]);if(filter==="for-you")rows.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)||(b.like_count+b.comment_count)-(a.like_count+a.comment_count));cache.push(...rows);hasMore=rows.length===limit;offset+=rows.length;if(reset)$("feedPosts").innerHTML="";
  if(!rows.length&&reset)$("feedPosts").innerHTML='<p class="feed-empty">No posts yet. Be the first to publish something thoughtful.</p>';else $("feedPosts").insertAdjacentHTML("beforeend",rows.map(card).join(""));
  $("loadMorePosts").hidden=!hasMore;loading=false;
 }
@@ -42,6 +43,27 @@ async function comments(id){
  const box=$("comments-"+id),list=$("comment-list-"+id);box.hidden=false;list.innerHTML='<span class="feed-muted">Loading replies…</span>';
  const r=await db.from("reader_feed_comments").select("*").eq("post_id",id).order("created_at").limit(30);if(r.error){list.textContent=r.error.message;return;}await getProfiles((r.data||[]).map(x=>x.author_id));
  list.innerHTML=(r.data||[]).map(c=>{const p=profiles.get(c.author_id)||{};return '<div class="feed-comment">'+avatar(p)+'<div><strong>'+esc(p.display_name||"Reader")+'</strong><p>'+esc(c.body)+'</p></div></div>';}).join("")||'<span class="feed-muted">No replies yet. Start the conversation.</span>';
+}
+function wrapShareText(ctx,text,maxWidth,maxLines){const words=String(text||"").split(/\s+/),lines=[];let line="";for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;if(lines.length>=maxLines)break;}else line=test;}if(line&&lines.length<maxLines)lines.push(line);if(lines.length===maxLines&&lines.join(" ").length<String(text||"").length)lines[lines.length-1]=lines[lines.length-1].replace(/[.,;:]?$/,"…");return lines;}
+async function sharePostImage(post){
+ if(!post)throw new Error("This post is no longer available.");
+ const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext("2d");
+ ctx.fillStyle="#fbf8f1";ctx.fillRect(0,0,1080,1350);ctx.fillStyle="#315f4e";ctx.fillRect(0,0,1080,18);
+ try{const logo=new Image();await new Promise((resolve,reject)=>{logo.onload=resolve;logo.onerror=reject;logo.src="assets/voiceoftaade-logo.jpg";});ctx.drawImage(logo,72,48,88,88);}catch(_){}
+ ctx.fillStyle="#20342e";ctx.font="700 34px Georgia";ctx.fillText("VOICEOFTAADE",184,92);ctx.fillStyle="#bd6655";ctx.font="700 17px Arial";ctx.fillText("READ · REFLECT · CONNECT",184,124);
+ const author=profiles.get(post.author_id)||{},display=author.display_name||"Voiceoftaade reader";
+ ctx.fillStyle="#20342e";ctx.font="700 27px Arial";ctx.fillText(display.slice(0,45),72,210);
+ ctx.fillStyle="#89948c";ctx.font="20px Arial";ctx.fillText("@"+display.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"").slice(0,28),72,245);
+ let y=325;
+ if(post.title){ctx.fillStyle="#20342e";ctx.font="600 46px Georgia";wrapShareText(ctx,post.title,920,2).forEach(line=>{ctx.fillText(line,72,y);y+=59;});y+=10;}
+ const summary=plainText(post.content_html||post.body||post.caption||"");
+ ctx.fillStyle="#4a5b51";ctx.font="29px Arial";wrapShareText(ctx,summary,920,4).forEach(line=>{ctx.fillText(line,72,y);y+=47;});
+ if(post.image_url){try{const im=new Image();im.crossOrigin="anonymous";await new Promise((resolve,reject)=>{im.onload=resolve;im.onerror=reject;im.src=post.image_url;});const top=Math.min(850,Math.max(y+24,650)),w=920,h=Math.min(420,w*im.height/im.width);ctx.drawImage(im,72,top,w,h);}catch(_){}}
+ ctx.fillStyle="#bd6655";ctx.fillRect(72,1245,936,2);ctx.fillStyle="#20342e";ctx.font="700 22px Arial";ctx.fillText("Read the conversation on Voiceoftaade",72,1293);
+ const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));if(!blob)throw new Error("The share image could not be created.");
+ const file=new File([blob],"voiceoftaade-post.png",{type:"image/png"});
+ if(navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:post.title||"Voiceoftaade post",text:"Shared from Voiceoftaade"});return;}
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="voiceoftaade-post.png";a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);say("Your Voiceoftaade share image is ready.");
 }
 async function suggestions(){$("suggestedReaders").innerHTML='<span class="feed-muted">Open a writer’s profile from any post to follow their work and see more in your Following feed.</span>';}
 function setPostType(){
@@ -51,9 +73,10 @@ function setPostType(){
  $("publishPost").textContent=isImage?"Publish image":isArticle?"Publish article":"Publish note";
  if(isImage&&!selectedBlob){$("postImageInput").click();}
 }
-function resetEdits(){editState={rotation:0,flip:false,brightness:100,contrast:100,saturation:100,ratio:"original"};}
+function resetEdits(){editState={rotation:0,flip:false,brightness:100,contrast:100,saturation:100,ratio:"original",filter:"none"};}
+function filterCss(){return ({none:"",mono:"grayscale(100%)",sepia:"sepia(72%)",warm:"sepia(24%) saturate(135%) hue-rotate(-8deg)",cool:"saturate(92%) hue-rotate(12deg)",vivid:"saturate(165%) contrast(108%)",fade:"saturate(72%) contrast(88%) brightness(108%)"})[editState.filter]||"";}
 function updateEditorPreview(){
- if(!sourceImage)return;const img=$("imageEditorPreview");img.style.filter="brightness("+editState.brightness+"%) contrast("+editState.contrast+"%) saturate("+editState.saturation+"%)";img.style.transform="rotate("+editState.rotation+"deg) scaleX("+(editState.flip?-1:1)+")";
+ if(!sourceImage)return;const img=$("imageEditorPreview");img.style.filter="brightness("+editState.brightness+"%) contrast("+editState.contrast+"%) saturate("+editState.saturation+"%) "+filterCss();img.style.transform="rotate("+editState.rotation+"deg) scaleX("+(editState.flip?-1:1)+")";img.style.objectFit=editState.ratio==="original"?"contain":"cover";img.style.objectPosition=(50+editState.cropX)+"% "+(50+editState.cropY)+"%";$("cropXValue").textContent=editState.cropX+"%";$("cropYValue").textContent=editState.cropY+"%";
  const ratios={"original":null,"1:1":"1 / 1","4:5":"4 / 5","16:9":"16 / 9"};$("imageEditorPreviewWrap").style.aspectRatio=ratios[editState.ratio]||"auto";
  $("brightnessValue").textContent=editState.brightness+"%";$("contrastValue").textContent=editState.contrast+"%";$("saturationValue").textContent=editState.saturation+"%";
 }
@@ -63,7 +86,7 @@ async function renderEditedImage(){
  if(!sourceImage)return null;const img=sourceImage,rot=((editState.rotation%360)+360)%360,ow=rot%180?img.naturalHeight:img.naturalWidth,oh=rot%180?img.naturalWidth:img.naturalHeight;
  let cw=ow,ch=oh;if(editState.ratio!=="original"){const [rw,rh]=editState.ratio.split(":").map(Number),ratio=rw/rh;if(cw/ch>ratio)cw=ch*ratio;else ch=cw/ratio;}
  const scale=Math.min(1,1600/Math.max(cw,ch)),outW=Math.max(1,Math.round(cw*scale)),outH=Math.max(1,Math.round(ch*scale));
- const canvas=document.createElement("canvas");canvas.width=outW;canvas.height=outH;const ctx=canvas.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,outW,outH);ctx.translate(outW/2,outH/2);ctx.scale(scale,scale);ctx.rotate(rot*Math.PI/180);ctx.scale(editState.flip?-1:1,1);ctx.filter="brightness("+editState.brightness+"%) contrast("+editState.contrast+"%) saturate("+editState.saturation+"%)";ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
+ const canvas=document.createElement("canvas");canvas.width=outW;canvas.height=outH;const ctx=canvas.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,outW,outH);ctx.translate(outW/2,outH/2);ctx.scale(scale,scale);ctx.translate(-((ow-cw)*editState.cropX/100),-((oh-ch)*editState.cropY/100));ctx.rotate(rot*Math.PI/180);ctx.scale(editState.flip?-1:1,1);ctx.filter="brightness("+editState.brightness+"%) contrast("+editState.contrast+"%) saturate("+editState.saturation+"%) "+filterCss();ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
  return new Promise(resolve=>canvas.toBlob(b=>resolve(b),"image/webp",.88));
 }
 function showImagePreview(blob,name){
@@ -71,6 +94,10 @@ function showImagePreview(blob,name){
  $("imagePreview").src=previewUrl;$("imagePreviewName").textContent=selectedName;$("imagePreviewCard").hidden=false;
 }
 $("postType").addEventListener("change",setPostType);
+const composer=$("postComposer"),composeFab=$("openPostComposer");
+function openComposer(){composer.hidden=false;composeFab.hidden=true;composeFab.setAttribute("aria-expanded","true");$("postEditor").focus({preventScroll:true});}
+function closeComposer(){composer.hidden=true;composeFab.hidden=false;composeFab.setAttribute("aria-expanded","false");}
+composeFab?.addEventListener("click",openComposer);$("closePostComposer")?.addEventListener("click",closeComposer);
 $("postEditor").addEventListener("input",countText);
 $("postEditor").addEventListener("paste",e=>{e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData("text/plain");document.execCommand("insertText",false,t);});
 document.querySelectorAll("[data-format]").forEach(b=>b.addEventListener("click",()=>{$("postEditor").focus();const f=b.dataset.format;if(f==="bold"||f==="italic")document.execCommand(f,false,null);else if(f==="h2"||f==="h3"||f==="p")document.execCommand("formatBlock",false,f);else if(f==="ul")document.execCommand("insertUnorderedList",false,null);else if(f==="ol")document.execCommand("insertOrderedList",false,null);else if(f==="quote")document.execCommand("formatBlock",false,"blockquote");countText();}));
@@ -81,9 +108,11 @@ $("postImageInput").addEventListener("change",e=>{
 });
 ["imageBrightness","imageContrast","imageSaturation"].forEach(id=>$(id).addEventListener("input",()=>{editState[id==="imageBrightness"?"brightness":id==="imageContrast"?"contrast":"saturation"]=Number($(id).value);updateEditorPreview();}));
 $("imageCropRatio").addEventListener("change",()=>{editState.ratio=$("imageCropRatio").value;updateEditorPreview();});
+["imageCropX","imageCropY"].forEach(id=>$(id).addEventListener("input",()=>{editState[id==="imageCropX"?"cropX":"cropY"]=Number($(id).value);updateEditorPreview();}));
+$("imageFilter").addEventListener("change",()=>{editState.filter=$("imageFilter").value;updateEditorPreview();});
 $("rotateImageButton").addEventListener("click",()=>{editState.rotation=(editState.rotation+90)%360;updateEditorPreview();});
 $("flipImageButton").addEventListener("click",()=>{editState.flip=!editState.flip;updateEditorPreview();});
-$("resetImageEdits").addEventListener("click",()=>{resetEdits();$("imageCropRatio").value="original";$("imageBrightness").value=$("imageContrast").value=$("imageSaturation").value=100;updateEditorPreview();});
+$("resetImageEdits").addEventListener("click",()=>{resetEdits();$("imageCropRatio").value="original";$("imageFilter").value="none";$("imageCropX").value=$("imageCropY").value=0;$("imageBrightness").value=$("imageContrast").value=$("imageSaturation").value=100;updateEditorPreview();});
 $("closeImageEditor").addEventListener("click",closeImageEditor);$("cancelImageEdits").addEventListener("click",closeImageEditor);$("imageEditorModal").addEventListener("click",e=>{if(e.target.hasAttribute("data-close-image-editor"))closeImageEditor();});
 $("applyImageEdits").addEventListener("click",async()=>{const b=$("applyImageEdits");b.disabled=true;b.textContent="Applying…";try{const blob=await renderEditedImage();if(!blob)throw new Error("Image editing failed.");showImagePreview(blob,selectedName.replace(/\.[^.]+$/,"")+".webp");closeImageEditor();say("Image ready to publish.");}catch(e){say(e.message||"Could not edit image.",true);}b.disabled=false;b.textContent="Apply edits";});
 $("editImageButton").addEventListener("click",openImageEditor);
@@ -101,7 +130,7 @@ $("postForm").addEventListener("submit",async e=>{
   const payload={author_id:user.id,title:title||null,body:body||"",visibility:$("postVisibility").value,post_type:type,caption:caption||null,content_html:html||null,image_path:imagePath};
   const r=await db.from("reader_feed_posts").insert(payload).select("id").single();if(r.error)throw r.error;
   $("postEditor").innerHTML="";$("postTitle").value="";$("postCaption").value="";$("postImageInput").value="";$("imagePreviewCard").hidden=true;selectedBlob=null;sourceImage=null;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;resetEdits();countText();$("postType").value="note";setPostType();say("Your "+(type==="image"?"image":type)+" is published.");
-  filter="for-you";document.querySelectorAll("[data-feed-filter]").forEach(b=>b.classList.toggle("active",b.dataset.feedFilter===filter));await load(true);
+  filter="for-you";closeComposer();document.querySelectorAll("[data-feed-filter]").forEach(b=>b.classList.toggle("active",b.dataset.feedFilter===filter));await load(true);
  }catch(err){if(imagePath)await db.storage.from("reader-feed-images").remove([imagePath]);say(err.message||"Your post could not be published.",true);}
  button.disabled=false;if($("postType").value===type)button.textContent=type==="image"?"Publish image":type==="article"?"Publish article":"Publish note";else setPostType();
 });
@@ -109,12 +138,13 @@ document.querySelectorAll("[data-feed-filter]").forEach(b=>b.addEventListener("c
 $("refreshFeed").addEventListener("click",()=>load(true));$("loadMorePosts").addEventListener("click",()=>load());
 $("feedPosts").addEventListener("click",async e=>{
  const b=e.target.closest("[data-action]");if(!b)return;const id=b.dataset.id,act=b.dataset.action;
- if(act==="like"){if(!user){location.href="account.html";return;}b.disabled=true;const was=liked.has(id),r=was?await db.from("reader_feed_likes").delete().eq("post_id",id).eq("user_id",user.id):await db.from("reader_feed_likes").insert({post_id:id,user_id:user.id});b.disabled=false;if(r.error){say(r.error.message,true);return;}was?liked.delete(id):liked.add(id);const p=cache.find(x=>x.id===id);if(p)p.like_count=Math.max(0,p.like_count+(was?-1:1));b.classList.toggle("is-liked",!was);b.innerHTML=(was?"♡":"♥")+" "+(p?.like_count||0)+" Like";}
+ if(act==="like"){if(!user){location.href="account.html";return;}b.disabled=true;const was=liked.has(id),r=was?await db.from("reader_feed_likes").delete().eq("post_id",id).eq("user_id",user.id):await db.from("reader_feed_likes").insert({post_id:id,user_id:user.id});b.disabled=false;if(r.error){say(r.error.message,true);return;}was?liked.delete(id):liked.add(id);const p=cache.find(x=>x.id===id);if(p)p.like_count=Math.max(0,p.like_count+(was?-1:1));b.classList.toggle("is-liked",!was);b.innerHTML=feedIcon("like")+"<span>"+(p?.like_count||0)+" Like</span>";}
  else if(act==="comments")await comments(id);
- else if(act==="share"){const url=location.origin+location.pathname+"#post-"+id;try{if(navigator.share)await navigator.share({title:"Voiceoftaade reader post",url});else{await navigator.clipboard.writeText(url);say("Post link copied.");}}catch(x){if(x.name!=="AbortError")say("Could not share this post.",true);}}
+ else if(act==="save"||act==="echo"){if(!user){location.href="account.html";return;}const set=act==="save"?savedPosts:echoedPosts,table=act==="save"?"reader_feed_saves":"reader_feed_echoes",was=set.has(id);b.disabled=true;const r=was?await db.from(table).delete().eq("post_id",id).eq("user_id",user.id):await db.from(table).insert({post_id:id,user_id:user.id});b.disabled=false;if(r.error){say(r.error.message,true);return;}was?set.delete(id):set.add(id);const p=cache.find(x=>x.id===id);if(act==="echo"&&p)p.echo_count=Math.max(0,(p.echo_count||0)+(was?-1:1));b.classList.toggle(act==="save"?"is-saved":"is-echoed",!was);b.innerHTML=feedIcon(act==="save"?"save":"echo")+"<span>"+(act==="save"?(was?"Save":"Saved"):(p?.echo_count||0)+" Echo")+"</span>";}
+ else if(act==="share"){try{await sharePostImage(cache.find(x=>x.id===id));}catch(x){if(x.name!=="AbortError")say(x.message||"Could not create the share image.",true);}}
 });
 $("feedPosts").addEventListener("submit",async e=>{
- const f=e.target.closest(".comment-form");if(!f)return;e.preventDefault();if(!user){location.href="account.html";return;}const body=f.elements.comment.value.trim();if(!body)return;const b=f.querySelector("button");b.disabled=true;const r=await db.from("reader_feed_comments").insert({post_id:f.dataset.post,author_id:user.id,body});b.disabled=false;if(r.error){say(r.error.message,true);return;}f.reset();await comments(f.dataset.post);const p=cache.find(x=>x.id===f.dataset.post);if(p)p.comment_count++;const trigger=document.querySelector('[data-action="comments"][data-id="'+f.dataset.post+'"]');if(trigger)trigger.textContent="◯ "+p.comment_count+" Comments";
+ const f=e.target.closest(".comment-form");if(!f)return;e.preventDefault();if(!user){location.href="account.html";return;}const body=f.elements.comment.value.trim();if(!body)return;const b=f.querySelector("button");b.disabled=true;const r=await db.from("reader_feed_comments").insert({post_id:f.dataset.post,author_id:user.id,body});b.disabled=false;if(r.error){say(r.error.message,true);return;}f.reset();await comments(f.dataset.post);const p=cache.find(x=>x.id===f.dataset.post);if(p)p.comment_count++;const trigger=document.querySelector('[data-action="comments"][data-id="'+f.dataset.post+'"]');if(trigger)trigger.innerHTML=feedIcon("comment")+"<span>"+p.comment_count+" Comment</span>";
 });
 $("suggestedReaders").addEventListener("click",async e=>{const b=e.target.closest("[data-follow]");if(!b)return;if(!user){location.href="account.html";return;}b.disabled=true;const r=await db.from("reader_follows").insert({follower_id:user.id,followed_id:b.dataset.follow});if(r.error){say(r.error.message,true);b.disabled=false;return;}b.textContent="Following";});
 (async()=>{
