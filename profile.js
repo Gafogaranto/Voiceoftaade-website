@@ -10,9 +10,9 @@ document.addEventListener("click",e=>{if(!e.target.closest(".profile-menu-wrap")
 async function init(){
  $("year").textContent=new Date().getFullYear();
  if(!db||!uid){$("profileName").textContent="Reader profile unavailable";return;}
- const [session,pr,visibility]=await Promise.all([db.auth.getSession(),db.rpc("get_public_reader_profile",{target_user_id:uid}),db.rpc("get_reader_profile_visibility",{target_user_id:uid})]);
- user=session.data?.session?.user||null;profileData=first(pr.data);
- if(pr.error||!profileData){$("profileName").textContent="Profile not found";feedback("This reader profile is unavailable or private.");return;}
+ const [session,pr,card,visibility]=await Promise.all([db.auth.getSession(),db.rpc("get_public_reader_profile",{target_user_id:uid}),db.rpc("get_public_reader_profile_card",{target_user_id:uid}),db.rpc("get_reader_profile_visibility",{target_user_id:uid})]);
+ user=session.data?.session?.user||null;profileData={...(first(pr.data)||{}),...(first(card.data)||{})};
+ if(pr.error||!profileData.id){$("profileName").textContent="Profile not found";feedback("This reader profile is unavailable or private.");return;}
  const p=profileData,privacy=first(visibility.data)||{};
  if(privacy.profile_visibility==="private"&&user?.id!==uid){$("profileName").textContent="This profile is private";feedback("This reader has chosen to keep their profile private.");return;}
  $("profileName").textContent=p.display_name||"Voiceoftaade reader";
