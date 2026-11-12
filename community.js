@@ -52,6 +52,8 @@
    await loadFollowing();
    await loadMentions();
    await loadNotifications();
+   if(location.hash==="#messages")showWorkspace("messages");
+   window.addEventListener("hashchange",()=>{if(location.hash==="#messages")showWorkspace("messages");});
   }
   async function refreshPermissions(){
    state.staff=false;state.creator=false;
@@ -251,9 +253,9 @@
   }
   function showWorkspace(which){
    document.querySelectorAll(".workspace-view").forEach(v=>v.hidden=true);
-   const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="ai"?$("workspaceAI"):which==="forYou"?$("workspaceForYou"):which==="following"?$("workspaceFollowing"):which==="mentions"?$("workspaceMentions"):which==="notifications"?$("workspaceNotifications"):$("workspaceDiscover");
+   const target=which==="admin"?$("workspaceAdmin"):which==="chat"?$("workspaceChat"):which==="messages"?$("workspaceMessages"):which==="ai"?$("workspaceAI"):which==="forYou"?$("workspaceForYou"):which==="following"?$("workspaceFollowing"):which==="mentions"?$("workspaceMentions"):which==="notifications"?$("workspaceNotifications"):$("workspaceDiscover");
    if(target)target.hidden=false;
-   const titleMap={forYou:"For You",following:"Following",mentions:"Mentions",notifications:"Notifications",discover:"Discover communities",chat:state.selected?.name||"Community chat",ai:"AI reading companion",admin:"Admin requests"};
+   const titleMap={forYou:"For You",following:"Following",mentions:"Mentions",notifications:"Notifications",discover:"Discover communities",chat:state.selected?.name||"Community chat",messages:"Messages",ai:"AI reading companion",admin:"Admin requests"};
    const mobileTitle=$("mobileWorkspaceTitle");if(mobileTitle)mobileTitle.textContent=titleMap[which]||"Voiceoftaade Community";
    document.body.classList.toggle("community-chat-open",which==="chat");
    document.querySelectorAll("[data-workspace]").forEach(b=>b.classList.toggle("active",b.dataset.workspace===which));
