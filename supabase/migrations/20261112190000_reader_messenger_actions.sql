@@ -114,15 +114,15 @@ begin
   update public.reader_chat_calls set status=p_status,accepted_at=case when p_status='accepted' then now() else accepted_at end,ended_at=case when p_status in('declined','ended','missed','failed')then now() else ended_at end where id=p_call_id;return true;
 end;$$;
 
-revoke all on function public.send_reader_chat_group_message(uuid,text,text,text,text,text,bigint,uuid) from public;
+revoke all on function public.send_reader_chat_group_message(uuid,text,text,text,text,text,bigint,uuid) from anon, public;
 grant execute on function public.send_reader_chat_group_message(uuid,text,text,text,text,text,bigint,uuid) to authenticated;
-revoke all on function public.update_reader_chat_message(uuid,text,text,text) from public;
+revoke all on function public.update_reader_chat_message(uuid,text,text,text) from anon, public;
 grant execute on function public.update_reader_chat_message(uuid,text,text,text) to authenticated;
-revoke all on function public.mark_reader_messages_read(uuid) from public;
+revoke all on function public.mark_reader_messages_read(uuid) from anon, public;
 grant execute on function public.mark_reader_messages_read(uuid) to authenticated;
-revoke all on function public.mark_reader_chat_group_read(uuid) from public;
+revoke all on function public.mark_reader_chat_group_read(uuid) from anon, public;
 grant execute on function public.mark_reader_chat_group_read(uuid) to authenticated;
-revoke all on function public.start_reader_chat_call(uuid,text) from public;
+revoke all on function public.start_reader_chat_call(uuid,text) from anon, public;
 grant execute on function public.start_reader_chat_call(uuid,text) to authenticated;
-revoke all on function public.update_reader_chat_call_status(uuid,text) from public;
+revoke all on function public.update_reader_chat_call_status(uuid,text) from anon, public;
 grant execute on function public.update_reader_chat_call_status(uuid,text) to authenticated;
