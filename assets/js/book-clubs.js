@@ -6,6 +6,7 @@
     "sb_publishable_S2_edmXWLvlB4P5Pyr-hDg_JLnP0F67"
   );
   const state = { user:null, clubs:[], selected:null, memberships:new Map(), staff:false };
+  let wizardStep=1;
   const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const dateText = value => value ? new Date(value).toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"}) : "";
   const status = (message,bad=false,target="bookClubsStatus") => {
@@ -41,7 +42,9 @@
     if(node)node.innerHTML=state.user
       ? "Signed in. You can join reading circles and participate in their discussions."
       : 'Browsing as a visitor. <a href="account.html">Sign in or create a reader account</a> to join or propose a club.';
-    $("createClubPanel").hidden=!state.user;
+    $("createClubPanel").hidden=true;
+    $("openCreateClub").hidden=!state.user;
+    $("clubRequests").hidden=!state.user;
   }
 
   async function loadClubs(){
@@ -237,6 +240,39 @@
     await loadPolls(state.selected.community_id);
   }
 
+
+  function showWizardStep(){
+    document.querySelectorAll("[data-club-step]").forEach(node=>node.hidden=Number(node.dataset.clubStep)!==wizardStep);
+    [...$("clubWizardProgress").children].forEach((node,index)=>node.classList.toggle("active",index+1===wizardStep));
+    $("clubWizardBack").hidden=wizardStep===1;$("clubWizardNext").hidden=wizardStep===3;$("clubWizardSubmit").hidden=wizardStep!==3;
+  }
+  function openWizard(){wizardStep=1;showWizardStep();$("createClubPanel").hidden=false;document.body.classList.add("club-wizard-open");}
+  function closeWizard(){$("createClubPanel").hidden=true;document.body.classList.remove("club-wizard-open");}
+  function updateBookRequirements(){const single=$("clubType").value==="single-book";$("createClubForm").elements.book_title.required=single;$("createClubForm").elements.book_author.required=single;}
+  function stepIsValid(){const section=document.querySelector('[data-club-step="'+wizardStep+'"]');for(const field of section.querySelectorAll("input,textarea,select")){if(!field.checkValidity()){field.reportValidity();return false;}}return true;}
+  async function loadManagedRequests(){
+    const section=$("clubRequests"),host=$("managedClubRequests");if(!state.user){section.hidden=true;return;}
+    section.hidden=false;host.innerHTML='<p class="clubs-loading">Checking membership requests…</p>';
+    const {data,error}=await client.from("book_club_applications").select("id,community_id,applicant_id,answers,created_at,communities!inner(name,created_by)").eq("status","pending").eq("communities.created_by",state.user.id).order("created_at",{ascending:false}).limit(50);
+    if(error){host.innerHTML='<p class="clubs-empty">Membership requests could not be loaded.</p>';return;}
+    if(!data?.length){host.innerHTML='<p class="clubs-empty">No pending membership applications. New requests will appear here.</p>';return;}
+    host.innerHTML=data.map(row=>'<article class="club-request-card"><h4>'+esc(row.communities?.name||"Book club")+'</h4><p><strong>Author familiarity:</strong> '+esc(row.answers?.author_familiarity||"Not provided")+'</p><p><strong>Reason for joining:</strong> '+esc(row.answers?.purpose||"Not provided")+'</p><p><strong>Contribution:</strong> '+esc(row.answers?.contribution||"Not provided")+'</p><div class="club-request-actions"><button type="button" class="clubs-button clubs-button-gold" data-review-application="'+row.id+'" data-decision="approved">Approve</button><button type="button" class="clubs-button clubs-button-quiet" data-review-application="'+row.id+'" data-decision="rejected">Decline</button></div></article>').join("");
+  }
+  async function loadClubApplications(id){
+    const section=$("clubApplications"),host=$("clubApplicationList"),club=state.clubs.find(row=>row.community_id===id);
+    if(!club||!managerFor(club)){section.hidden=true;return;}
+    section.hidden=false;host.innerHTML='<p class="clubs-loading">Loading applications…</p>';
+    const {data,error}=await client.from("book_club_applications").select("id,applicant_id,answers,created_at").eq("community_id",id).eq("status","pending").order("created_at",{ascending:false});
+    if(error){host.innerHTML='<p class="clubs-empty">Applications could not be loaded.</p>';return;}
+    if(!data?.length){host.innerHTML='<p class="clubs-empty">No pending applications for this club.</p>';return;}
+    host.innerHTML=data.map(row=>'<article class="club-request-card"><h4>Reader application</h4><p><strong>Author familiarity:</strong> '+esc(row.answers?.author_familiarity||"")+'</p><p><strong>Purpose:</strong> '+esc(row.answers?.purpose||"")+'</p><p><strong>Contribution:</strong> '+esc(row.answers?.contribution||"")+'</p><div class="club-request-actions"><button type="button" class="clubs-button clubs-button-gold" data-review-application="'+row.id+'" data-decision="approved">Approve</button><button type="button" class="clubs-button clubs-button-quiet" data-review-application="'+row.id+'" data-decision="rejected">Decline</button></div></article>').join("");
+  }
+  async function reviewApplication(id,decision){
+    const {error}=await client.rpc("review_book_club_application",{p_application_id:id,p_decision:decision});
+    if(error){status("The application could not be reviewed: "+error.message,true);return;}
+    status(decision==="approved"?"Reader approved and added to the club.":"Application declined.");
+    await loadManagedRequests();await loadMemberships();if(state.selected)await openClub(state.selected.community_id);
+  }
   async function createClub(event){
     event.preventDefault();
     if(!state.user){status("Sign in before proposing a book club.",true);return;}
@@ -246,11 +282,11 @@
     const {data,error}=await client.rpc("create_book_club_request",{
       p_name:values.name.trim(),p_slug:slug,p_description:values.description.trim(),p_visibility:values.visibility,
       p_book_title:values.book_title.trim(),p_book_author:values.book_author.trim(),p_genre:values.genre.trim(),
-      p_reading_plan:values.reading_plan.trim()
+      p_reading_plan:values.reading_plan.trim(),p_club_type:values.club_type
     });
     button.disabled=false;
     if(error){status("The book club could not be submitted: "+error.message,true);return;}
-    form.reset();status("Your book club proposal has been submitted for review. It will appear publicly after approval.");
+    form.reset();updateBookRequirements();closeWizard();showWizardStep();status("Your book club proposal has been submitted for review. It will appear publicly after approval.");
     await loadClubs();
     if(data)await openClub(data);
   }
