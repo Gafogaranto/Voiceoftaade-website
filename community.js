@@ -4,6 +4,7 @@
   const escape = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const dateText = value => value ? new Date(value).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}) : "";
   const state = { user:null, selected:null, communities:[], joined:[], staff:false, creator:false, blockedUsers:[] };
+  let activeCommunityChannel = null;
   const status = (message, bad=false) => { const el=$("communityStatus"); if(el){el.textContent=message;el.classList.toggle("is-error",bad);} };
   const requireLogin = () => { if(!state.user){status("Please sign in from your reader account before joining or posting.");return false;} return true; };
   async function init(){
@@ -276,6 +277,25 @@
    const nav=$("joinedCommunityNav");if(nav){nav.innerHTML=markup;nav.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.room)));}
    const mobile=$("mobileJoinedCommunityNav");if(mobile){mobile.innerHTML=state.joined.map(room=>'<button type="button" class="'+(state.selected?.id===room.id?'active':'')+'" data-room="'+room.id+'"><span class="room-nav-icon">'+escape(room.name.slice(0,1).toUpperCase())+'</span><span class="room-nav-name">'+escape(room.name)+'</span></button>').join("");mobile.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>openCommunity(b.dataset.room)));}
   }
+  async function subscribeToCommunity(communityId){
+   if(activeCommunityChannel){await client.removeChannel(activeCommunityChannel);activeCommunityChannel=null;}
+   if(!client||!communityId)return;
+   const feed=$("chatMessageArea");
+   const refresh=()=>{
+    if(state.selected?.id!==communityId)return;
+    const nearBottom=feed&&feed.scrollHeight-feed.scrollTop-feed.clientHeight<140;
+    loadPosts(state.selected).then(()=>{if(nearBottom&&feed)feed.scrollTop=feed.scrollHeight;});
+   };
+   activeCommunityChannel=client.channel("community-room:"+communityId)
+    .on("postgres_changes",{event:"*",schema:"public",table:"community_posts",filter:"community_id=eq."+communityId},refresh)
+    .on("postgres_changes",{event:"*",schema:"public",table:"community_replies"},refresh)
+    .subscribe((status)=>{
+      const description=$("chatDescription");
+      if(description&&state.selected?.id===communityId){
+        description.textContent=status==="SUBSCRIBED"?"Live conversation · updates appear automatically":status==="CHANNEL_ERROR"?"Live updates unavailable · use refresh to check new activity":"Connecting to live conversation…";
+      }
+    });
+  }
   async function openCommunity(id){
    document.body.classList.remove("community-mobile-menu-open");const menu=$("mobileMenuToggle"),chatMenu=$("chatMenuToggle"),backdrop=$("mobileMenuBackdrop");menu?.setAttribute("aria-expanded","false");chatMenu?.setAttribute("aria-expanded","false");if(backdrop)backdrop.hidden=true;
    const community=state.communities.find(c=>c.id===id)||state.joined.find(c=>c.id===id);if(!community)return;
@@ -285,6 +305,7 @@
    const active=member?.status==="active";
    $("newPostPanel").hidden=!active;$("chatJoinPrompt").hidden=active||!state.user;
    $("chatJoinBtn").textContent=community.visibility==="private"?"Request access":"Join community";
+   await subscribeToCommunity(id);
    await loadPosts(community);
   }
   async function joinCommunity(community){
