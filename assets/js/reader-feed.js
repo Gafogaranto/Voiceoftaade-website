@@ -44,6 +44,27 @@ async function comments(id){
  const r=await db.from("reader_feed_comments").select("*").eq("post_id",id).order("created_at").limit(30);if(r.error){list.textContent=r.error.message;return;}await getProfiles((r.data||[]).map(x=>x.author_id));
  list.innerHTML=(r.data||[]).map(c=>{const p=profiles.get(c.author_id)||{};return '<div class="feed-comment">'+avatar(p)+'<div><strong>'+esc(p.display_name||"Reader")+'</strong><p>'+esc(c.body)+'</p></div></div>';}).join("")||'<span class="feed-muted">No replies yet. Start the conversation.</span>';
 }
+function wrapShareText(ctx,text,maxWidth,maxLines){const words=String(text||"").split(/\s+/),lines=[];let line="";for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;if(lines.length>=maxLines)break;}else line=test;}if(line&&lines.length<maxLines)lines.push(line);if(lines.length===maxLines&&lines.join(" ").length<String(text||"").length)lines[lines.length-1]=lines[lines.length-1].replace(/[.,;:]?$/,"…");return lines;}
+async function sharePostImage(post){
+ if(!post)throw new Error("This post is no longer available.");
+ const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext("2d");
+ ctx.fillStyle="#fbf8f1";ctx.fillRect(0,0,1080,1350);ctx.fillStyle="#315f4e";ctx.fillRect(0,0,1080,18);
+ try{const logo=new Image();await new Promise((resolve,reject)=>{logo.onload=resolve;logo.onerror=reject;logo.src="assets/voiceoftaade-logo.jpg";});ctx.drawImage(logo,72,48,88,88);}catch(_){}
+ ctx.fillStyle="#20342e";ctx.font="700 34px Georgia";ctx.fillText("VOICEOFTAADE",184,92);ctx.fillStyle="#bd6655";ctx.font="700 17px Arial";ctx.fillText("READ · REFLECT · CONNECT",184,124);
+ const author=profiles.get(post.author_id)||{},display=author.display_name||"Voiceoftaade reader";
+ ctx.fillStyle="#20342e";ctx.font="700 27px Arial";ctx.fillText(display.slice(0,45),72,210);
+ ctx.fillStyle="#89948c";ctx.font="20px Arial";ctx.fillText("@"+display.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"").slice(0,28),72,245);
+ let y=325;
+ if(post.title){ctx.fillStyle="#20342e";ctx.font="600 46px Georgia";wrapShareText(ctx,post.title,920,2).forEach(line=>{ctx.fillText(line,72,y);y+=59;});y+=10;}
+ const summary=plainText(post.content_html||post.body||post.caption||"");
+ ctx.fillStyle="#4a5b51";ctx.font="29px Arial";wrapShareText(ctx,summary,920,4).forEach(line=>{ctx.fillText(line,72,y);y+=47;});
+ if(post.image_url){try{const im=new Image();im.crossOrigin="anonymous";await new Promise((resolve,reject)=>{im.onload=resolve;im.onerror=reject;im.src=post.image_url;});const top=Math.min(850,Math.max(y+24,650)),w=920,h=Math.min(420,w*im.height/im.width);ctx.drawImage(im,72,top,w,h);}catch(_){}}
+ ctx.fillStyle="#bd6655";ctx.fillRect(72,1245,936,2);ctx.fillStyle="#20342e";ctx.font="700 22px Arial";ctx.fillText("Read the conversation on Voiceoftaade",72,1293);
+ const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));if(!blob)throw new Error("The share image could not be created.");
+ const file=new File([blob],"voiceoftaade-post.png",{type:"image/png"});
+ if(navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:post.title||"Voiceoftaade post",text:"Shared from Voiceoftaade"});return;}
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="voiceoftaade-post.png";a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);say("Your Voiceoftaade share image is ready.");
+}
 async function suggestions(){$("suggestedReaders").innerHTML='<span class="feed-muted">Open a writer’s profile from any post to follow their work and see more in your Following feed.</span>';}
 function setPostType(){
  const type=$("postType").value,isImage=type==="image",isArticle=type==="article";
@@ -120,7 +141,7 @@ $("feedPosts").addEventListener("click",async e=>{
  if(act==="like"){if(!user){location.href="account.html";return;}b.disabled=true;const was=liked.has(id),r=was?await db.from("reader_feed_likes").delete().eq("post_id",id).eq("user_id",user.id):await db.from("reader_feed_likes").insert({post_id:id,user_id:user.id});b.disabled=false;if(r.error){say(r.error.message,true);return;}was?liked.delete(id):liked.add(id);const p=cache.find(x=>x.id===id);if(p)p.like_count=Math.max(0,p.like_count+(was?-1:1));b.classList.toggle("is-liked",!was);b.innerHTML=feedIcon("like")+"<span>"+(p?.like_count||0)+" Like</span>";}
  else if(act==="comments")await comments(id);
  else if(act==="save"||act==="echo"){if(!user){location.href="account.html";return;}const set=act==="save"?savedPosts:echoedPosts,table=act==="save"?"reader_feed_saves":"reader_feed_echoes",was=set.has(id);b.disabled=true;const r=was?await db.from(table).delete().eq("post_id",id).eq("user_id",user.id):await db.from(table).insert({post_id:id,user_id:user.id});b.disabled=false;if(r.error){say(r.error.message,true);return;}was?set.delete(id):set.add(id);const p=cache.find(x=>x.id===id);if(act==="echo"&&p)p.echo_count=Math.max(0,(p.echo_count||0)+(was?-1:1));b.classList.toggle(act==="save"?"is-saved":"is-echoed",!was);b.innerHTML=feedIcon(act==="save"?"save":"echo")+"<span>"+(act==="save"?(was?"Save":"Saved"):(p?.echo_count||0)+" Echo")+"</span>";}
- else if(act==="share"){const url=location.origin+location.pathname+"#post-"+id;try{if(navigator.share)await navigator.share({title:"Voiceoftaade reader post",url});else{await navigator.clipboard.writeText(url);say("Post link copied.");}}catch(x){if(x.name!=="AbortError")say("Could not share this post.",true);}}
+ else if(act==="share"){try{await sharePostImage(cache.find(x=>x.id===id));}catch(x){if(x.name!=="AbortError")say(x.message||"Could not create the share image.",true);}}
 });
 $("feedPosts").addEventListener("submit",async e=>{
  const f=e.target.closest(".comment-form");if(!f)return;e.preventDefault();if(!user){location.href="account.html";return;}const body=f.elements.comment.value.trim();if(!body)return;const b=f.querySelector("button");b.disabled=true;const r=await db.from("reader_feed_comments").insert({post_id:f.dataset.post,author_id:user.id,body});b.disabled=false;if(r.error){say(r.error.message,true);return;}f.reset();await comments(f.dataset.post);const p=cache.find(x=>x.id===f.dataset.post);if(p)p.comment_count++;const trigger=document.querySelector('[data-action="comments"][data-id="'+f.dataset.post+'"]');if(trigger)trigger.textContent="◯ "+p.comment_count+" Comments";
