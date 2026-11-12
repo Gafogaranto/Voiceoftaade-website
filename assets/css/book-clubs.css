@@ -108,3 +108,43 @@ body:has(.book-clubs-page){background:#f8f7f1;color:#213b30}
 
 /* Platform owner proposal review */
 .owner-approval-section{scroll-margin-top:110px}.owner-approval-note{max-width:760px;padding:13px 16px;border:1px solid #e8dfd2;border-radius:14px;background:#fffaf3;color:#536258;font-size:.9rem}.owner-approval-card{padding:22px!important;border:1px solid #dfd4c5!important;border-radius:18px!important;background:linear-gradient(145deg,#fffdf9,#f8f4eb)!important}.owner-approval-card h3{margin:10px 0 8px;color:#203d34;font:600 1.35rem/1.25 "Playfair Display",Georgia,serif}.owner-approval-card-head{display:flex;flex-wrap:wrap;gap:8px}.owner-approval-card .club-request-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.owner-approval-card .clubs-muted{font-size:.82rem}.club-tag.pending{background:#f6ead4;color:#795c24}
+
+/* Readability correction: cream editorial theme needs dark, high-contrast text on every card */
+body:has(.book-clubs-page){background:#f5f4ed!important;color:#263b30!important}
+.book-clubs-page{color:#263b30}
+.book-clubs-page .clubs-eyebrow{color:#94733a!important}
+.book-clubs-page .clubs-section-heading h2,.book-clubs-page .club-detail-head h2,.book-clubs-page .clubs-create-panel h2{color:#1e3b30!important}
+.book-clubs-page .clubs-section-heading>p,.book-clubs-page .clubs-hero>p:not(.clubs-eyebrow){color:#52645a!important}
+.book-clubs-page .club-card,.book-clubs-page .session-card,.book-clubs-page .discussion-card,.book-clubs-page .poll-card{background:rgba(255,255,252,.96)!important;border-color:#dce5dc!important;color:#30463a!important}
+.book-clubs-page .club-card h3,.book-clubs-page .session-card h4,.book-clubs-page .discussion-card h4,.book-clubs-page .poll-card h4{color:#203d31!important}
+.book-clubs-page .club-card p,.book-clubs-page .session-card p,.book-clubs-page .discussion-card p,.book-clubs-page .poll-card p{color:#53655b!important}
+.book-clubs-page .club-card .club-book{color:#80622d!important}
+.book-clubs-page .club-tag{color:#70572b!important;border-color:#d8c59d!important;background:#fbf6e8!important}
+.book-clubs-page .club-tag.pending{color:#80532b!important;background:#fbefdf!important}
+.book-clubs-page .clubs-loading,.book-clubs-page .clubs-empty{color:#53665b!important;border-color:#d5e0d6!important;background:rgba(255,255,252,.75)}
+.book-clubs-page .clubs-status{color:#6f5728!important}
+.book-clubs-page .clubs-status.error{color:#a13f36!important}
+.book-clubs-page .club-detail-section h3{color:#203d31!important}
+.book-clubs-page .club-detail-section h4{color:#315844!important}
+.book-clubs-page .club-detail-head>div:first-child>p:not(.clubs-eyebrow){color:#52645a!important}
+.book-clubs-page .club-meta span,.book-clubs-page .clubs-muted{color:#66766b!important}
+.book-clubs-page .clubs-create-panel,.book-clubs-page .club-detail-panel{background:rgba(255,255,252,.94)!important;border-color:#dce5dc!important;box-shadow:0 18px 48px rgba(28,55,41,.07)}
+.book-clubs-page .clubs-form label{color:#365444!important}
+.book-clubs-page .clubs-form input,.book-clubs-page .clubs-form textarea,.book-clubs-page .clubs-form select,.book-clubs-page .reply-form input{background:#fff!important;color:#203b30!important;border-color:#cbd9ce!important}
+.book-clubs-page .clubs-form input::placeholder,.book-clubs-page .clubs-form textarea::placeholder,.book-clubs-page .reply-form input::placeholder{color:#7d8a80!important;opacity:1}
+.book-clubs-page .club-wizard-card{background:rgba(255,254,249,.98)!important;color:#263b30!important}
+.book-clubs-page .club-wizard-header h2,.book-clubs-page .club-wizard-step h3{color:#203d31!important}
+.book-clubs-page .club-wizard-header p:not(.clubs-eyebrow),.book-clubs-page .club-wizard-hint{color:#5e7065!important}
+.book-clubs-page .club-review-note{color:#655a42!important;background:#f8f3e7!important}
+.book-clubs-page .club-request-card{background:#fff!important;border-color:#dfe6dd!important}
+.book-clubs-page .club-request-card h4,.book-clubs-page .owner-approval-card h3{color:#203d31!important}
+.book-clubs-page .club-request-card p,.book-clubs-page .owner-approval-note{color:#52645a!important}
+.book-clubs-page .owner-approval-card{background:linear-gradient(145deg,#fff,#f6f4eb)!important}
+.book-clubs-page .club-request-actions .clubs-button-quiet{color:#315844!important;border-color:#cbd9ce!important;background:#fff!important}
+.book-clubs-page .discussion-reply{background:#f1f5f0!important;color:#43584b!important}
+.book-clubs-page .poll-option,.book-clubs-page .poll-result{color:#43584b!important}
+.book-clubs-page .poll-bar{background:#e3e9e2!important}
+.book-clubs-page .reply-form button{background:#eaf2eb!important;color:#28513d!important;border-color:#cbd9ce!important}
+.book-clubs-page .club-create-fab{color:#fff!important;background:rgba(38,91,65,.92)!important;border-color:#fff!important}
+.book-clubs-page .clubs-button-gold{background:linear-gradient(135deg,#286047,#194b36)!important;color:#fff!important}
+.book-clubs-page .clubs-button-quiet{color:#315844!important;background:#fff!important;border-color:#cad8ce!important}

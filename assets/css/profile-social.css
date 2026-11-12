@@ -86,3 +86,30 @@ body.reader-social-page{background:#f1f4f2!important;color:#1e3029!important}
 .founder-badge{display:inline-flex;align-items:center;gap:7px;margin:8px 0 0;padding:7px 12px;border:1px solid rgba(201,169,103,.48);border-radius:999px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(245,235,210,.58));backdrop-filter:blur(14px);color:#87672e;font-size:.64rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 24px rgba(100,76,35,.09)}.voiceoftaade-founder .social-profile-card{border-color:#c9ad72;box-shadow:0 18px 55px rgba(117,91,42,.12)}.voiceoftaade-founder .social-cover{background-image:radial-gradient(circle at 80% 18%,rgba(235,208,151,.42),transparent 27%),linear-gradient(125deg,#102f28,#1e5948 56%,#b18e55)}.voiceoftaade-founder .social-avatar{box-shadow:0 0 0 3px rgba(198,164,94,.48),0 15px 35px rgba(22,55,40,.22)}
 
 .founder-badge[hidden]{display:none!important}
+
+/* Clickable follower/following lists and founder identity mark */
+.profile-name-line{display:flex;align-items:center;flex-wrap:wrap;gap:11px}
+.identity-copy h1 .founder-badge{margin:0;vertical-align:middle}
+.founder-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid #c6a15b;border-radius:999px;background:linear-gradient(135deg,#fff9e9,#f0dfb4);color:#74531d;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 5px 18px rgba(128,91,31,.15)}
+.founder-badge svg{width:15px;height:15px;fill:#bd9141;stroke:#8b6428;stroke-width:.7}
+.social-stats{align-items:center}
+.profile-stat-link,.profile-stat-static{display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border:1px solid #e8ede8;border-radius:999px;background:#fbfcfa;color:#738178;font:inherit;font-size:.7rem;text-decoration:none}
+.profile-stat-link{cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+.profile-stat-link:hover{background:#eaf3ed;border-color:#b8d0bf;transform:translateY(-1px)}
+.profile-stat-link strong,.profile-stat-static strong{color:#1f4034;font-size:.82rem}
+.profile-stat-link:focus-visible,.follow-list-close:focus-visible,.follow-list-reader:focus-visible{outline:3px solid #c9a35e;outline-offset:3px}
+.follow-list-dialog{width:min(520px,calc(100% - 28px));max-height:min(78vh,680px);padding:0;border:1px solid #e3e9e2;border-radius:22px;background:#fffdf9;color:#203b30;box-shadow:0 28px 90px rgba(14,38,27,.28);overflow:hidden}
+.follow-list-dialog::backdrop{background:rgba(8,24,17,.48);backdrop-filter:blur(5px)}
+.follow-list-header{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-bottom:1px solid #e9ede8;background:rgba(250,249,242,.95)}
+.follow-list-header h2{margin:4px 0 0;color:#1d3b30;font:600 1.45rem "Playfair Display",Georgia,serif}
+.follow-list-close{width:38px;height:38px;border:1px solid #e0e7df;border-radius:50%;background:#fff;color:#315a48;font-size:1.55rem;cursor:pointer}
+.follow-list-items{display:grid;gap:5px;max-height:calc(78vh - 90px);overflow:auto;padding:12px}
+.follow-list-reader{display:flex;align-items:center;gap:12px;padding:11px;border-radius:13px;color:#264436;text-decoration:none;transition:background .16s}
+.follow-list-reader:hover{background:#f0f5ef}
+.follow-list-avatar{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;overflow:hidden;border:1px solid #dce6dc;border-radius:50%;background:#e6efe7;color:#315b48;font-weight:800}
+.follow-list-avatar img{width:100%;height:100%;object-fit:cover}
+.follow-list-reader-copy{display:grid;gap:3px;min-width:0}
+.follow-list-reader-copy strong{color:#244535;font-size:.84rem;overflow-wrap:anywhere}
+.follow-list-reader-copy small{color:#89968d;font-size:.68rem}
+.follow-list-arrow{margin-left:auto;color:#9a895e}
+@media(max-width:560px){.profile-name-line{gap:8px}.identity-copy h1 .founder-badge{font-size:.52rem;padding:5px 8px}.profile-stat-link,.profile-stat-static{padding:6px 8px;font-size:.63rem}}

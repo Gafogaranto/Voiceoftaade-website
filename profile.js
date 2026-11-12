@@ -6,6 +6,11 @@ function feedback(s){$("profileFeedback").textContent=s;}
 function tab(name){document.querySelectorAll("[data-profile-tab]").forEach(b=>b.classList.toggle("active",b.dataset.profileTab===name));document.querySelectorAll("[data-profile-panel]").forEach(p=>{p.hidden=p.dataset.profilePanel!==name;p.classList.toggle("active",!p.hidden);});}
 document.querySelectorAll("[data-profile-tab]").forEach(b=>b.addEventListener("click",()=>tab(b.dataset.profileTab)));
 $("profileMenuButton").addEventListener("click",()=>{const m=$("profileMenu");m.hidden=!m.hidden;$("profileMenuButton").setAttribute("aria-expanded",String(!m.hidden));});
+const followDialog=$("followListDialog"),followListItems=$("followListItems");
+$("followersLink").addEventListener("click",()=>openFollowList("followers"));
+$("followingLink").addEventListener("click",()=>openFollowList("following"));
+$("closeFollowList").addEventListener("click",()=>followDialog.close());
+followDialog.addEventListener("click",e=>{if(e.target===followDialog)followDialog.close();});
 document.addEventListener("click",e=>{if(!e.target.closest(".profile-menu-wrap")){$("profileMenu").hidden=true;$("profileMenuButton").setAttribute("aria-expanded","false");}});
 async function init(){
  $("year").textContent=new Date().getFullYear();
@@ -58,6 +63,21 @@ async function init(){
  const milestones=[];const journals=new Set((reading||[]).map(x=>x.journal_id));if(journals.size>=1)milestones.push("First reflection");if(journals.size>=5)milestones.push("Five journeys");if(contributions.length>=1)milestones.push("Community voice");if(contributions.length>=5)milestones.push("Conversation builder");
  $("readerMilestones").innerHTML=milestones.length?milestones.map(x=>'<span class="milestone-pill">✦ '+esc(x)+'</span>').join(""):'<p class="profile-empty">Milestones will appear as this reader participates.</p>';
  bindProfileActions(privacy);
+}
+async function openFollowList(direction){
+  const title=direction==="followers"?"Followers":"Following";
+  $("followListTitle").textContent=title;
+  followListItems.innerHTML='<p class="profile-empty">Loading readers…</p>';
+  if(!followDialog.open)followDialog.showModal();
+  const {data,error}=await db.rpc("get_public_reader_follow_list",{target_user_id:uid,list_type:direction});
+  if(error){followListItems.innerHTML='<p class="profile-empty">This list could not be loaded. '+esc(error.message)+'</p>';return;}
+  const rows=Array.isArray(data)?data:[];
+  if(!rows.length){followListItems.innerHTML='<div class="profile-empty-card"><span>♧</span><h3>No '+title.toLowerCase()+' to show</h3><p>Reader connections will appear here when available.</p></div>';return;}
+  followListItems.innerHTML=rows.map(reader=>{
+    const initial=esc((reader.display_name||"V").trim().slice(0,1).toUpperCase());
+    const avatar=reader.avatar_url?'<img src="'+esc(reader.avatar_url)+'" alt="">':initial;
+    return '<a class="follow-list-reader" href="profile.html?id='+encodeURIComponent(reader.id)+'"><span class="follow-list-avatar">'+avatar+'</span><span class="follow-list-reader-copy"><strong>'+esc(reader.display_name||"Voiceoftaade reader")+'</strong><small>View reader profile</small></span><span class="follow-list-arrow" aria-hidden="true">↗</span></a>';
+  }).join("");
 }
 async function bindProfileActions(privacy){
  const own=user?.id===uid;
