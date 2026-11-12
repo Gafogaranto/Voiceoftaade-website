@@ -30,11 +30,13 @@ async function init(){
  $("aboutSince").textContent=date(p.created_at);
  $("aboutProfession").textContent=p.profession||"Not shared";$("aboutEducation").textContent=p.education||"Not shared";$("aboutCity").textContent=p.city||"Not shared";$("aboutCountry").textContent=p.country||"Not shared";$("aboutGenres").textContent=p.favourite_genres||"Not shared";$("aboutCurrentlyReading").textContent=p.currently_reading||"Not shared";$("aboutQuote").textContent=p.favourite_quote||"Not shared";
  if(p.website_url){let u=p.website_url;if(!/^https?:\/\//i.test(u))u="https://"+u;const a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener noreferrer";a.textContent=p.website_url;$("aboutWebsite").replaceChildren(a);}else $("aboutWebsite").textContent="Not shared";
- const [counts,posts,replies,activity]=await Promise.all([
+ const [counts,posts,replies,activity,bookItems,readerRecs]=await Promise.all([
   db.rpc("get_reader_follow_counts",{target_user_id:uid}),
   db.from("reader_feed_posts").select("id,title,body,visibility,created_at").eq("author_id",uid).order("created_at",{ascending:false}).limit(40),
   db.from("reader_feed_comments").select("id,body,created_at,reader_feed_posts(title,visibility,author_id)").eq("author_id",uid).order("created_at",{ascending:false}).limit(40),
-  db.rpc("get_reader_public_activity",{target_user_id:uid})
+  db.rpc("get_reader_public_activity",{target_user_id:uid}),
+  db.from("reader_profile_books").select("*").eq("user_id",uid).order("created_at",{ascending:false}),
+  db.from("reader_profile_recommendations").select("*").eq("user_id",uid).order("created_at",{ascending:false})
  ]);
  const pubPosts=(posts.data||[]).filter(x=>x.visibility==="public"||user?.id===uid).map(x=>({id:x.id,kind:"Post",text:(x.title?x.title+"\n":"")+x.body,created_at:x.created_at,community:"Voiceoftaade Reading Room"}));
  const pubReplies=(replies.data||[]).filter(x=>{const p=first(x.reader_feed_posts);return p&&(p.visibility==="public"||user?.id===uid);}).map(x=>({id:x.id,kind:"Comment",text:x.body,created_at:x.created_at,community:"Reader conversation"}));
