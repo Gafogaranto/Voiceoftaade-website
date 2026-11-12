@@ -51,7 +51,7 @@ async function refreshChats(){
    const m=members.find(x=>x.group_id===g.id),last=lastGroup.get(g.id),pref=prefs.get("group:"+g.id)||{},count=await db.from("reader_chat_group_members").select("user_id").eq("group_id",g.id);
    return {type:"group",id:g.id,name:g.name,description:g.description,avatar:g.avatar_url,createdBy:g.created_by,role:m?.role,lastReadAt:m?.last_read_at,last,unread:unreadGroup.get(g.id)||0,memberCount:count.data?.length||0,pref};
  }));
- state.items=[...directItems,...groupItems].filter(x=>!x.pref.is_archived);
+ state.items=[...directItems,...groupItems];
  state.allItems=[...directItems,...groupItems];
  state.requestCount=reqRes.data?.length||0;$("waRequestCount").textContent=state.requestCount;$("waRequestCount").hidden=!state.requestCount;
  renderChatList();
@@ -86,6 +86,7 @@ async function openConversation(type,id){
  $("waEmptyState").hidden=true;$("waConversation").hidden=false;$("waInfoView").hidden=true;
  $("waActiveName").textContent=item.name;$("waActiveAvatar").innerHTML=type==="group"&&item.avatar?'<img src="'+esc(item.avatar)+'" alt="">':avatar(item.peer,item.name);
  $("waActivePresence").textContent=type==="group"?(item.memberCount+" members · "+(item.role==="admin"?"Group admin":"Group member")):"Private conversation · Message requests were accepted";
+ $("waChatMenu").querySelector('[data-chat-action="leave"]').hidden=type!=="group";$("waChatMenu").querySelector('[data-chat-action="block"]').hidden=type!=="direct";$("waChatMenu").querySelector('[data-chat-action="report"]').hidden=type!=="direct";
  $("waChatMenu").hidden=true;$("waReplyBar").hidden=true;chatStatus("Loading messages…");
  await loadMessages();await markCurrentRead();await subscribeActive();
  renderChatList();
@@ -295,11 +296,14 @@ async function loadStatuses(){
 async function viewStatus(id,rows){
  const s=rows.find(x=>x.id===id);if(!s)return;
  await db.from("reader_chat_status_views").upsert({status_id:id,viewer_id:state.user.id},{onConflict:"status_id,viewer_id"});
- let extra="";
- if(s.media_path){const u=await db.storage.from(MEDIA).createSignedUrl(s.media_path,3600);if(u.data?.signedUrl)extra='<img class="wa-status-preview" src="'+esc(u.data.signedUrl)+'" alt="Reader update">';}
- alert((s.caption||"Reader update")+(extra?"":"")+"
-
-This update is available for 24 hours.");
+ let url="";
+ if(s.media_path){const u=await db.storage.from(MEDIA).createSignedUrl(s.media_path,3600);url=u.data?.signedUrl||"";}
+ const owner=await getProfile(s.user_id);
+ $("waStatusViewerTitle").textContent="Update from "+(owner?.display_name||"Reader");
+ $("waStatusViewerCaption").textContent=s.caption||"";
+ $("waStatusViewerImage").hidden=!url;
+ $("waStatusViewerImage").src=url;
+ $("waStatusViewer").hidden=false;
 }
 async function createStatus(event){
  event.preventDefault();const caption=$("waStatusText").value.trim(),file=$("waStatusFile").files[0],visibility=$("waStatusVisibility").value;
@@ -322,7 +326,7 @@ async function showChatInfo(){
   markup='<h3>'+esc(group.data?.name||a.name)+'</h3><p>'+esc(group.data?.description||"")+'</p><p class="wa-app-status">'+memberRows.length+' members</p>'+memberRows.map(({m,p})=>'<div class="wa-member-row"><span class="wa-avatar">'+avatar(p,p?.display_name)+'</span><span>'+esc(p?.display_name||"Reader")+'<small>'+esc(m.role)+'</small></span></div>').join("")+(a.role==="admin"?'<button class="wa-primary" id="waAddGroupMembers" type="button">Add members</button>':"");
  }
  $("waChatInfoBody").innerHTML=markup;showModal("waChatInfoModal",true);
- $("waAddGroupMembers")?.addEventListener("click",()=>{showModal("waChatInfoModal",false);state.addToGroup=a.id;$("waGroupTitle").textContent="Add group members";$("waGroupForm").dataset.mode="add";$("waGroupName").hidden=true;$("waGroupDescription").hidden=true;showModal("waGroupModal",true);});
+ $("waAddGroupMembers")?.addEventListener("click",()=>{showModal("waChatInfoModal",false);state.addToGroup=a.id;$("waGroupTitle").textContent="Add group members";$("waGroupForm").dataset.mode="add";$("waGroupName").hidden=true;$("waGroupName").required=false;$("waGroupDescription").hidden=true;showModal("waGroupModal",true);});
 }
 async function loadCalls(){
  const r=await db.from("reader_chat_calls").select("id,conversation_id,caller_id,recipient_id,call_type,status,created_at,ended_at").or("caller_id.eq."+state.user.id+",recipient_id.eq."+state.user.id).order("created_at",{ascending:false}).limit(50);
@@ -425,7 +429,7 @@ function bindEvents(){
  document.querySelectorAll("[data-wa-filter]").forEach(b=>b.addEventListener("click",()=>{state.filter=b.dataset.waFilter;document.querySelectorAll("[data-wa-filter]").forEach(x=>x.classList.toggle("active",x===b));renderChatList();}));
  $("waChatSearch").addEventListener("input",renderChatList);
  $("waNewChatButton").addEventListener("click",openNewChat);
- $("waNewGroupButton").addEventListener("click",()=>{state.addToGroup=null;$("waGroupTitle").textContent="Create a group";$("waGroupName").hidden=false;$("waGroupDescription").hidden=false;$("waGroupForm").dataset.mode="create";showModal("waGroupModal",true);});
+ $("waNewGroupButton").addEventListener("click",()=>{state.addToGroup=null;$("waGroupTitle").textContent="Create a group";$("waGroupName").hidden=false;$("waGroupName").required=true;$("waGroupDescription").hidden=false;$("waGroupForm").dataset.mode="create";showModal("waGroupModal",true);});
  $("waCommunityNewGroup").addEventListener("click",()=>$("waNewGroupButton").click());
  $("waGroupForm").addEventListener("submit",async e=>{
   e.preventDefault();
@@ -457,11 +461,11 @@ function bindEvents(){
  $("waChatSearchButton").addEventListener("click",()=>{const q=prompt("Search messages in this chat");if(!q)return;const found=state.messages.find(x=>(x.body||"").toLowerCase().includes(q.toLowerCase()));if(!found){say("No matching messages in the recent chat history.");return;}document.querySelector('[data-message-card="'+found.id+'"]')?.scrollIntoView({behavior:"smooth",block:"center"});});
  $("waStatusAttach").addEventListener("click",()=>$("waStatusFile").click());
  $("waStatusForm").addEventListener("submit",createStatus);
- $("waRefreshUpdates").addEventListener("click",loadStatuses);$("waRefreshCalls").addEventListener("click",loadCalls);
+ $("waRefreshUpdates").addEventListener("click",loadStatuses);$("waRefreshCalls").addEventListener("click",loadCalls);$("waStatusViewerClose").addEventListener("click",()=>{$("waStatusViewer").hidden=true;$("waStatusViewerImage").src="";});
  $("waChatInfoModal").querySelector("[data-modal-close]").addEventListener("click",()=>showModal("waChatInfoModal",false));
  document.querySelectorAll("[data-modal-close]").forEach(b=>b.addEventListener("click",()=>showModal(b.dataset.modalClose,false)));
  $("waAudioCallButton").addEventListener("click",()=>startCall("audio"));$("waVideoCallButton").addEventListener("click",()=>startCall("video"));
- $("waCallEnd").addEventListener("click",()=>endCurrentCall("ended"));$("waAcceptCall").addEventListener("click",acceptIncomingCall);$("waDeclineCall").addEventListener("click",declineIncomingCall);
+ $("waEndCall").addEventListener("click",()=>endCurrentCall("ended"));$("waAcceptCall").addEventListener("click",acceptIncomingCall);$("waDeclineCall").addEventListener("click",declineIncomingCall);
  $("waCallMute").addEventListener("click",()=>{if(!state.localStream)return;const track=state.localStream.getAudioTracks()[0];if(track){track.enabled=!track.enabled;$("waCallMute").textContent=track.enabled?"🎙":"🔇";}});
  $("waCallCamera").addEventListener("click",()=>{if(!state.localStream)return;const track=state.localStream.getVideoTracks()[0];if(track){track.enabled=!track.enabled;$("waCallCamera").textContent=track.enabled?"▣":"◻";}});
  $("waListMenuButton").addEventListener("click",()=>{const archived=state.filter==="archived";state.filter=archived?"all":"archived";document.querySelectorAll("[data-wa-filter]").forEach(x=>x.classList.toggle("active",x.dataset.waFilter===state.filter));renderChatList();});
