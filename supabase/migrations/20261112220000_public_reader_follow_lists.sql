@@ -1,3 +1,4 @@
+-- Public follow lists, scoped to profile visibility and executed as invoker.
 create or replace function public.get_public_reader_follow_list(
   target_user_id uuid,
   list_type text
@@ -5,29 +6,35 @@ create or replace function public.get_public_reader_follow_list(
 returns table(id uuid, display_name text, avatar_url text)
 language sql
 stable
-security definer
+security invoker
 set search_path = ''
 as $function$
-  select p.id,
-         coalesce(nullif(trim(p.display_name), ''), 'Voiceoftaade reader') as display_name,
-         p.avatar_url
-  from public.reader_follows f
-  join public.profiles p
-    on p.id = case
-      when list_type = 'followers' then f.follower_id
-      when list_type = 'following' then f.followed_id
-      else null
-    end
-  where list_type in ('followers', 'following')
-    and private.can_view_reader_profile(target_user_id)
-    and private.can_view_reader_profile(p.id)
-    and (
-      (list_type = 'followers' and f.followed_id = target_user_id)
+  with visible_target as (
+    select p.id
+    from public.get_public_reader_profile_card(target_user_id) p
+    where list_type in ('followers','following')
+  )
+  select visible_reader.id, visible_reader.display_name, visible_reader.avatar_url
+  from visible_target t
+  join public.reader_follows f
+    on (
+      (list_type = 'followers' and f.followed_id = t.id)
       or
-      (list_type = 'following' and f.follower_id = target_user_id)
+      (list_type = 'following' and f.follower_id = t.id)
     )
-  order by lower(coalesce(p.display_name, '')), p.id;
+  cross join lateral public.get_public_reader_profile_card(
+    case when list_type = 'followers' then f.follower_id else f.followed_id end
+  ) visible_reader
+  order by lower(visible_reader.display_name), visible_reader.id;
 $function$;
 
-revoke all on function public.get_public_reader_follow_list(uuid, text) from public, anon, authenticated;
-grant execute on function public.get_public_reader_follow_list(uuid, text) to anon, authenticated;
+drop policy if exists "Readers can view follow relationships" on public.reader_follows;
+create policy "Readers can view visible follow relationships"
+  on public.reader_follows for select to anon, authenticated
+  using (
+    private.can_view_reader_profile(follower_id)
+    and private.can_view_reader_profile(followed_id)
+  );
+grant select on public.reader_follows to anon, authenticated;
+revoke all on function public.get_public_reader_follow_list(uuid,text) from public, anon, authenticated;
+grant execute on function public.get_public_reader_follow_list(uuid,text) to anon, authenticated;
