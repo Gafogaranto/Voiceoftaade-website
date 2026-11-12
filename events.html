@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07172b">
+<meta name="description" content="Discover Voiceoftaade reading sessions, book clubs, chapter challenges and your personal reading passport.">
+<meta property="og:title" content="Reading Events & Passport | Voiceoftaade">
+<meta property="og:description" content="Read together, join a session, follow the reading path and celebrate your progress.">
+<title>Reading Events & Passport | Voiceoftaade</title>
+<link rel="icon" href="assets/icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261112-events1">
+<link rel="stylesheet" href="assets/css/events.css?v=20261112-events1">
+</head>
+<body>
+<div class="announcement">VOICEOFTAADE · READ TOGETHER · GROW TOGETHER</div>
+<header class="site-header"><a class="brand" href="index.html" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav aria-label="Main navigation"></nav></header>
+<main class="events-page">
+<section class="events-hero">
+ <div><p class="events-kicker">THE VOICEOFTAADE READING CALENDAR</p><h1>Make room for words.<br><em>Make time for people.</em></h1><p>Discover real reading sessions hosted by Voiceoftaade book clubs, follow the 25-chapter reading path, and keep your own progress in one thoughtful reader passport.</p><div class="events-actions"><a class="events-button" href="#upcomingEvents">Explore upcoming events ↓</a><a class="events-button outline" href="book-clubs.html">Find a reading circle ↗</a></div></div>
+ <div class="events-hero-aside"><div class="event-stat"><strong id="upcomingCount">—</strong><span>scheduled sessions currently listed</span></div><div class="event-stat"><strong>25</strong><span>chapters in the featured reading path</span></div><div class="event-stat"><strong>5</strong><span>parts to explore at your own pace</span></div></div>
+</section>
+<section class="events-section" id="upcomingEvents">
+ <div class="events-heading"><div><p class="events-kicker">WHAT'S ON</p><h2>Upcoming reading events</h2></div><p>These are live sessions scheduled by book-club organisers. Events appear here when a club publishes a date and time.</p></div>
+ <div id="eventsGrid" class="events-grid" aria-live="polite"><article class="event-empty">Loading the reading calendar…</article></div>
+ <p class="events-footnote">Times are displayed in your device's local time. Add-to-calendar creates a calendar file from the published session details. There is no RSVP system on this page.</p>
+</section>
+<section class="events-section" id="readerPassport">
+ <div class="events-heading"><div><p class="events-kicker">YOUR READING JOURNEY</p><h2>The Reader Passport</h2></div><p>Mark chapters as you finish them. Complete a part to earn its on-page milestone and see your progress grow.</p></div>
+ <div class="passport-panel">
+  <div class="passport-top"><strong>Series of Life Hacks to Live By</strong><span class="passport-count" id="passportCount">0 of 25 chapters completed</span></div>
+  <div class="passport-meter" role="progressbar" aria-label="Reading passport progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="passportMeter"><span id="passportMeterFill"></span></div>
+  <div id="passportParts" class="passport-parts"></div>
+  <div id="passportPerks" class="passport-perks" aria-live="polite"></div>
+  <p class="events-footnote">Your checklist is saved on this device in this browser. It is a personal progress tracker, not a verified certificate or a cross-device account record.</p>
+ </div>
+</section>
+<section class="events-section">
+ <div class="events-heading"><div><p class="events-kicker">MORE WAYS TO TAKE PART</p><h2>Your reader world</h2></div><p>Reading is the beginning. Discover conversations, vote on what gets featured and exchange ideas with other readers.</p></div>
+ <div class="events-ecosystem">
+  <article class="ecosystem-card"><span>✦</span><h3>Book Clubs</h3><p>Join public reading circles, request access to private clubs, follow chapter plans and take part in polls.</p><a href="book-clubs.html">Explore book clubs ↗</a></article>
+  <article class="ecosystem-card"><span>◉</span><h3>Community & Messages</h3><p>Share reading notes, meet thoughtful readers and continue accepted private conversations in one hub.</p><a href="community.html">Open the reader network ↗</a></article>
+  <article class="ecosystem-card"><span>♡</span><h3>Featured Book Voting</h3><p>Help choose which Voiceoftaade publication readers discover on the homepage next.</p><a href="featured.html">Cast your reader vote ↗</a></article>
+ </div>
+</section>
+</main>
+<footer class="site-footer"><p>A home for thoughtful words and purposeful living.</p><div class="footer-bottom"><span>© <span id="year"></span> Voiceoftaade Publications</span><a href="index.html">Back to home ↑</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="events.js?v=20261112-events1"></script>
+<script src="assets/js/app-nav.js?v=20261112-unified1" defer></script>
+</body>
+</html>
