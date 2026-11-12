@@ -49,8 +49,9 @@ async function searchReaders(event){
 async function respond(id,decision){say(decision==="accepted"?"Accepting request…":"Declining request…");const r=await db.rpc("respond_reader_message_request",{request_id:id,decision});if(r.error){say(r.error.message,true);return;}say(decision==="accepted"?"Request accepted. You can now message each other.":"Request declined.");await refresh();if(decision==="accepted"&&r.data)await openConversation(r.data);}
 async function openConversation(id){
  active=conversations.find(c=>c.id===id);if(!active)return;
+ document.querySelector(".dm-shell")?.classList.add("has-active-chat");
  const peerId=active.user_one===user.id?active.user_two:active.user_one,peer=await profile(peerId);
- $("dmTitle").textContent=peer?.display_name||"Private conversation";$("dmSubtitle").textContent="Only you and this reader can see these messages.";
+ $("dmTitle").textContent=peer?.display_name||"Private conversation";$("dmPeerAvatar")&&( $("dmPeerAvatar").textContent=(peer?.display_name||"V").trim().charAt(0).toUpperCase());$("dmSubtitle").textContent="Only you and this reader can see these messages.";
  $("dmComposer").hidden=false;
  if(channel){await db.removeChannel(channel);channel=null;}
  await loadMessages();
@@ -73,6 +74,7 @@ async function send(event){
  if(error){say(error.message,true);return;}
  $("dmBody").value="";say("Message sent.");await loadMessages();
 }
+$("dmBackButton")?.addEventListener("click",()=>document.querySelector(".dm-shell")?.classList.remove("has-active-chat"));
 window.addEventListener("beforeunload",()=>{if(channel)db.removeChannel(channel);});
 init().catch(e=>say(e.message,true));
 })();
