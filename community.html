@@ -1,1 +1,101 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fbf8f1"><title>Community | Voiceoftaade</title><meta name="description" content="Publish ideas, join conversations and discover readers."><link rel="icon" href="assets/icon-192.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1"><link rel="stylesheet" href="assets/css/reader-feed.css?v=20261112-feed1"><script src="theme.js" defer></script></head><body class="reader-feed-page"><header class="site-header"><a class="brand" href="index.html"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav aria-label="Primary navigation"></nav></header><main class="feed-shell"><section class="feed-intro"><span class="feed-eyebrow">THE VOICEOFTAADE READING ROOM</span><h1>Ideas worth <em>sharing.</em></h1><p>A home for readers and writers to publish thoughts, exchange perspectives and find their next favourite voice.</p></section><div class="feed-layout"><aside class="feed-left"><nav class="feed-side-card feed-nav-card" aria-label="Reading room"><button class="feed-nav active" data-feed-filter="for-you">✦ For you</button><button class="feed-nav" data-feed-filter="following">♡ Following</button><button class="feed-nav" data-feed-filter="latest">◷ Latest</button><a class="feed-nav" href="activity.html">◉ Activity</a><a class="feed-nav" href="messages.html">✉ Messages</a></nav><div class="feed-side-card"><span class="feed-side-label">OUR COMMUNITY</span><p>Bring curiosity, generosity and a point of view. Share what you are reading, learning, or an idea worth discussing.</p><a href="events.html">Explore reader events →</a></div></aside><section class="feed-main"><div class="composer-card"><div class="composer-top"><div class="composer-avatar" id="composerAvatar">V</div><div><strong id="composerGreeting">Join the conversation</strong><span>What would you like to share today?</span></div></div><form id="postForm"><input id="postTitle" maxlength="180" placeholder="Give your idea a title (optional)" aria-label="Post title"><textarea id="postBody" maxlength="12000" rows="4" placeholder="Write something worth reading…" required aria-label="Write your post"></textarea><div class="composer-footer"><label>Audience <select id="postVisibility"><option value="public">Everyone</option><option value="followers">Followers</option></select></label><span id="postCount">0 / 12,000</span><button class="feed-primary-button" type="submit" id="publishPost">Publish post</button></div><p id="postFeedback" class="feed-feedback" role="status"></p></form></div><div class="feed-toolbar"><div><span class="feed-eyebrow">THE COMMUNITY</span><h2 id="feedHeading">For you</h2></div><button id="refreshFeed" class="feed-refresh" type="button">↻ Refresh</button></div><div id="feedPosts" class="feed-post-list" aria-live="polite"><p class="feed-loading">Gathering reader voices…</p></div><button id="loadMorePosts" class="feed-load-more" type="button" hidden>Load more posts</button></section><aside class="feed-right"><div class="feed-side-card"><span class="feed-side-label">DISCOVER READERS</span><h3>Good ideas travel.</h3><p>Find readers to follow and see more of what they are thinking about.</p><div id="suggestedReaders" class="suggested-readers"></div></div><div class="feed-side-card"><span class="feed-side-label">UP NEXT</span><h3>Gather around a good book.</h3><p>Join reading circles and author conversations.</p><a href="events.html">Browse events →</a></div></aside></div></main><footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade Publications · Read · Reflect · Connect.</p></footer><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/reader-feed.js?v=20261112-feed1"></script><script src="assets/js/app-nav.js?v=20261112-single-nav5" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fbf8f1">
+<title>Community | Voiceoftaade</title><meta name="description" content="Publish notes, articles and images. Discover ideas and join thoughtful conversations.">
+<link rel="icon" href="assets/icon-192.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1"><link rel="stylesheet" href="assets/css/reader-feed.css?v=20261112-feed2"><link rel="stylesheet" href="assets/css/post-editor.css?v=20261112-editor1">
+<script src="theme.js" defer></script>
+</head>
+<body class="reader-feed-page">
+<header class="site-header"><a class="brand" href="index.html"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav aria-label="Primary navigation"></nav></header>
+<main class="feed-shell">
+<section class="feed-intro"><span class="feed-eyebrow">THE VOICEOFTAADE READING ROOM</span><h1>Ideas worth <em>sharing.</em></h1><p>A home for readers and writers to publish thoughtful notes, longer articles and images — and discover what others are thinking.</p></section>
+<div class="feed-layout">
+<aside class="feed-left">
+<nav class="feed-side-card feed-nav-card" aria-label="Reading room feeds">
+<button class="feed-nav active" data-feed-filter="for-you" type="button">✦ For you</button>
+<button class="feed-nav" data-feed-filter="following" type="button">♡ Following</button>
+<button class="feed-nav" data-feed-filter="latest" type="button">◷ Latest</button>
+</nav>
+<div class="feed-side-card"><span class="feed-side-label">OUR COMMUNITY</span><p>Bring curiosity, generosity and a point of view. Share what you are reading, learning, or an idea worth discussing.</p><a href="events.html">Explore reader events →</a></div>
+</aside>
+<section class="feed-main">
+<section class="composer-card" aria-labelledby="composerHeading">
+<div class="composer-top"><div class="composer-avatar" id="composerAvatar">V</div><div><strong id="composerGreeting">Join the conversation</strong><span id="composerHeading">What would you like to publish today?</span></div></div>
+<form id="postForm">
+<div class="editor-type-row">
+<label class="editor-type-label" for="postType">Create</label>
+<select id="postType" aria-label="Post type"><option value="note">Short note</option><option value="article">Article</option><option value="image">Image post</option></select>
+<span class="editor-type-hint" id="editorTypeHint">A quick thought or reflection.</span>
+</div>
+<input id="postTitle" class="editor-title" maxlength="180" placeholder="Title (optional for a note)" aria-label="Post title">
+<div class="rich-editor-wrap" id="richEditorWrap">
+<div class="rich-editor-toolbar" role="toolbar" aria-label="Text formatting">
+<button type="button" data-format="bold" aria-label="Bold" title="Bold"><strong>B</strong></button>
+<button type="button" data-format="italic" aria-label="Italic" title="Italic"><em>I</em></button>
+<span class="toolbar-divider"></span>
+<button type="button" data-format="h2" title="Heading">H1</button>
+<button type="button" data-format="h3" title="Subheading">H2</button>
+<button type="button" data-format="p" title="Paragraph">¶</button>
+<span class="toolbar-divider"></span>
+<button type="button" data-format="ul" title="Bulleted list">☷</button>
+<button type="button" data-format="ol" title="Numbered list">1.</button>
+<button type="button" data-format="quote" title="Quote">“ ”</button>
+</div>
+<div id="postEditor" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Write your note or article" data-placeholder="Start writing…"></div>
+</div>
+<div class="image-composer" id="imageComposer">
+<div class="image-composer-actions">
+<label class="image-pick-button" for="postImageInput"><span aria-hidden="true">＋</span> Add image</label>
+<span>JPG, PNG or WebP · up to 8 MB</span>
+<input id="postImageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+</div>
+<div class="image-preview-card" id="imagePreviewCard" hidden>
+<img id="imagePreview" alt="Your selected image preview">
+<div class="image-preview-meta"><span id="imagePreviewName">Selected image</span><div><button type="button" id="editImageButton">Edit image</button><button type="button" id="removeImageButton">Remove</button></div></div>
+<label class="image-caption-label" for="postCaption">Caption <span>Optional</span></label>
+<textarea id="postCaption" rows="2" maxlength="500" placeholder="Add a caption to your image…"></textarea>
+</div>
+</div>
+<div class="composer-footer">
+<label>Audience <select id="postVisibility"><option value="public">Everyone</option><option value="followers">Followers</option></select></label>
+<span id="postCount">0 / 12,000</span>
+<button class="feed-primary-button" type="submit" id="publishPost">Publish note</button>
+</div>
+<p id="postFeedback" class="feed-feedback" role="status" aria-live="polite"></p>
+</form>
+</section>
+<div class="feed-toolbar"><div><span class="feed-eyebrow">THE COMMUNITY</span><h2 id="feedHeading">For you</h2></div><button id="refreshFeed" class="feed-refresh" type="button">↻ Refresh</button></div>
+<div id="feedPosts" class="feed-post-list" aria-live="polite"><p class="feed-loading">Gathering reader voices…</p></div>
+<button id="loadMorePosts" class="feed-load-more" type="button" hidden>Load more posts</button>
+</section>
+<aside class="feed-right">
+<div class="feed-side-card"><span class="feed-side-label">DISCOVER READERS</span><h3>Good ideas travel.</h3><p>Find readers to follow and see more of what they are thinking about.</p><div id="suggestedReaders" class="suggested-readers"></div></div>
+<div class="feed-side-card"><span class="feed-side-label">UP NEXT</span><h3>Gather around a good book.</h3><p>Join reading circles and author conversations.</p><a href="events.html">Browse events →</a></div>
+</aside>
+</div>
+</main>
+<div class="image-editor-modal" id="imageEditorModal" hidden>
+<div class="image-editor-backdrop" data-close-image-editor></div>
+<section class="image-editor-dialog" role="dialog" aria-modal="true" aria-labelledby="imageEditorTitle">
+<header><div><span class="feed-eyebrow">IMAGE STUDIO</span><h2 id="imageEditorTitle">Adjust your image</h2></div><button type="button" id="closeImageEditor" aria-label="Close image editor">×</button></header>
+<div class="image-editor-preview-wrap" id="imageEditorPreviewWrap"><img id="imageEditorPreview" alt="Image editing preview"></div>
+<div class="image-editor-controls">
+<label>Crop shape<select id="imageCropRatio"><option value="original">Original</option><option value="1:1">Square · 1:1</option><option value="4:5">Portrait · 4:5</option><option value="16:9">Landscape · 16:9</option></select></label>
+<div class="image-adjust-grid">
+<label>Brightness <output id="brightnessValue">100%</output><input id="imageBrightness" type="range" min="60" max="150" value="100"></label>
+<label>Contrast <output id="contrastValue">100%</output><input id="imageContrast" type="range" min="60" max="150" value="100"></label>
+<label>Colour <output id="saturationValue">100%</output><input id="imageSaturation" type="range" min="0" max="180" value="100"></label>
+</div>
+<div class="image-transform-actions"><button type="button" id="rotateImageButton">↻ Rotate</button><button type="button" id="flipImageButton">⇋ Flip</button><button type="button" id="resetImageEdits">Reset edits</button></div>
+</div>
+<footer><button type="button" id="cancelImageEdits">Cancel</button><button type="button" id="applyImageEdits">Apply edits</button></footer>
+</section>
+</div>
+<footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade Publications · Read · Reflect · Connect.</p></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/reader-feed.js?v=20261112-feed2"></script>
+<script src="assets/js/app-nav.js?v=20261112-nav1" defer></script>
+</body></html>
