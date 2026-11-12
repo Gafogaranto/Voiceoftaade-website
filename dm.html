@@ -52,7 +52,7 @@ body{min-height:100vh;background:#f6f2e9;color:#102844}.dm-shell{width:min(1180p
 <h2>Requests sent</h2><div id="dmOutgoing" class="dm-list"><p class="dm-empty">Loading sent requests…</p></div>
 </aside>
 <section class="dm-panel">
-<div class="dm-top"><button id="dmBackButton" class="dm-back" type="button" aria-label="Back to chats">← Chats</button><div class="dm-peer-avatar" aria-hidden="true">V</div><div class="dm-peer-copy"><h2 id="dmTitle">Choose a conversation</h2><p id="dmSubtitle" class="muted">Your accepted conversations will appear here.</p></div></div>
+<div class="dm-top"><button id="dmBackButton" class="dm-back" type="button" aria-label="Back to chats">← Chats</button><div class="dm-peer-avatar" id="dmPeerAvatar" aria-hidden="true">V</div><div class="dm-peer-copy"><h2 id="dmTitle">Choose a conversation</h2><p id="dmSubtitle" class="muted">Your accepted conversations will appear here.</p></div></div>
 <div id="dmMessages" class="dm-messages"><p class="dm-empty">Select an accepted conversation to read and reply.</p></div>
 <form id="dmComposer" class="dm-composer" hidden><textarea id="dmBody" maxlength="4000" placeholder="Write a private message…" required></textarea><button class="button button-gold" type="submit">Send</button></form>
 <div id="dmStatus" class="dm-status" role="status" aria-live="polite"></div>
