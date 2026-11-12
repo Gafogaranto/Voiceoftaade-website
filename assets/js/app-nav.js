@@ -11,7 +11,7 @@ const icons={
  back:icon('<path d="m15 18-6-6 6-6"/><path d="M9 12h12"/>'),
  chevron:icon('<path d="m7 10 5 5 5-5"/>')
 };
-const socialPages=["community.html","activity.html","messages.html","book-clubs.html"];
+const socialPages=["community.html","activity.html","messages.html"];
 const libraryPages=["books.html","store.html","featured.html","bookshelf.html","book-details.html","reader.html","free-reading.html"];
 const active=(name)=>name==="home"?current===home:name==="library"?libraryPages.includes(current):name==="social"?socialPages.includes(current):name==="events"?current==="events.html":name==="about"?current==="about.html":false;
 let header=document.querySelector(".site-header");
