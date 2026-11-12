@@ -42,6 +42,7 @@ create policy "Readers delete their own feed comments" on public.reader_feed_com
 create policy "Likes visible with readable posts" on public.reader_feed_likes for select to anon,authenticated using (exists(select 1 from public.reader_feed_posts p where p.id=post_id and (p.visibility='public' or p.author_id=(select auth.uid()) or (p.visibility='followers' and exists(select 1 from public.reader_follows f where f.follower_id=(select auth.uid()) and f.followed_id=p.author_id))));
 create policy "Readers like readable posts" on public.reader_feed_likes for insert to authenticated with check (user_id=(select auth.uid()) and exists(select 1 from public.reader_feed_posts p where p.id=post_id and (p.visibility='public' or p.author_id=(select auth.uid()) or (p.visibility='followers' and exists(select 1 from public.reader_follows f where f.follower_id=(select auth.uid()) and f.followed_id=p.author_id))));
 create policy "Readers remove their own likes" on public.reader_feed_likes for delete to authenticated using (user_id=(select auth.uid()));
+revoke all on table public.reader_feed_posts,public.reader_feed_comments,public.reader_feed_likes from public,anon,authenticated;
 grant select on public.reader_feed_posts,public.reader_feed_comments,public.reader_feed_likes to anon,authenticated;
 grant insert,update,delete on public.reader_feed_posts,public.reader_feed_comments to authenticated;
 grant insert,delete on public.reader_feed_likes to authenticated;
