@@ -1,0 +1,64 @@
+/* Voiceoftaade Community — dedicated phone layout */
+@media (max-width: 760px) {
+  html, body { width:100%; max-width:100%; overflow-x:hidden; }
+  body { background:#f5f0e8!important; }
+  body > .announcement { padding:7px 12px!important; font-size:.58rem!important; text-align:center; letter-spacing:.09em!important; }
+  body > .site-header { min-height:58px!important; padding:8px 14px!important; display:flex!important; align-items:center!important; justify-content:space-between!important; gap:10px!important; }
+  body > .site-header .brand-logo { width:38px!important; height:38px!important; object-fit:contain!important; }
+  body > .site-header .menu-toggle { display:grid!important; place-items:center!important; flex:0 0 42px!important; width:42px!important; height:42px!important; border:1px solid #e2d6c2!important; border-radius:12px!important; background:#fffdf8!important; color:#102844!important; font-size:1.25rem!important; }
+  body > .site-header nav#mainNav { display:none!important; position:absolute!important; z-index:200!important; top:100%!important; left:10px!important; right:10px!important; padding:12px!important; border:1px solid #e6ddcf!important; border-radius:15px!important; background:#fffdf8!important; box-shadow:0 18px 40px #07172b24!important; flex-direction:column!important; align-items:stretch!important; gap:4px!important; }
+  body > .site-header nav#mainNav.open { display:flex!important; }
+  body > .site-header nav#mainNav a { display:flex!important; align-items:center!important; min-height:42px!important; padding:9px 12px!important; border-radius:9px!important; color:#102844!important; font-size:.92rem!important; }
+  body > .site-header nav#mainNav a.nav-cta { background:#102844!important; color:#fff!important; }
+  body > .site-header nav#mainNav .account-avatar-link { justify-content:flex-start!important; }
+  .community-platform { width:100%!important; max-width:100%!important; padding:12px 12px 34px!important; margin:0!important; box-sizing:border-box!important; }
+  .community-intro { padding:23px 20px!important; min-height:0!important; border-radius:19px!important; }
+  .community-intro .eyebrow { font-size:.63rem!important; letter-spacing:.13em!important; }
+  .community-intro h1 { max-width:100%!important; margin:9px 0 12px!important; font-size:clamp(1.85rem,8vw,2.55rem)!important; line-height:1.08!important; overflow-wrap:normal!important; }
+  .community-intro>p:not(.eyebrow) { font-size:.9rem!important; line-height:1.65!important; margin:0!important; }
+  .community-intro:after { font-size:6rem!important; right:3%!important; top:3%!important; opacity:.65; }
+  .community-hub-actions { display:grid!important; grid-template-columns:1fr!important; gap:9px!important; margin-top:18px!important; }
+  .community-hub-actions .button { width:100%!important; min-height:44px!important; box-sizing:border-box!important; }
+  .community-account { margin:12px 0!important; padding:11px 13px!important; font-size:.82rem!important; }
+  .community-workspace { display:flex!important; flex-direction:column!important; width:100%!important; max-width:100%!important; min-width:0!important; min-height:0!important; height:auto!important; margin:12px 0 0!important; overflow:visible!important; border-radius:17px!important; }
+  .mobile-community-nav { display:flex!important; position:relative!important; align-items:center!important; gap:10px!important; min-height:56px!important; padding:7px 11px!important; border-radius:16px 16px 0 0!important; }
+  .mobile-community-nav button { flex:0 0 40px!important; width:40px!important; height:40px!important; display:grid!important; place-items:center!important; }
+  .mobile-community-nav strong { min-width:0!important; font-size:.88rem!important; }
+  #mobileMenuOverlayClose { display:none!important; }
+  .mobile-menu-backdrop { display:none!important; }
+  body.community-mobile-menu-open .mobile-menu-backdrop { display:block!important; position:fixed!important; z-index:110!important; inset:0!important; background:#061222b8!important; }
+  .community-sidebar { display:flex!important; position:fixed!important; z-index:120!important; top:0!important; bottom:0!important; left:0!important; width:min(84vw,310px)!important; max-width:310px!important; height:100dvh!important; overflow-y:auto!important; padding:18px 14px calc(24px + env(safe-area-inset-bottom))!important; transform:translateX(-110%)!important; transition:transform .22s ease!important; box-shadow:18px 0 45px #0006!important; }
+  body.community-mobile-menu-open .community-sidebar { transform:translateX(0)!important; }
+  .community-workspace-main { display:block!important; width:100%!important; max-width:100%!important; min-width:0!important; padding:0!important; }
+  .workspace-view { min-width:0!important; min-height:0!important; }
+  .workspace-topbar { display:flex!important; flex-direction:column!important; align-items:stretch!important; gap:10px!important; padding:17px 14px!important; }
+  .workspace-topbar h2 { font-size:1.45rem!important; }
+  .workspace-topbar p:not(.eyebrow) { font-size:.85rem!important; }
+  .workspace-topbar>.button, .workspace-topbar>button { width:100%!important; min-height:42px!important; }
+  .social-feed, #forYouFeed, #followingFeed, #mentionsFeed, #notificationsFeed { display:grid!important; grid-template-columns:minmax(0,1fr)!important; gap:11px!important; width:100%!important; max-width:100%!important; padding:12px!important; box-sizing:border-box!important; }
+  .social-feed-item, .chat-post, .discussion-card { width:100%!important; max-width:100%!important; min-width:0!important; box-sizing:border-box!important; margin:0 0 12px!important; padding:15px!important; border-radius:14px!important; overflow-wrap:anywhere!important; }
+  .social-feed-item p, .chat-post-body, .discussion-body { font-size:.91rem!important; line-height:1.65!important; overflow-wrap:anywhere!important; }
+  .chat-post-actions, .discussion-actions, .chat-comment-actions { display:flex!important; flex-wrap:wrap!important; gap:7px!important; }
+  .chat-post-actions button, .chat-comment-actions button, .discussion-actions button { flex:0 1 auto!important; min-height:38px!important; max-width:100%!important; padding:8px 10px!important; font-size:.76rem!important; white-space:normal!important; }
+  .community-view .community-list, .workspace-view .community-list { display:grid!important; grid-template-columns:minmax(0,1fr)!important; padding:12px!important; gap:11px!important; }
+  .community-card { min-width:0!important; padding:17px!important; }
+  .community-card-bottom { display:grid!important; grid-template-columns:1fr!important; }
+  .community-card-bottom .button { width:100%!important; }
+  #discussionPanel { width:100%!important; max-width:100%!important; box-sizing:border-box!important; margin:0!important; border-radius:0 0 16px 16px!important; }
+  .discussion-feed { padding:10px!important; }
+  .chat-topbar { gap:8px!important; padding:10px!important; }
+  .chat-room-title { min-width:0!important; }
+  .chat-room-title h2 { font-size:1rem!important; }
+  .chat-message-area { min-height:260px!important; max-height:none!important; padding:12px!important; }
+  .chat-composer-wrap, .chat-join-prompt { padding:10px!important; padding-bottom:calc(10px + env(safe-area-inset-bottom))!important; }
+  .chat-composer textarea { min-height:62px!important; }
+  .moderation-columns { grid-template-columns:minmax(0,1fr)!important; }
+  .moderation-wide { grid-column:auto!important; }
+}
+@media (max-width: 390px) {
+  .community-intro h1 { font-size:1.85rem!important; }
+  .chat-post-actions button { flex:1 1 calc(50% - 7px)!important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .community-sidebar { transition:none!important; }
+}
