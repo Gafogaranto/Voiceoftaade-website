@@ -1,0 +1,44 @@
+/* Community + direct messages — unified social reading workspace */
+.community-platform{width:min(1480px,96vw)!important;margin:0 auto!important;padding:0 0 42px!important;color:#1b302b!important}
+.community-intro{width:min(1180px,100%)!important;margin:0 auto!important;padding:clamp(42px,6vw,76px) clamp(18px,5vw,58px)!important;border-radius:0 0 28px 28px!important;background:radial-gradient(circle at 84% 18%,#c7a45d25,transparent 28%),linear-gradient(120deg,#f7f4ec,#fffdf9)!important}
+.community-intro h1{font:600 clamp(2.5rem,5vw,4.4rem)/1.06 "Playfair Display",serif!important;letter-spacing:-.045em!important;color:#1b302b!important}
+.community-intro>p:not(.eyebrow){max-width:760px;color:#65736b!important}
+.community-workspace{display:grid!important;grid-template-columns:270px minmax(0,1fr)!important;min-height:760px!important;margin:20px auto!important;border:1px solid #e4e1d8!important;border-radius:24px!important;background:#fffdf9!important;box-shadow:0 20px 54px #19352d0d!important;overflow:hidden!important}
+.community-sidebar{min-width:0!important;padding:20px 15px!important;background:#fffdf9!important;border-right:1px solid #e9e6de!important}
+.sidebar-brand{padding:9px 9px 20px!important;border-bottom:1px solid #eeeae2!important;margin-bottom:14px!important}
+.sidebar-brand-mark{background:#285447!important;color:#fff!important;border-radius:12px!important}
+.sidebar-brand strong{color:#203a31!important}
+.sidebar-brand small,.sidebar-empty{color:#859087!important}
+.workspace-nav{display:flex!important;align-items:center!important;gap:10px!important;width:100%!important;min-height:44px!important;padding:10px 12px!important;margin:3px 0!important;border:0!important;border-radius:12px!important;background:transparent!important;color:#5b6b62!important;text-align:left!important;font-weight:600!important}
+.workspace-nav:hover{background:#f3f5ef!important;color:#285447!important}
+.workspace-nav.active{background:#eaf1e9!important;color:#285447!important;font-weight:700!important}
+.sidebar-label{margin:22px 10px 8px!important;color:#a36a52!important;font-size:.65rem!important;font-weight:700!important;letter-spacing:.14em!important}
+.joined-community-nav{display:grid!important;gap:5px!important}
+.community-workspace-main{min-width:0!important;background:#f8f6f0!important}
+.workspace-topbar{padding:24px clamp(16px,3vw,34px)!important;border-bottom:1px solid #e9e5dc!important;background:#fffdf9!important}
+.workspace-topbar h2{font:600 clamp(1.5rem,3vw,2rem) "Playfair Display",serif!important;color:#1b302b!important}
+.workspace-topbar p{color:#6c786f!important}
+.workspace-view{min-width:0!important}
+.social-feed{width:min(900px,100%)!important;margin:0 auto!important;padding:20px clamp(12px,2.5vw,28px)!important}
+.social-feed-item,.community-card,.discussion-panel,.new-post-panel{border:1px solid #e7e3da!important;border-radius:18px!important;background:#fffdf9!important;box-shadow:0 10px 28px #19352d08!important}
+.social-feed-item{padding:20px!important;margin:0 0 14px!important}
+.social-feed-item h3,.community-card h3{color:#203a31!important}
+.social-feed-item p,.community-card p{color:#5f6d64!important}
+.community-panel{margin:16px!important;background:#fffdf9!important;border:1px solid #e7e3da!important;border-radius:18px!important}
+.community-panel-head{border-bottom:1px solid #eeeae2!important}
+.chat-topbar{background:#fffdf9!important;border-bottom:1px solid #e8e4db!important;color:#1b302b!important}
+.chat-room-title h2{color:#1b302b!important}
+.chat-room-title p{color:#748078!important}
+.chat-message-area{background:#f4f1e9!important}
+.chat-post{padding:16px!important;margin:10px 0!important;border:1px solid #e7e3da!important;border-radius:16px!important;background:#fffdf9!important;box-shadow:0 7px 20px #19352d08!important}
+.chat-composer-wrap{background:#fffdf9!important;border-top:1px solid #e8e4db!important}
+.vt-messages-workspace{background:#f8f6f0!important}
+.vt-embedded-dm .dm-layout{grid-template-columns:minmax(245px,310px) minmax(0,1fr)!important;border:1px solid #e4e1d8!important;border-radius:20px!important;overflow:hidden!important;background:#fffdf9!important}
+.vt-embedded-dm .dm-sidebar{background:#f4f1e9!important;border-right:1px solid #e8e4db!important}
+.vt-embedded-dm .dm-sidebar h2{font:600 1.1rem "Playfair Display",serif!important;color:#1b302b!important}
+.vt-embedded-dm .dm-thread,.vt-embedded-dm .dm-conversation,.vt-embedded-dm .dm-main{min-width:0!important;background:#fffdf9!important}
+.vt-embedded-dm .dm-list{background:transparent!important}
+.vt-embedded-dm .dm-list>*,.vt-embedded-dm .dm-conversation-item{border-bottom:1px solid #e9e6de!important}
+.vt-embedded-dm .dm-status{color:#64736a!important}
+@media(max-width:900px){.community-workspace{grid-template-columns:235px minmax(0,1fr)!important}.vt-embedded-dm .dm-layout{grid-template-columns:245px minmax(0,1fr)!important}}
+@media(max-width:760px){.community-platform{width:100%!important;padding:0 0 20px!important}.community-intro{border-radius:0 0 20px 20px!important;padding:36px 18px!important}.community-workspace{display:block!important;min-height:calc(100dvh - 74px)!important;margin:12px 0!important;border-radius:0!important;border-left:0!important;border-right:0!important}.community-workspace-main{width:100%!important}.workspace-topbar{padding:17px 16px!important}.social-feed{padding:12px!important}.social-feed-item{padding:15px!important}.community-panel{margin:10px!important}.vt-messages-workspace{padding:0!important}.vt-embedded-dm .dm-layout{display:flex!important;flex-direction:column!important;height:calc(100dvh - 235px)!important;min-height:470px!important;border-radius:0!important;border-left:0!important;border-right:0!important}.vt-embedded-dm .dm-sidebar{max-height:42%;overflow:auto;border-right:0!important;border-bottom:1px solid #e8e4db!important}.vt-embedded-dm .dm-thread,.vt-embedded-dm .dm-main{min-height:0!important;flex:1!important}}
