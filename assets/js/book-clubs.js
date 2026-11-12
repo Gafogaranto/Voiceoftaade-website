@@ -139,7 +139,7 @@
     }
     await loadMemberships();
     renderAccount();
-    if(privateClub){status("Your request has been sent. The club organiser must approve it.",false,"clubDetailStatus");}
+    if(privateClub){status("Your request has been sent. The Voiceoftaade team must approve it.",false,"clubDetailStatus");}
     else{status("You have joined the reading circle. You can now join discussions and vote in polls.",false,"clubDetailStatus");}
     await openClub(club.community_id);
     await loadUpcomingSessions();
