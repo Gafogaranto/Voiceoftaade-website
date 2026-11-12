@@ -24,7 +24,7 @@ async function loadProfileLibrary(){
 }
 async function addProfileBook(e){
  e.preventDefault();const title=$("profileBookTitle").value.trim();if(!title)return;
- const payload={user_id:user.id,item_type:$("profileBookType").value,book_title:title,book_author:$("profileBookAuthor").value.trim(),book_url:$("profileBookUrl").value.trim()||null,note:$("profileBookNote").value.trim()};
+ const bookUrl=$("profileBookUrl").value.trim();if(bookUrl&&!/^https?:\/\//i.test(bookUrl)){status("profileBookStatus","Use a secure http or https book link.",true);return;}const payload={user_id:user.id,item_type:$("profileBookType").value,book_title:title,book_author:$("profileBookAuthor").value.trim(),book_url:bookUrl||null,note:$("profileBookNote").value.trim()};
  const r=await db.from("reader_profile_books").insert(payload);if(r.error){status("profileBookStatus",r.error.message,true);return;}
  e.target.reset();status("profileBookStatus","Book added to your profile.");await loadProfileLibrary();
 }
