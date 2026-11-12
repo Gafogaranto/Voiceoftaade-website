@@ -1,44 +1,58 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#183a32">
-<meta name="description" content="Reader profile and public reading activity on Voiceoftaade Publications.">
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f0f2f5">
+<meta name="description" content="Reader profile on Voiceoftaade Publications.">
 <title>Reader Profile | Voiceoftaade Publications</title>
 <link rel="icon" href="assets/icon-192.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1"><link rel="stylesheet" href="assets/css/reader-profile.css?v=20261112-profile2">
-<script src="theme.js" defer></script></head><body class="inner-page">
-<div class="announcement">VOICEOFTAADE · YOUR READING IDENTITY</div>
-<header class="site-header"><a class="brand" href="index.html"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav aria-label="Primary navigation"></nav></header>
-<main class="reader-profile-shell">
-<p class="profile-breadcrumb"><a href="community.html">← Community & Chats</a></p>
-<section class="reader-profile-card">
- <div class="reader-cover" aria-hidden="true"><span>VOICEOFTAADE READER</span></div>
- <div class="reader-profile-main">
-  <div class="reader-profile-top"><div id="profileAvatar" class="reader-avatar" aria-label="Reader avatar">V</div><div class="reader-profile-actions">
-   <button class="button button-gold" id="followButton" type="button" hidden>Follow reader</button>
-   <button class="button button-dark" id="messageRequestButton" type="button" hidden>Request to message</button>
-   <a class="button button-outline" id="profileSettingsLink" href="account.html" hidden>Edit profile & settings</a>
-   <a class="button button-outline" id="websiteLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Website ↗</a>
-   <button class="profile-more-button" id="profileBlockButton" type="button" hidden>Block</button>
-   <button class="profile-more-button" id="profileReportButton" type="button" hidden>Report</button><button id="blockReaderButton" type="button" hidden>Block reader</button><button id="reportReaderButton" type="button" hidden>Report reader</button>
-  </div></div>
-  <div class="reader-name-line"><div><h1 id="profileName">Loading reader…</h1><span id="profileHandle" class="reader-handle"></span></div><span id="profileVerified" class="reader-verified" title="Verified Voiceoftaade owner" hidden>✓</span></div>
-  <p id="profileBio" class="reader-bio">Loading profile details…</p><p id="profileLocation" class="reader-location"></p>
-  <div class="reader-stats"><span><strong id="followersCount">0</strong> followers</span><span><strong id="followingCount">0</strong> following</span><span><strong id="postsCount">0</strong> public contributions</span></div>
-  <p id="profileMessage" class="reader-feedback" role="status" aria-live="polite"></p>
- </div>
-</section>
-<div class="reader-profile-grid">
- <div class="reader-profile-main-column">
-  <section class="reader-panel"><div class="reader-panel-heading"><div><p class="eyebrow">READER ACTIVITY</p><h2>Public contributions</h2></div><span class="reader-panel-mark">01</span></div><div id="profileActivity" class="reader-activity"><p class="muted">Loading public activity…</p></div></section>
-  <section class="reader-panel"><div class="reader-panel-heading"><div><p class="eyebrow">READING JOURNEY</p><h2>Reading activity</h2></div><span class="reader-panel-mark">02</span></div><div id="publicReadingActivity" class="reader-activity"><p class="muted">Reading activity is private unless this reader chooses to share it.</p></div></section>
- </div>
- <aside class="reader-profile-side">
-  <section class="reader-panel reader-passport-section" id="readerPassportSection" hidden><div class="reader-panel-heading"><div><p class="eyebrow">MILESTONES & PROGRESS</p><h2>Reader Passport</h2></div><span class="reader-panel-mark">03</span></div><p class="reader-passport-intro">Achievements are based on activity this reader has chosen to share. They celebrate reading, collecting ideas and contributing to public conversations.</p><div id="readerPassportBadges" class="reader-passport-badges" aria-live="polite"></div><div id="readerPassportStats" class="reader-passport-stats" aria-label="Reader activity totals"></div></section><section class="reader-panel"><p class="eyebrow">ABOUT THIS READER</p><h2>Reader details</h2><div id="profileAbout" class="reader-about">Loading details…</div></section>
-  <section class="reader-panel"><p class="eyebrow">PERSONAL COLLECTIONS</p><h2>Favourite journals</h2><div id="publicFavourites" class="reader-activity"><p class="muted">Not shared.</p></div><h2 class="reader-subheading">Saved collections</h2><div id="publicSaved" class="reader-activity"><p class="muted">Not shared.</p></div></section>
-  <section class="reader-profile-prompt"><span>✳</span><h3>Make your profile yours.</h3><p>Add a thoughtful bio, reading interests and a profile picture in your account settings.</p><a href="account.html">Manage your reader account →</a></section>
- </aside>
-</div>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav2">
+<link rel="stylesheet" href="assets/css/reader-profile-v2.css?v=20261112-fbprofile1">
+</head><body class="reader-profile-page">
+<header class="site-header"><a class="brand" href="index.html" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav aria-label="Primary navigation"></nav></header>
+<main class="fb-profile-shell">
+ <div id="profileLoading" class="fb-loading">Opening reader profile…</div>
+ <section id="profileContent" hidden>
+  <div class="fb-profile-cover" id="profileCover"><span class="fb-cover-caption">VOICEOFTAADE READER</span></div>
+  <div class="fb-profile-head">
+   <div class="fb-identity">
+    <div class="fb-avatar" id="profileAvatar">V</div>
+    <div class="fb-name-block"><h1 id="profileName">Reader</h1><p id="profileSubtitle">Voiceoftaade reader</p><div class="fb-stats"><span><strong id="followersCount">0</strong> followers</span><span><strong id="followingCount">0</strong> following</span><span><strong id="postsCount">0</strong> posts</span></div></div>
+   </div>
+   <div class="fb-profile-actions">
+    <button class="fb-primary-action" id="followButton" type="button" hidden>＋ Follow</button>
+    <button class="fb-secondary-action" id="messageButton" type="button" hidden>✉ Message</button>
+    <button class="fb-secondary-action" id="editProfileButton" type="button" hidden>Edit profile</button>
+    <div class="fb-menu-wrap"><button class="fb-more-button" id="profileMenuButton" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Profile menu">•••</button>
+     <div class="fb-profile-menu" id="profileMenu" hidden>
+      <a href="account.html#profile-settings" id="menuEditProfile" hidden>Edit profile</a>
+      <a href="account.html#profile-settings" id="menuSettings" hidden>Settings & privacy</a>
+      <a href="account.html#privacy-settings" id="menuPrivacy" hidden>Privacy settings</a>
+      <a href="community.html" id="menuMessages" hidden>Open chats</a>
+      <button type="button" id="menuBlock" hidden>Block reader</button>
+      <button type="button" id="menuReport" hidden>Report profile</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <nav class="fb-profile-tabs" aria-label="Profile sections">
+   <button class="active" data-profile-tab="posts" type="button">Posts</button>
+   <button data-profile-tab="about" type="button">About</button>
+  </nav>
+  <div class="fb-profile-grid">
+   <aside class="fb-profile-aside">
+    <section class="fb-card fb-intro-card"><p class="fb-card-kicker">INTRO</p><h2>About</h2><p id="profileBio" class="fb-bio">A Voiceoftaade reader.</p><p class="fb-member-since" id="memberSince"></p><a href="community.html" id="communityLink">Connect with readers ↗</a></section>
+    <section class="fb-card fb-profile-stat-card"><p class="fb-card-kicker">READER DASHBOARD</p><h2>Activity at a glance</h2><div class="fb-stat-line"><span>Public posts</span><strong id="sidebarPosts">0</strong></div><div class="fb-stat-line"><span>Followers</span><strong id="sidebarFollowers">0</strong></div><div class="fb-stat-line"><span>Following</span><strong id="sidebarFollowing">0</strong></div></section>
+   </aside>
+   <section class="fb-profile-main">
+    <div id="profilePostsTab" class="fb-profile-tab-content"><div class="fb-card fb-posts-card"><div class="fb-card-head"><h2>Posts</h2><span>Public activity</span></div><div id="profilePosts" class="fb-post-list" aria-live="polite"><p class="fb-empty">Loading reader posts…</p></div></div></div>
+    <div id="profileAboutTab" class="fb-profile-tab-content" hidden><div class="fb-card fb-about-card"><div class="fb-card-head"><h2>About</h2><span>Reader information</span></div><p id="aboutBio"></p><p id="aboutSince"></p><p class="fb-privacy-note">Personal details and account settings are managed privately from the reader's profile menu.</p></div></div>
+   </section>
+  </div>
+  <p class="fb-feedback" id="profileFeedback" role="status" aria-live="polite"></p>
+ </section>
 </main>
-<footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade Publications · Read · Reflect · Connect.</p></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="profile.js?v=20261112-profile-privacy2"></script><script src="assets/js/reader-passport.js?v=20261112-passport2"></script><script src="assets/js/app-nav.js?v=20261112-single-nav2" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/reader-profile-v2.js?v=20261112-fbprofile1"></script>
+<script src="assets/js/app-nav.js?v=20261112-single-nav2" defer></script>
 </body></html>
