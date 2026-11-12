@@ -9,7 +9,7 @@ const fmt=(value,tz)=>{try{return new Intl.DateTimeFormat(undefined,{dateStyle:"
 const label=t=>({reading_circle:"Reading circle",author_session:"Author session",book_club:"Book club",workshop:"Workshop",launch:"Book launch",discussion:"Open discussion"}[t]||"Reader event");
 const calendarLinks=ev=>{
  const start=new Date(ev.starts_at),end=ev.ends_at?new Date(ev.ends_at):new Date(start.getTime()+60*60*1000);
- const stamp=d=>d.toISOString().replace(/[-:]/g,"").replace(/\\.\\d{3}/,"")+"Z";
+ const stamp=d=>d.toISOString().split(".")[0].replace(/[-:]/g,"")+"Z";
  const title=encodeURIComponent(ev.title),details=encodeURIComponent((ev.description||"")+"\nVoiceoftaade reader event"),place=encodeURIComponent(ev.location_label||(ev.format==="online"?"Online event":""));
  const google="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+title+"&dates="+stamp(start)+"/"+stamp(end)+"&details="+details+"&location="+place;
  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Voiceoftaade//Reader Events//EN","CALSCALE:GREGORIAN","BEGIN:VEVENT","UID:"+ev.id+"@voiceoftaade","DTSTAMP:"+stamp(new Date()),"DTSTART:"+stamp(start),"DTEND:"+stamp(end),"SUMMARY:"+String(ev.title||"Voiceoftaade event").replace(/[\r\n,;]/g," "),"DESCRIPTION:"+String(ev.description||"Voiceoftaade reader event").replace(/[\r\n]/g," "),"LOCATION:"+String(ev.location_label||"Online").replace(/[\r\n,;]/g," "),"END:VEVENT","END:VCALENDAR"].join("\r\n");
