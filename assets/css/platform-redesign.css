@@ -54,3 +54,5 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .experience-card b{margin-top:auto;color:var(--vt-forest);font-size:.78rem}
 @media(max-width:900px){.experience-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.experience-grid{grid-template-columns:1fr}.experience-card{min-height:210px;padding:19px}}
+
+.vt-nav-badge{display:inline-grid;place-items:center;min-width:17px;height:17px;margin-left:6px;padding:0 4px;border-radius:999px;background:#b85d4c;color:#fff;font:800 .58rem/1 "DM Sans",sans-serif;vertical-align:middle}
