@@ -1,0 +1,12 @@
+/* Voiceoftaade Publications copyright standard */
+.book-copyright-notice,.reader-copyright-notice{
+  margin:18px 0 0;padding:15px 17px;border:1px solid #d9dfE7;
+  border-left:3px solid #b58a43;border-radius:9px;background:#f5f7fa;
+  color:#536174;font-size:.78rem;line-height:1.75
+}
+.book-copyright-notice strong,.reader-copyright-notice strong{
+  display:block;margin-bottom:4px;color:#102b55;font-size:.72rem;
+  letter-spacing:.11em;text-transform:uppercase
+}
+.reader-copyright-notice{max-width:860px;margin:28px auto 0}
+@media(max-width:600px){.book-copyright-notice,.reader-copyright-notice{font-size:.75rem;padding:13px}}
