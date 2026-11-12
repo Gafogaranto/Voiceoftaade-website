@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#183a32">
+<meta name="description" content="Join Voiceoftaade reading circles, author sessions, book discussions and community events.">
+<title>Reading Events | Voiceoftaade Publications</title>
+<link rel="icon" href="assets/icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1">
+<link rel="stylesheet" href="assets/css/events.css?v=20261112-events1">
+</head><body class="inner-page">
+<div class="announcement">VOICEOFTAADE · READ TOGETHER, THINK DEEPER</div>
+<header class="site-header"><a class="brand" href="index.html" aria-label="Voiceoftaade home"><img class="brand-logo" src="assets/voiceoftaade-logo.jpg" alt="Voiceoftaade Publications"></a><nav aria-label="Primary navigation"></nav></header>
+<main class="events-page">
+<section class="events-hero">
+ <div class="events-hero-copy"><p class="eyebrow">THE VOICEOFTAADE READING ROOM</p><h1>Good books deserve <em>good company.</em></h1><p>Meet readers, exchange ideas, join guided reading sessions and take part in conversations that continue long after the final page.</p><div class="events-hero-actions"><a class="button button-gold" href="#upcomingEvents">Explore events ↓</a><a class="events-text-link" href="community.html">Enter the community ↗</a></div></div>
+ <div class="events-hero-art" aria-hidden="true"><span class="event-orbit orbit-one"></span><span class="event-orbit orbit-two"></span><div class="event-book-stack"><span>READ</span><span>REFLECT</span><span>CONNECT</span></div><small>IDEAS GROW IN GOOD COMPANY</small></div>
+</section>
+<section class="events-content" id="upcomingEvents">
+ <div class="events-section-head"><div><p class="eyebrow">YOUR NEXT GOOD CONVERSATION</p><h2>Upcoming events</h2><p>Official sessions appear here when they are scheduled by the Voiceoftaade team.</p></div><span class="events-live-label"><i></i> Live event board</span></div>
+ <div id="eventsList" class="events-grid" aria-live="polite"><div class="events-loading">Loading the reading calendar…</div></div>
+ <p id="eventsStatus" class="events-status" role="status" aria-live="polite"></p>
+</section>
+<section class="reading-pathways">
+ <div class="events-section-head"><div><p class="eyebrow">INSPIRED BY THE FEATURED BOOK</p><h2>Reading pathways</h2><p>Explore the five parts of <em>Series of Life Hacks to Live By</em> and use them as prompts for your own reading circle.</p></div><a class="button button-dark" href="reader.html">Open the reading room ↗</a></div>
+ <div class="pathway-grid">
+  <article class="pathway-card"><span>01</span><h3>Foundations of a Good Life</h3><p>Perspective, stillness, discipline, wisdom and the value of time.</p><small>5 reading themes</small></article>
+  <article class="pathway-card"><span>02</span><h3>Matters of the Heart</h3><p>Love, marriage, boundaries, loyalty and forgiveness.</p><small>5 reading themes</small></article>
+  <article class="pathway-card"><span>03</span><h3>Mindset and Motivation</h3><p>Fear, persistence, humility, motivation and courageous dreams.</p><small>5 reading themes</small></article>
+  <article class="pathway-card"><span>04</span><h3>Social Truth & Modern Struggles</h3><p>Social approval, authenticity, hustle culture and mental peace.</p><small>5 reading themes</small></article>
+  <article class="pathway-card"><span>05</span><h3>Spiritual & Personal Depth</h3><p>Patience, purpose, faith, courage and prayer.</p><small>5 reading themes</small></article>
+ </div>
+</section>
+<section class="events-community-cta"><div><p class="eyebrow">THE CONVERSATION CONTINUES</p><h2>Read something. <em>Bring your perspective.</em></h2><p>Discuss a chapter, join a book club, or connect privately with readers who share your interests.</p></div><a class="button button-gold" href="community.html">Explore Community & Chats ↗</a></section>
+<section id="eventAdminPanel" class="event-admin-panel" hidden>
+ <div><p class="eyebrow">PUBLISHER WORKSPACE</p><h2>Schedule a reading event</h2><p>Only approved Voiceoftaade platform administrators can publish official events.</p></div>
+ <form id="eventCreateForm" class="event-form">
+  <label>Event title<input name="title" required minlength="4" maxlength="160" placeholder="e.g. The Art of Stillness — Reader Session"></label>
+  <label>Short description<textarea name="description" required minlength="20" maxlength="5000" rows="4" placeholder="What will readers explore together?"></textarea></label>
+  <div class="event-form-grid">
+   <label>Event type<select name="event_type"><option value="reading_circle">Reading circle</option><option value="author_session">Author session</option><option value="book_club">Book club</option><option value="workshop">Workshop</option><option value="launch">Book launch</option><option value="discussion">Open discussion</option></select></label>
+   <label>Format<select name="format"><option value="online">Online</option><option value="in_person">In person</option></select></label>
+   <label>Starts<input name="starts_at" type="datetime-local" required></label>
+   <label>Ends (optional)<input name="ends_at" type="datetime-local"></label>
+   <label>Time zone<input name="timezone" value="Africa/Lagos" required maxlength="80"></label>
+   <label>Venue / location<input name="location_label" maxlength="180" placeholder="Required for in-person events"></label>
+  </div>
+  <label class="event-publish-toggle"><input type="checkbox" name="publish"> Publish immediately</label>
+  <button class="button button-gold" type="submit">Save event</button><p id="eventAdminStatus" role="status" aria-live="polite"></p>
+ </form>
+</section>
+</main>
+<footer class="site-footer"><p>© <span id="year"></span> Voiceoftaade Publications · Read · Reflect · Connect.</p></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/events.js?v=20261112-events1" defer></script>
+<script src="assets/js/app-nav.js?v=20261112-single-nav1" defer></script>
+</body></html>
