@@ -10,7 +10,7 @@ async function init(){
  $("year").textContent=new Date().getFullYear();
  if(!db){say("Messaging is unavailable right now.",true);return;}
  const {data:{session}}=await db.auth.getSession();user=session?.user||null;
- if(!user){say("Sign in to use private messages.");$("dmIncoming").innerHTML='<p class="dm-empty"><a href="account.html">Sign in to your reader account</a></p>';return;}
+ if(!user){$("dmSearchForm").hidden=true;$("dmSearchResults").hidden=true;$("dmComposer").hidden=true;say("Sign in to use private messages.");$("dmIncoming").innerHTML='<p class="dm-empty"><a href="account.html">Sign in to your reader account</a></p>';return;}
  await refresh();
  db.auth.onAuthStateChange((_e,s)=>{user=s?.user||null;if(user)refresh();else location.href="account.html";});
  $("dmComposer").addEventListener("submit",send);
