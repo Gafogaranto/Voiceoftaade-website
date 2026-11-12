@@ -4,6 +4,7 @@ const links=[
   ["journals.html","Journal"],
   ["community.html","Community"],
   ["activity.html","Activity"],
+  ["messages.html","Messages"],
   ["events.html","Events"],
   ["about.html","About"]
 ];
