@@ -26,6 +26,7 @@ toggle.addEventListener("click",()=>{const open=!nav.classList.contains("open");
 nav.addEventListener("click",e=>{if(e.target.closest("a"))close();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
 document.addEventListener("click",e=>{if(!header.contains(e.target))close();});
+const designLink=document.createElement("link");designLink.rel="stylesheet";designLink.href="assets/css/platform-redesign.css?v=20261112-platform1";document.head.appendChild(designLink);
 document.body.classList.add("has-app-nav");
 document.querySelectorAll(".vt-app-nav").forEach(el=>el.remove());
 })();
