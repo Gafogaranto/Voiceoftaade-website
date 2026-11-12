@@ -113,3 +113,5 @@ body.messenger-page>.site-header .menu-toggle{display:none}
  .chat-info-drawer{width:min(88%,360px)}.app-modal{padding:19px}.call-modal{min-height:420px}
 }
 @media(prefers-reduced-motion:reduce){.rail-item,.primary-action,.messenger-toast{transition:none}}
+
+.group-manage-details{margin:-4px 0 12px;color:#78867d;font-size:.72rem;line-height:1.55}.member-chip{border:0;cursor:pointer}.modal-reader button{padding:7px 10px;border:0;border-radius:8px;background:#eaf3ed;color:#28634d;font-size:.66rem;font-weight:800;cursor:pointer}.modal-reader button:hover{background:#dcebe1}
