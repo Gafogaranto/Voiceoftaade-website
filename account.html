@@ -444,6 +444,20 @@
                 </section>
               </div>
 
+<section class="profile-card" id="readerPrivacySettings">
+  <p class="eyebrow">YOUR PRIVACY, YOUR CHOICE</p>
+  <h3>Profile & reading visibility</h3>
+  <p>Choose who can see your profile and reading activity. Community means members who share at least one active community with you.</p>
+  <form id="readerPrivacyForm" class="account-form">
+    <label>Profile visibility<select id="privacyProfile"><option value="community">Community members</option><option value="public">Everyone</option><option value="private">Only me</option></select></label>
+    <label>Reading history<select id="privacyReading"><option value="community">Community members</option><option value="public">Everyone</option><option value="private">Only me</option></select></label>
+    <label>Favourite journals<select id="privacyFavourites"><option value="community">Community members</option><option value="public">Everyone</option><option value="private">Only me</option></select></label>
+    <label>Saved collections<select id="privacySaved"><option value="community">Community members</option><option value="public">Everyone</option><option value="private">Only me</option></select></label>
+    <label class="privacy-toggle"><input id="privacyMessageRequests" type="checkbox" checked> Allow private message requests</label>
+    <button class="button button-dark" type="submit">Save privacy settings →</button>
+  </form>
+  <p class="account-status" id="privacyStatus" role="status" aria-live="polite"></p>
+</section>
 <section class="profile-card" id="purchasedBooksCard">
   <p class="eyebrow">YOUR LIBRARY</p>
   <h3>Purchased ebooks</h3>
@@ -529,6 +543,7 @@
   })();
   </script>
   <script src="account.js?v=20261027-library2"></script>
+  <script src="reader-privacy.js?v=20261112-privacy1"></script>
   <script src="profile-activity.js?v=20261024-activity2"></script>
   <script src="premium-ux.js" defer></script>
 </body>
