@@ -7,11 +7,11 @@ const supabase = window.supabase?.createClient(
 );
 const PASSPORT_KEY="voiceoftaade-reader-passport-v1";
 const parts=[
- {name:"Foundations",chapters:["The Power of Perspective","Stillness Is Strength","Discipline: The Silent Architect","Choose Wisdom Over Noise","Time Is the Real Currency"]},
+ {name:"Foundations of a Good Life",chapters:["The Power of Perspective","Stillness Is Strength","Discipline: The Silent Architect","Choose Wisdom Over Noise","Time Is the Real Currency"]},
  {name:"Matters of the Heart",chapters:["Love Without Losing Yourself","What They Do Not Tell You About Marriage","Boundaries Are a Gift","When Loyalty Becomes a Burden","Forgiveness Is Not Approval"]},
- {name:"Mindset and Motivation",chapters:["You Are Not Lazy, You Are Spiritually Disconnected","Fear Is a Liar","You Only Fail When You Stop","Stay Humble, Stay Hungry","Let the Dream Terrify You"]},
- {name:"Social Truth and Modern Struggles",chapters:["Do Not Be Led by Likes","Everyone Is Faking Something","Soft Life, Hard Core","Hustle Is Not a Personality","Protect Your Mental Peace"]},
- {name:"Spiritual and Personal Depth",chapters:["God Does Not Rush Greatness","Delay Is Not Denial","Be the Light, Even in the Dark","Walk Alone If You Must","Prayer Is Power"]}
+ {name:"Mindset and Motivation",chapters:["You Are Not Lazy; You Are Spiritually Disconnected","Fear Is a Liar","You Only Fail When You Stop","Stay Humble, Stay Hungry","Let the Dream Terrify You"]},
+ {name:"Social Truth & Modern Struggles",chapters:["Do Not Be Led by Likes","Everyone Is Faking Something","Soft Life, Hard Core","Hustle Is Not a Personality","Protect Your Mental Peace"]},
+ {name:"Spiritual & Personal Depth",chapters:["God Does Not Rush Greatness","Delay Is Not Denial","Be the Light, Even in the Dark","Walk Alone If You Must","Prayer Is Power"]}
 ];
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dateTime=value=>new Date(value).toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
