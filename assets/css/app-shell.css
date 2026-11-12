@@ -30,3 +30,9 @@ body.vt-shell-ready{padding-bottom:0!important}
  .site-header .vt-profile-link{width:39px;height:39px}
 }
 @media(prefers-reduced-motion:reduce){.site-header #vtMainNav .vt-nav-link{transition:none!important}}
+
+body>.announcement{min-height:32px;box-sizing:border-box;padding:8px 14px!important;background:#0b2037!important;color:#dcbf7c!important;text-align:center!important;font:800 .62rem/1.2 "DM Sans",sans-serif!important;letter-spacing:.16em!important}
+.site-header .vt-profile-link[aria-current=page]{box-shadow:0 0 0 3px rgba(230,189,104,.22);border-color:#e6bd68}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(230,189,104,.9)!important;outline-offset:3px!important}
+img{max-width:100%}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
