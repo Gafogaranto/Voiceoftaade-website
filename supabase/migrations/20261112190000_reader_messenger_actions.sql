@@ -126,3 +126,31 @@ revoke all on function public.start_reader_chat_call(uuid,text) from anon, publi
 grant execute on function public.start_reader_chat_call(uuid,text) to authenticated;
 revoke all on function public.update_reader_chat_call_status(uuid,text) from anon, public;
 grant execute on function public.update_reader_chat_call_status(uuid,text) to authenticated;
+
+create or replace function public.remove_reader_chat_group_member(p_group_id uuid,p_target_user_id uuid)
+returns void language plpgsql security definer set search_path=''
+as $$
+declare actor uuid:=auth.uid(); target_role text;
+begin
+ if actor is null or not public.is_reader_chat_group_admin(p_group_id,actor) then raise exception 'Only group admins can manage members.'; end if;
+ if p_target_user_id=actor then raise exception 'Use Leave group to remove yourself.'; end if;
+ select role into target_role from public.reader_chat_group_members where group_id=p_group_id and user_id=p_target_user_id;
+ if target_role is null then raise exception 'Member not found.'; end if;
+ if target_role='admin' then raise exception 'Another admin must transfer admin rights before removal.'; end if;
+ delete from public.reader_chat_group_members where group_id=p_group_id and user_id=p_target_user_id;
+end;$$;
+create or replace function public.update_reader_chat_group(p_group_id uuid,p_name text,p_description text)
+returns boolean language plpgsql security definer set search_path=''
+as $$
+declare actor uuid:=auth.uid();
+begin
+ if actor is null or not public.is_reader_chat_group_admin(p_group_id,actor) then raise exception 'Only group admins can edit group details.'; end if;
+ if char_length(btrim(coalesce(p_name,''))) not between 2 and 80 then raise exception 'Group names must be between 2 and 80 characters.'; end if;
+ if char_length(coalesce(p_description,''))>500 then raise exception 'Group description cannot exceed 500 characters.'; end if;
+ update public.reader_chat_groups set name=btrim(p_name),description=btrim(coalesce(p_description,'')),updated_at=now() where id=p_group_id;
+ return true;
+end;$$;
+revoke execute on function public.remove_reader_chat_group_member(uuid,uuid) from anon,public;
+grant execute on function public.remove_reader_chat_group_member(uuid,uuid) to authenticated;
+revoke execute on function public.update_reader_chat_group(uuid,text,text) from anon,public;
+grant execute on function public.update_reader_chat_group(uuid,text,text) to authenticated;
