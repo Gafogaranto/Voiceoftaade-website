@@ -93,6 +93,7 @@
   }
   async function showDashboard(user) {
     currentUser = user;
+    const publicProfileLink=$("viewPublicProfile");if(publicProfileLink){publicProfileLink.href="profile.html?id="+encodeURIComponent(user.id);publicProfileLink.hidden=false;}
     $("authPanel").style.display = "none";
     $("dashboard").style.display = "block";
     const { data, error } = await supabase.from("profiles").select("display_name,avatar_url,cover_url,bio,location,website_url,reading_interests").eq("id", user.id).maybeSingle();
