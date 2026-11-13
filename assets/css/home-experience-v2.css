@@ -261,7 +261,7 @@
 .vt-book-cover-right{right:0;border-radius:3px 9px 9px 3px;transform:skewY(-5deg);transform-origin:left}
 .vt-book-pages{position:absolute;top:17px;width:46%;height:165px;background:repeating-linear-gradient(to bottom,#fff8e7 0 10px,#e7d9bd 11px 12px);box-shadow:0 5px 12px rgba(0,0,0,.14)}
 .vt-book-pages-left{left:4%;border-radius:5px 0 0 4px;transform:skewY(5deg);transform-origin:right}
-.vt-book-pages-right{right:4%;border-radius:0 5px 4px 0;transform:skewY(-5deg);transform-origin:left}
+.vt-book-pages-right{right:4%;border-radius:0 5px 4px 0;transform:skewY(-5deg) rotateY(0deg);transform-origin:left center;backface-visibility:hidden;animation:vt-page-turn 5.8s ease-in-out infinite}
 .vt-book-pages i{display:block;width:62%;height:1px;margin:17px auto;background:rgba(141,109,63,.28)}
 .vt-book-spine{position:absolute;z-index:4;left:calc(50% - 4px);top:12px;width:8px;height:180px;border-radius:50%;background:linear-gradient(90deg,#4c3420,#f2d69c,#5d4023)}
 .vt-stage-word{position:absolute;z-index:5;padding:8px 12px;border:1px solid rgba(238,214,169,.28);border-radius:999px;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);color:#f7e8c8;font-size:.65rem;font-weight:900;letter-spacing:.15em;box-shadow:0 10px 25px rgba(0,0,0,.12)}
@@ -273,15 +273,18 @@
 .vt-stage-bottomline{position:absolute;bottom:20px;left:max(6vw,22px);display:flex;align-items:center;gap:14px;color:#d8c49b;font-size:.6rem;font-weight:900;letter-spacing:.16em}
 .vt-stage-bottomline i{width:4px;height:4px;border-radius:50%;background:#d9b878}
 @keyframes vt-open-book-float{0%,100%{transform:translateY(0) rotateX(4deg) rotateZ(-1deg)}50%{transform:translateY(-14px) rotateX(-2deg) rotateZ(1deg)}}
+@keyframes vt-page-turn{0%,24%,100%{transform:skewY(-5deg) rotateY(0deg)}48%,72%{transform:skewY(-5deg) rotateY(-24deg)}84%{transform:skewY(-5deg) rotateY(-4deg)}}
 @keyframes vt-stage-drift{0%,100%{translate:0 0}50%{translate:0 -13px}}
 @keyframes vt-stage-twinkle{0%,100%{opacity:.45;scale:.8}50%{opacity:1;scale:1.25}}
+@keyframes vt-experience-photo-drift{from{background-position:46% 50%}to{background-position:56% 50%}}
+@keyframes vt-sdg-photo-drift{from{background-size:110%;background-position:45% 50%}to{background-size:122%;background-position:58% 50%}}
 @keyframes vt-stage-orbit{to{transform:rotate(338deg)}}
 @keyframes vt-stage-orbit-reverse{to{transform:rotate(-318deg)}}
 
 /* Photo-led SDG panels: every goal carries a visual story beside its explanation. */
 .vt-sdg-grid{gap:16px}
 .vt-sdg-card{grid-template-columns:132px 64px minmax(0,1fr);gap:15px;align-items:stretch;padding:14px;border-radius:20px;background:#fffdf7;box-shadow:0 14px 34px rgba(0,0,0,.14)}
-.vt-sdg-visual{grid-column:1;grid-row:1;position:relative;min-height:100%;min-height:190px;overflow:hidden;border-radius:13px;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.vt-sdg-visual{grid-column:1;grid-row:1;position:relative;min-height:100%;min-height:190px;overflow:hidden;border-radius:13px;background-size:110%;background-position:center;animation:vt-sdg-photo-drift 16s ease-in-out infinite alternate;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
 .vt-sdg-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,26,19,.04),rgba(9,26,19,.48))}
 .vt-sdg-visual:after{content:"";position:absolute;inset:12px;border:1px solid rgba(255,255,255,.5);border-radius:9px;transform:scale(.94);transition:transform .5s ease}
 .vt-sdg-card:hover .vt-sdg-visual:after,.vt-sdg-card:focus-within .vt-sdg-visual:after{transform:scale(1)}
@@ -301,13 +304,14 @@
 
 /* Image-led reading-life cards with a strong dark scrim for readable type. */
 .vt-home-v3 .experience-grid{gap:18px}
-.vt-home-v3 .experience-card{position:relative;isolation:isolate;min-height:360px;padding:24px;border:1px solid rgba(255,255,255,.24);border-radius:22px;overflow:hidden;background-color:#183c2d;background-size:cover;background-position:center;color:#fff!important;box-shadow:0 18px 38px rgba(17,42,31,.13);transition:transform .4s ease,box-shadow .4s ease}
+.vt-home-v3 .experience-card{position:relative;isolation:isolate;min-height:360px;animation:vt-experience-photo-drift 24s ease-in-out infinite alternate;padding:24px;border:1px solid rgba(255,255,255,.24);border-radius:22px;overflow:hidden;background-color:#183c2d;background-size:cover;background-position:center;color:#fff!important;box-shadow:0 18px 38px rgba(17,42,31,.13);transition:transform .4s ease,box-shadow .4s ease}
 .vt-home-v3 .experience-card:before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,rgba(8,22,16,.12) 0%,rgba(8,22,16,.34) 34%,rgba(8,22,16,.94) 100%);transition:background .35s ease}
 .vt-home-v3 .experience-card:after{content:"";position:absolute;z-index:-1;inset:12px;border:1px solid rgba(255,255,255,.28);border-radius:14px;pointer-events:none;transition:inset .35s ease,border-color .35s ease}
 .vt-home-v3 .experience-card:nth-child(1){background-image:url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=82")}
 .vt-home-v3 .experience-card:nth-child(2){background-image:url("https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=900&q=82")}
 .vt-home-v3 .experience-card:nth-child(3){background-image:url("https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=900&q=82")}
-.vt-home-v3 .experience-card:nth-child(4){background-image:url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=82")}
+.vt-home-v3 .experience-card:nth-child(4){background-image:url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=82");animation-delay:-9s}
+.vt-home-v3 .experience-card:nth-child(2){animation-delay:-5s}.vt-home-v3 .experience-card:nth-child(3){animation-delay:-13s}
 .vt-home-v3 .experience-card:hover{transform:translateY(-8px);box-shadow:0 28px 52px rgba(17,42,31,.25)}
 .vt-home-v3 .experience-card:hover:after{inset:18px;border-color:rgba(255,255,255,.62)}
 .vt-home-v3 .experience-card .experience-icon{display:grid;place-items:center;width:48px;height:48px;margin-bottom:auto;border:1px solid rgba(255,255,255,.42);border-radius:15px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);color:#fff;font-size:1.35rem}
@@ -402,7 +406,7 @@
  .vt-home-v3 .experience-card h3{font-size:1.25rem}
  .vt-home-v3 .experience-card p{font-size:.82rem}
  .vt-home-v3 .community-section{grid-template-columns:1fr}
- .vt-home-v3 .community-mark{max-width:360px;width:100%;margin:auto}
+ .vt-home-v3 .community-mark{display:grid!important;max-width:360px;width:100%;margin:auto}
  .vt-footer-main{gap:26px 18px}
  .vt-footer-column a{font-size:.82rem}
  .vt-footer-books{right:6%;top:10px;scale:.75}
@@ -422,6 +426,6 @@
  .vt-footer-bottom{font-size:.68rem}
 }
 @media(prefers-reduced-motion:reduce){
- .vt-reading-stage:before,.vt-reading-stage:after,.vt-stage-orbit,.vt-open-book,.vt-stage-word,.vt-stage-spark,.vt-sdg-visual:after,.vt-home-v3 .community-section:before,.vt-home-v3 .community-mark:before,.vt-home-v3 .community-mark:after,.vt-home-v3 .quote-section:before,.vt-footer-glow,.vt-footer-books,.vt-footer-star{animation:none!important;transition:none!important}
+ .vt-reading-stage:before,.vt-reading-stage:after,.vt-stage-orbit,.vt-open-book,.vt-book-pages-right,.vt-stage-word,.vt-stage-spark,.vt-sdg-visual,.vt-sdg-visual:after,.vt-home-v3 .experience-card,.vt-home-v3 .community-section:before,.vt-home-v3 .community-mark:before,.vt-home-v3 .community-mark:after,.vt-home-v3 .quote-section:before,.vt-footer-glow,.vt-footer-books,.vt-footer-star{animation:none!important;transition:none!important}
  .vt-home-v3 .experience-card:hover{transform:none}
 }
