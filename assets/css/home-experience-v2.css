@@ -134,3 +134,42 @@
 @media(max-width:850px){.vt-manifesto-grid,.vt-sdg-section{grid-template-columns:1fr}.vt-sdg-intro{position:relative;top:auto;max-width:680px}.vt-pillars-heading{grid-template-columns:1fr;gap:12px}.vt-feature-book{grid-template-columns:minmax(180px,.65fr) 1fr}.vt-founder-band{grid-template-columns:120px 1fr}}
 @media(max-width:620px){.vt-section-kicker{font-size:.58rem}.vt-section-kicker span{font-size:.53rem}.vt-manifesto-values{grid-template-columns:repeat(2,1fr);margin-top:36px}.vt-manifesto-values>span:nth-child(2){border-right:0}.vt-manifesto-values>span:nth-child(3){padding-left:0}.daily-wisdom-inner{grid-template-columns:1fr}.vt-feature-book{grid-template-columns:1fr}.vt-book-art{width:min(68%,260px);min-height:330px}.vt-pillar-list>a{grid-template-columns:34px 1fr 20px;gap:10px;padding:19px 4px}.vt-pillar-list p{font-size:.76rem}.vt-sdg-card{grid-template-columns:54px 1fr;gap:12px;padding:16px}.vt-sdg-number{width:50px;height:50px;font-size:1.2rem}.vt-founder-band{grid-template-columns:1fr}.vt-founder-monogram{width:100px}.vt-home-v3 .section-heading{display:grid}}
 @media(prefers-reduced-motion:reduce){.vt-pillar-list>a,.vt-arrow-link{transition:none}}
+
+
+/* Full homepage editorial system refinements — v3.1 */
+.vt-feature-book-section{padding:clamp(58px,8vw,108px) max(6vw,22px);background:#173b2c}
+.vt-feature-book-section>.vt-section-kicker{color:#e2c78e}
+.vt-feature-book{max-width:1240px;margin:0 auto}
+.vt-feature-book-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:22px}
+.vt-feature-book-actions .vt-arrow-link{color:#f0d69d}
+.vt-book-art{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.35);border-radius:4px 13px 13px 4px}
+.vt-book-art:before{content:"";position:absolute;inset:12px;border:1px solid rgba(255,248,232,.42);pointer-events:none}
+.vt-book-art strong{position:relative;z-index:1}
+.vt-wisdom-side{max-width:520px}
+.vt-wisdom-side h2{margin:10px 0 14px;color:#173d2d;font:600 clamp(2.1rem,4.4vw,3.6rem)/1.08 "Playfair Display",Georgia,serif;letter-spacing:-.035em}
+.vt-wisdom-side h2 em{color:#a17b40}
+.vt-wisdom-side .eyebrow{color:#9a773f}
+.vt-wisdom-side .wisdom-caption{margin:0 0 12px}
+.vt-home-v3 .platform-experiences{padding-left:max(6vw,22px);padding-right:max(6vw,22px)}
+.vt-home-v3 .platform-experiences .section-heading,.vt-home-v3 .experience-grid{max-width:1240px;margin-left:auto;margin-right:auto}
+.vt-home-v3 .experience-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.vt-home-v3 .experience-card{display:flex;flex-direction:column}
+.vt-home-v3 .experience-card b{margin-top:auto;padding-top:22px}
+.vt-home-v3 .home-event-feature{padding:clamp(54px,7vw,88px) 22px}
+.vt-home-v3 .home-event-feature-inner{max-width:1240px;margin:auto}
+.vt-home-v3 .community-section,.vt-home-v3 .contact-section,.vt-home-v3 .featured-vote-promo{padding-left:max(6vw,22px);padding-right:max(6vw,22px)}
+.vt-home-v3 .contact-section>div,.vt-home-v3 .contact-links{max-width:620px}
+.vt-home-v3 .featured-vote-promo>div{max-width:900px;margin:auto}
+.vt-home-v3 .site-footer{padding-left:max(6vw,22px);padding-right:max(6vw,22px)}
+.vt-home-v3 .quote-section{padding:clamp(58px,8vw,104px) 22px;text-align:center}
+.vt-home-v3 .quote-section blockquote{max-width:900px;margin:0 auto 22px}
+.vt-home-v3 .quote-section .quote-mark{margin:0 auto}
+@media(max-width:950px){.vt-home-v3 .experience-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){
+ .vt-feature-book-section{padding-left:18px;padding-right:18px}
+ .vt-feature-book{padding:24px 18px}
+ .vt-book-art{width:min(74%,270px);min-height:320px}
+ .vt-home-v3 .experience-grid{grid-template-columns:1fr}
+ .vt-feature-book-actions{align-items:flex-start;flex-direction:column;gap:10px}
+ .vt-home-v3 .contact-section{padding-top:54px;padding-bottom:54px}
+}
