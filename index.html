@@ -11,19 +11,19 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Voiceoftaade">
-  <meta name="description" content="Voiceoftaade Publications is an independent publishing house for thoughtful books, daily wisdom, and purposeful living.">
+  <meta name="description" content="Discover Voiceoftaade Publications: thoughtful books, daily wisdom, a reader community, and values-based alignment with selected UN Sustainable Development Goals.">
   <meta name="author" content="Taiwo Abdulgafar Adekunle">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Voiceoftaade Publications | Founded by Taiwo Abdulgafar Adekunle">
-  <meta property="og:description" content="Explore the Voiceoftaade reading room, daily wisdom, journals, and community.">
+  <meta property="og:description" content="Explore thoughtful books, daily wisdom, reader experiences, and Voiceoftaade’s values-based connection to the UN Sustainable Development Goals.">
   <meta property="og:url" content="https://gafogaranto.github.io/Voiceoftaade-website/">
   <meta property="og:image" content="https://gafogaranto.github.io/Voiceoftaade-website/assets/icon-512.png">
   <meta property="og:image:alt" content="Voiceoftaade Publications brand icon">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Voiceoftaade Publications | Taade">
-  <meta name="twitter:description" content="Thoughtful books, daily wisdom, and purposeful living.">
+  <meta name="twitter:description" content="Thoughtful books, daily wisdom, purposeful living, and ideas aligned with the Sustainable Development Goals.">
   <meta name="twitter:image" content="https://gafogaranto.github.io/Voiceoftaade-website/assets/icon-512.png">
-  <title>Voiceoftaade Publications | Taiwo Abdulgafar Adekunle (Taade)</title>
+  <title>Voiceoftaade Publications | Books, Wisdom &amp; Purposeful Living</title>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -68,7 +68,7 @@
 <link rel="stylesheet" href="assets/css/editorial-refresh.css?v=20261112-hybrid-editorial4">
 <link rel="stylesheet" href="assets/css/app-nav-v3.css?v=20261112-single-nav1">
 <link rel="stylesheet" href="assets/css/home-event-feature.css?v=20261112-home-events1">
-<link rel="stylesheet" href="assets/css/home-experience-v2.css?v=20261112-home-experience2">
+<link rel="stylesheet" href="assets/css/home-experience-v2.css?v=20261113-home-v3">
 </head>
 <body>
   <div class="announcement">A home for thoughtful words, timeless wisdom, and purposeful living.</div>
@@ -78,12 +78,12 @@
     </a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav id="mainNav" aria-label="Main navigation">
-      <a href="books.html">Library</a><a href="store.html">Store</a><a href="journals.html">Journal</a><a href="about.html">About Us</a><a href="community.html">Community</a><a class="nav-cta" href="contact.html">Contact</a>
+      <a href="books.html">Library</a><a href="store.html">Store</a><a href="journals.html">Journal</a><a href="#sdg-impact">Our impact</a><a href="about.html">About Us</a><a href="community.html">Community</a><a class="nav-cta" href="contact.html">Contact</a>
       <a class="account-avatar-link" href="account.html" aria-label="Open your reader profile" title="Profile / upload picture"><span class="account-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg><span class="avatar-add">+</span></span></a>
     </nav>
   </header>
 
-  <main>
+  <main class="vt-home-v3">
     <section class="hero" id="home">
       <div class="hero-copy">
         <p class="eyebrow"><span></span> AN INDEPENDENT PUBLISHING HOUSE</p>
@@ -104,6 +104,7 @@
     </section>
 
     <section class="ticker" aria-label="Our themes"><span>WISDOM</span><b>✳</b><span>PERSONAL GROWTH</span><b>✳</b><span>LOVE & RELATIONSHIPS</span><b>✳</b><span>PURPOSE</span><b>✳</b><span>WISDOM</span></section>
+    <section class="vt-manifesto" aria-labelledby="manifestoTitle"><div class="vt-section-kicker">WHY WE EXIST <span>01 / THE VOICEOFTAADE IDEA</span></div><div class="vt-manifesto-grid"><h2 id="manifestoTitle">A better world begins with <em>better questions.</em></h2><div><p>We believe words can do more than entertain. They can challenge assumptions, make knowledge easier to reach and encourage choices rooted in wisdom, empathy and purpose.</p><p>Our work brings together books, reflections and reader experiences around one ambition: help people make meaning of life and turn insight into thoughtful action.</p><a class="vt-arrow-link" href="about.html">Read our publishing philosophy ↗</a></div></div><div class="vt-manifesto-values"><span>01 <b>Clarity</b><small>Think with intention</small></span><span>02 <b>Growth</b><small>Keep learning</small></span><span>03 <b>Empathy</b><small>Live with consideration</small></span><span>04 <b>Purpose</b><small>Make choices that matter</small></span></div></section>
 
     <section class="daily-wisdom" id="dailyWisdom" aria-labelledby="dailyWisdomTitle">
       <div class="daily-wisdom-inner">
@@ -116,22 +117,48 @@
           <p class="wisdom-art-date" id="dailyWisdomDate"></p>
           <p class="wisdom-art-footer">READ · REFLECT · LIVE DELIBERATELY</p>
         </div>
-        <p class="wisdom-caption">A daily pause for reflection, perspective, and purposeful living.</p>
-        <button class="button button-gold wisdom-share-button" id="shareWisdom" type="button">Share wisdom card ↗</button>
-        <p class="wisdom-share-status" id="wisdomShareStatus" aria-live="polite"></p>
+        <div class="vt-wisdom-side">
+          <p class="eyebrow">A MOMENT TO RESET</p>
+          <h2>Pause. <em>Consider.</em><br>Move with intention.</h2>
+          <p class="wisdom-caption">A daily pause for reflection, perspective, and purposeful living. Keep a thought that helps you meet the day with greater clarity.</p>
+          <button class="button button-gold wisdom-share-button" id="shareWisdom" type="button">Share wisdom card ↗</button>
+          <p class="wisdom-share-status" id="wisdomShareStatus" aria-live="polite"></p>
+        </div>
       </div>
     </section>
 
-    <section class="section home-library-section" id="books">
-      <div class="section-heading">
-        <div><p class="eyebrow">THE VOICEOFTAADE READING ROOM</p><h2>Find a book.<br><em>Keep an idea.</em></h2></div>
-        <p>A growing collection of thoughtful writing, practical reflections, and books made to be read at your own pace.</p>
-      </div>
-      <div class="home-library-panel">
-        <div class="home-library-symbol" aria-hidden="true">✳</div>
-        <div><span class="pill">THE DIGITAL LIBRARY</span><h3>A digital library for curious minds.</h3><p>Explore <em>Series of Life Hacks to Live By</em>, the Voiceoftaade debut ebook on perspective, relationships, discipline, fear, failure, and purposeful living.</p><a class="button button-dark" href="reader.html">Read the featured book <span>↗</span></a><a class="text-link" href="books.html">Explore the full library →</a></div>
+    <section class="vt-feature-book-section" id="books" aria-labelledby="featuredBookTitle">
+      <div class="vt-section-kicker">THE FEATURED PUBLICATION <span>02 / START READING</span></div>
+      <div class="vt-feature-book">
+        <div class="vt-book-art" role="img" aria-label="Typographic feature artwork for Series of Life Hacks to Live By">
+          <span>VOICEOFTAADE PUBLICATIONS</span>
+          <strong>SERIES OF<br><i>LIFE HACKS</i><br>TO LIVE BY</strong>
+          <b>TAIWO ABDULGAFAR ADEKUNLE</b>
+          <small>READ · REFLECT · LIVE DELIBERATELY</small>
+        </div>
+        <div class="vt-feature-book-copy">
+          <p class="eyebrow">THE DEBUT EBOOK · 5 PARTS · 25 CHAPTERS</p>
+          <h3 id="featuredBookTitle">Series of <em>Life Hacks</em> to Live By</h3>
+          <p>A collection of life truths, short reflections and practical perspectives on living well, loving deeply, thinking clearly and finding direction. Its five parts explore the foundations of a good life, matters of the heart, mindset and motivation, modern social struggles, and spiritual and personal depth.</p>
+          <div class="vt-topic-tags"><span>Perspective</span><span>Relationships</span><span>Discipline</span><span>Purpose</span><span>Personal growth</span></div>
+          <div class="vt-feature-book-actions"><a class="button button-dark" href="reader.html">Enter the reading room ↗</a><a class="vt-arrow-link" href="books.html">Browse all publications →</a></div>
+        </div>
       </div>
     </section>
+
+    <section class="vt-sdg-section" id="sdg-impact" aria-labelledby="sdgTitle"><div class="vt-sdg-intro"><p class="eyebrow">OUR WORK IN A WIDER WORLD</p><h2 id="sdgTitle">Stories with purpose.<br><em>Ideas aligned with the SDGs.</em></h2><p>The United Nations Sustainable Development Goals offer a shared framework for a fairer, healthier and more sustainable world. Voiceoftaade connects with selected goals through reading, reflection, personal development and constructive community participation.</p><p class="vt-sdg-note">This is an editorial and values-based alignment—not a claim of UN affiliation, certification or measured SDG impact.</p><a class="vt-arrow-link" href="https://sdgs.un.org/goals" target="_blank" rel="noopener noreferrer">Explore the 17 Sustainable Development Goals ↗</a></div><div class="vt-sdg-grid">
+      <article class="vt-sdg-card sdg-4"><span class="vt-sdg-number">04</span><div><small>SDG 4</small><h3>Quality Education</h3><p>Encouraging reading, reflection, accessible knowledge and lifelong learning through books, journals and reader-led learning spaces.</p></div></article>
+      <article class="vt-sdg-card sdg-3"><span class="vt-sdg-number">03</span><div><small>SDG 3</small><h3>Good Health and Well-being</h3><p>Making room for reflection on rest, perspective, emotional well-being and healthier relationships—without presenting publications as medical advice.</p></div></article>
+      <article class="vt-sdg-card sdg-8"><span class="vt-sdg-number">08</span><div><small>SDG 8</small><h3>Decent Work and Economic Growth</h3><p>Exploring discipline, time, purposeful ambition and responsible effort as themes that can inform personal and professional development.</p></div></article>
+      <article class="vt-sdg-card sdg-16"><span class="vt-sdg-number">16</span><div><small>SDG 16</small><h3>Peace, Justice and Strong Institutions</h3><p>Promoting thoughtful dialogue, empathy, boundaries, forgiveness and peaceful ways of relating to others.</p></div></article>
+      <article class="vt-sdg-card sdg-17"><span class="vt-sdg-number">17</span><div><small>SDG 17</small><h3>Partnerships for the Goals</h3><p>Creating room for readers, writers, educators and organisations to exchange ideas and explore meaningful collaborations.</p></div></article>
+    </div></section>
+    <section class="vt-editorial-pillars"><div class="vt-section-kicker">WHAT WE EXPLORE <span>02 / EDITORIAL PILLARS</span></div><div class="vt-pillars-heading"><h2>The questions that shape <em>how we live.</em></h2><p>Our editorial themes connect inner growth with the relationships, responsibilities and communities that shape everyday life.</p></div><div class="vt-pillar-list">
+      <a href="journals.html"><span>01</span><div><h3>Perspective &amp; wisdom</h3><p>Question assumptions and make room for clearer thinking.</p></div><b>↗</b></a>
+      <a href="journals.html"><span>02</span><div><h3>Growth &amp; determination</h3><p>Explore discipline, courage, time, motivation and the steady work of becoming.</p></div><b>↗</b></a>
+      <a href="journals.html"><span>03</span><div><h3>Love &amp; relationships</h3><p>Reflect on boundaries, loyalty, forgiveness, respect and the responsibilities of connection.</p></div><b>↗</b></a>
+      <a href="journals.html"><span>04</span><div><h3>Purpose &amp; inner peace</h3><p>Consider meaning, patience and the choices that help us live deliberately.</p></div><b>↗</b></a>
+    </div></section>
 
     <section class="section platform-experiences" id="reader-experience">
       <div class="section-heading"><div><p class="eyebrow">MORE THAN A BOOKSHELF</p><h2>Your reading life, <em>all in one place.</em></h2></div><p>Discover gatherings, exchange ideas, join reader-led spaces and build a reading identity that grows with every book.</p></div>
@@ -145,6 +172,7 @@
 
     <section class="home-event-feature"><div class="home-event-feature-inner"><div class="home-event-feature-head"><div><p class="eyebrow">THE READING ROOM</p><h2>Something worth gathering for.</h2></div><p>Discover real Voiceoftaade sessions and reserve a place at the next reading circle, author session or workshop.</p></div><div id="homeEventPreview" class="home-event-feature-grid" aria-live="polite"><p class="home-event-feature-empty">Loading published events…</p></div><div class="home-event-feature-actions"><a href="events.html">Explore the events calendar ↗</a><a class="secondary" href="book-clubs.html">Find a book club</a></div></div></section>
 
+<section class="vt-founder-band"><div class="vt-founder-monogram" aria-hidden="true">V<span>·</span>T</div><div><p class="eyebrow">A NOTE FROM THE PUBLISHER</p><h2>Built around a simple belief: <em>words should matter.</em></h2><p>Founded by Taiwo Abdulgafar Adekunle, professionally known as Taade, Voiceoftaade Publications brings together original writing, digital reading experiences and a growing community of curious minds.</p><a class="vt-arrow-link" href="about.html">Meet the publisher and learn our story ↗</a></div></section>
 <section class="quote-section"><div class="quote-mark">“</div><blockquote>In a noisy world, wisdom is not always the loudest voice. Sometimes, it is the one that helps you hear yourself clearly.</blockquote><p>— THE VOICEOFTAADE PHILOSOPHY</p></section>
 
     
