@@ -303,6 +303,7 @@
 }
 .vt-home-v3 .vt-sdg-details[open] summary span { transform: rotate(45deg); }
 .vt-home-v3 .vt-sdg-more { display: none; }
+.vt-home-v3 .vt-sdg-dialog-body .vt-sdg-more { display: block; padding: 0; animation: none; }
 
 /* Page-level translucent overlay for the full SDG explanation. */
 .vt-home-v3 .vt-sdg-dialog {
