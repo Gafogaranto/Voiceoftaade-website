@@ -47,7 +47,7 @@
 
   function start() {
     stop();
-    if (!reducedMotion.matches && !document.hidden) {
+    if (!reducedMotion.matches && !document.hidden && !root.matches(":hover") && !root.contains(document.activeElement)) {
       restartProgress();
       timer = window.setInterval(showNext, delay);
     }
