@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gafogaranto.github.io/Voiceoftaade-website/sitemap.xml
